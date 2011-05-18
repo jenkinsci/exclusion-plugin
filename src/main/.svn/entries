@@ -1,0 +1,37 @@
+10
+
+dir
+39388
+https://svn.jenkins-ci.org/trunk/hudson/plugins/port-allocator/src/main
+https://svn.jenkins-ci.org
+
+
+
+2010-03-30T01:26:30.458106Z
+29452
+kohsuke
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+71c3de6d-444a-0410-be80-ed276b4c234a
+
+java
+dir
+
+resources
+dir
+
+webapp
+dir
+

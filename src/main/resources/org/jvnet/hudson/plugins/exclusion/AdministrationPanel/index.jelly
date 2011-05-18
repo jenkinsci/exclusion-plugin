@@ -1,0 +1,40 @@
+
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">                                                       
+    <l:layout title="Exclusion">
+        <l:side-panel>
+            <t:queue items="${app.queue.items}"/>
+            <t:executors/>
+        </l:side-panel>
+        <l:main-panel>
+            <h1>${%AdministrationPanel.title}</h1>
+            <h3>${%AdministrationPanel.description}</h3>
+            <j:invoke on="${it}" method="load"/>
+            <j:set var="rcs" value="${it.list}" />
+            
+            <TABLE frame="border" cellpadding="40">
+                <TR>
+                    <TH align="center">  Job  </TH>
+                    <TH align="center"> Ressources </TH>
+                    <TH align="center"> Action </TH>
+                </TR>
+                <j:forEach var="rc" items="${rcs}">
+                    <TR>
+                        <TD>${rc.jobName}</TD>
+                        <TD>${rc.ressource}</TD>
+                        <j:if test="${rc.build==true}">
+                            <TD>  <!--- with="secretKey,accessId"  -->
+                              <f:validateButton title="${%Free resource}"  method="jetest" /> 
+                               <!-- <f:form on="${it}" method="jetest" >
+                                    <f:block> 
+                                        <j:invoke on="${it}" method="jeTest"/>
+                                        <f:submit value="Does Work" class="submit-button"/> 
+                                    </f:block> 
+                                </f:form> -->
+                            </TD>
+                        </j:if>
+                    </TR>
+                </j:forEach>
+            </TABLE>
+        </l:main-panel>
+    </l:layout>
+</j:jelly>

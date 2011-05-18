@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hudson.scm.SubversionSCM_-DescriptorImpl>
+  <repositoryBrowser>hudson.scm.SubversionRepositoryBrowser</repositoryBrowser>
+  <generation>1</generation>
+  <credentials class="hashtable"/>
+  <revPropSupport class="hashtable"/>
+</hudson.scm.SubversionSCM_-DescriptorImpl>

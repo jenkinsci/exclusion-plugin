@@ -1,0 +1,42 @@
+10
+
+dir
+39388
+https://svn.jenkins-ci.org/trunk/hudson/plugins/port-allocator/src/main/resources/org/jvnet/hudson/plugins
+https://svn.jenkins-ci.org
+
+
+
+2008-07-14T18:56:05.375061Z
+10807
+btosabre
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+71c3de6d-444a-0410-be80-ed276b4c234a
+
+exclusion
+dir
+
+
+
+add
+
+port_allocator
+dir
+
+
+
+delete
+

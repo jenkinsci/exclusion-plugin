@@ -1,0 +1,11 @@
+Démarré par l'utilisateur anonymous
+Allocating Id : 11
+  -> Assigned 11
+Allocating Id : 21
+Waiting ressource : 21 currently use by : twoo #78
+  -> Assigned 21
+Id allocation complete
+[workspace] $ sh -xe C:\DOCUME~1\aroux\LOCALS~1\Temp\hudson5972344505197881733.sh
++ echo yo
+yo
+Finished: SUCCESS

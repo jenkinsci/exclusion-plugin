@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/!svn/ver/29452/trunk/hudson/plugins/port-allocator/src/main/java/org/jvnet/hudson/plugins/port_allocator
+END
+PluginImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/!svn/ver/22360/trunk/hudson/plugins/port-allocator/src/main/java/org/jvnet/hudson/plugins/port_allocator/PluginImpl.java
+END
+Port.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/!svn/ver/13598/trunk/hudson/plugins/port-allocator/src/main/java/org/jvnet/hudson/plugins/port_allocator/Port.java
+END
+PortAllocationManager.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/!svn/ver/29452/trunk/hudson/plugins/port-allocator/src/main/java/org/jvnet/hudson/plugins/port_allocator/PortAllocationManager.java
+END
+PortAllocator.java
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/!svn/ver/22360/trunk/hudson/plugins/port-allocator/src/main/java/org/jvnet/hudson/plugins/port_allocator/PortAllocator.java
+END
+PortTypeDescriptor.java
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/!svn/ver/10807/trunk/hudson/plugins/port-allocator/src/main/java/org/jvnet/hudson/plugins/port_allocator/PortTypeDescriptor.java
+END
+PortType.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/!svn/ver/10807/trunk/hudson/plugins/port-allocator/src/main/java/org/jvnet/hudson/plugins/port_allocator/PortType.java
+END
+GlassFishJmxPortType.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/!svn/ver/10807/trunk/hudson/plugins/port-allocator/src/main/java/org/jvnet/hudson/plugins/port_allocator/GlassFishJmxPortType.java
+END
+TomcatShutdownPortType.java
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/!svn/ver/10807/trunk/hudson/plugins/port-allocator/src/main/java/org/jvnet/hudson/plugins/port_allocator/TomcatShutdownPortType.java
+END
+AllocatedPortAction.java
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/!svn/ver/10807/trunk/hudson/plugins/port-allocator/src/main/java/org/jvnet/hudson/plugins/port_allocator/AllocatedPortAction.java
+END
+DefaultPortType.java
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/!svn/ver/10807/trunk/hudson/plugins/port-allocator/src/main/java/org/jvnet/hudson/plugins/port_allocator/DefaultPortType.java
+END

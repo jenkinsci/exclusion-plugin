@@ -1,0 +1,17 @@
+K 10
+svn:ignore
+V 157
+port-allocator.iml
+target
+work
+.project
+.settings
+port-allocator.iml
+target-eclipse
+port-allocator.iml
+port-allocator.ipr
+port-allocator.iws
+.git
+.gitignore
+
+END

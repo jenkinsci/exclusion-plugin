@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Built-By: kohsuke
+Build-Jdk: 1.6.0_14-fastdebug
+Extension-Name: subversion
+Implementation-Title: subversion
+Implementation-Version: 1.7
+Plugin-Class: hudson.scm.PluginImpl
+Short-Name: subversion
+Long-Name: Hudson Subversion Plug-in
+Url: http://wiki.hudson-ci.org/display/HUDSON/Subversion+Plugin
+Plugin-Version: 1.7
+Hudson-Version: 1.322
+

@@ -1,0 +1,10 @@
+Démarré par l'utilisateur anonymous
+Allocating Id : 21
+  -> Assigned 21
+Allocating Id : 23
+  -> Assigned 23
+Allocating Id : 24
+  -> Assigned 24
+Id allocation complete
+[workspace] $ sh -xe C:\DOCUME~1\aroux\LOCALS~1\Temp\hudson2068538456414413386.sh
++ sleep 30
