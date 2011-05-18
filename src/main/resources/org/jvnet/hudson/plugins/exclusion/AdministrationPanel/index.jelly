@@ -21,17 +21,17 @@
                     <TR>
                         <TD>${rc.jobName}</TD>
                         <TD>${rc.ressource}</TD>
-                        <j:if test="${rc.build==true}">
-                            <TD>  <!--- with="secretKey,accessId"  -->
+                       <!-- <j:if test="${rc.build==true}">
+                            <TD>  
                               <f:validateButton title="${%Free resource}"  method="jetest" /> 
-                               <!-- <f:form on="${it}" method="jetest" >
+                               <f:form on="${it}" method="jetest" >
                                     <f:block> 
                                         <j:invoke on="${it}" method="jeTest"/>
                                         <f:submit value="Does Work" class="submit-button"/> 
                                     </f:block> 
                                 </f:form> -->
                             </TD>
-                        </j:if>
+                       <!-- </j:if> -->
                     </TR>
                 </j:forEach>
             </TABLE>
