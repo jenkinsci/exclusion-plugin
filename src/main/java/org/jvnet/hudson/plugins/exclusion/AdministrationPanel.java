@@ -110,23 +110,4 @@ public class AdministrationPanel implements RootAction {
     public String getUrlName() {
         return "/administrationpanel";
     }
-
-
-    public DescriptorImpl getDescriptor() {
-        return DescriptorImpl.INSTANCE;
-    }
-
-    public static final class DescriptorImpl extends Descriptor {
-
-        private DescriptorImpl() {
-            super(AdministrationPanel.class);
-        }
-
-
-        public String getDisplayName() {
-            return ""; //unsed
-        }
-        
-        public static final DescriptorImpl INSTANCE = new DescriptorImpl();
-    }
 }
