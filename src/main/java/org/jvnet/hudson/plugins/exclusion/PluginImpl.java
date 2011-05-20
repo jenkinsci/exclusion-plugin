@@ -5,11 +5,7 @@ import hudson.Plugin;
 import hudson.model.Item;
 import hudson.model.listeners.ItemListener;
 
-/**
- * Exclusion Plugin
- *
- * @author Rama Pulavarthi
- */
+
 public class PluginImpl extends Plugin {
 
     @Override
@@ -17,7 +13,6 @@ public class PluginImpl extends Plugin {
         IdTypeDescriptor.LIST.add(DefaultIdType.DescriptorImpl.INSTANCE);
     }
 
-   
     @Extension
     public static final class RenameListener extends ItemListener {
 
@@ -28,7 +23,7 @@ public class PluginImpl extends Plugin {
 
         @Override
         public void onDeleted(Item item) {
-             IdAllocator.deleteList(item.getName());
+            IdAllocator.deleteList(item.getName());
         }
 
         @Override

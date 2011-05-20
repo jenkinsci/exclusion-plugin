@@ -1,47 +1,24 @@
 package org.jvnet.hudson.plugins.exclusion;
 
-import hudson.EnvVars;
 import hudson.Extension;
 import hudson.Launcher;
-import hudson.matrix.MatrixConfiguration;
 import hudson.model.BuildListener;
 import hudson.model.Descriptor;
 import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
-import hudson.model.Computer;
-import hudson.model.Describable;
 import hudson.model.Executor;
-import hudson.model.Hudson;
-import hudson.model.Job;
-import hudson.model.JobProperty;
-import hudson.model.ParameterDefinition;
-import hudson.model.ParametersDefinitionProperty;
-import hudson.model.Project;
-import hudson.model.Run.RunnerAbortedException;
-import hudson.model.listeners.ItemListener;
 import hudson.tasks.BuildWrapper;
-import hudson.util.CopyOnWriteList;
-import java.util.Enumeration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.StaplerRequest;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import javax.servlet.ServletException;
-import org.kohsuke.stapler.RequestImpl;
-import sun.security.jca.GetInstance;
 
 public class IdAllocator extends BuildWrapper {
 
     public IdType[] ids = null;
-    public static  List<RessourcesMonitor> listRessources = new ArrayList<RessourcesMonitor>();
+    public static List<RessourcesMonitor> listRessources = new ArrayList<RessourcesMonitor>();
     public static String jName = "unknow";
 
     public static List<RessourcesMonitor> getListRessources() {
@@ -51,19 +28,15 @@ public class IdAllocator extends BuildWrapper {
     public static void setListRessources(List<RessourcesMonitor> list) {
         listRessources = list;
     }
-    
-    
     public static boolean isActivated = false;
 
     public IdAllocator(IdType[] ids) {
         this.ids = ids;
         isActivated = true;
-        System.out.println("constructeur");
     }
 
     @Override
     public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
-        System.out.println("setup");
         CriticalBlockStart.pa = this;
         isActivated = true;
         final List<String> allocated = new ArrayList<String>();
@@ -74,6 +47,7 @@ public class IdAllocator extends BuildWrapper {
 
 
         return new Environment() {
+
             @Override
             public void buildEnvVars(Map<String, String> env) {
                 int i = 0;
@@ -104,7 +78,7 @@ public class IdAllocator extends BuildWrapper {
         }
     }
 
-public static void updateBuild(String ProjectName, String resourceName, boolean build) {
+    public static void updateBuild(String ProjectName, String resourceName, boolean build) {
         for (int i = listRessources.size() - 1; i >= 0; i--) {
             if (listRessources.get(i).getJobName().equals(ProjectName) && listRessources.get(i).getRessource().equals(resourceName)) {
                 RessourcesMonitor rmGet = listRessources.get(i);
@@ -114,7 +88,7 @@ public static void updateBuild(String ProjectName, String resourceName, boolean 
             }
         }
     }
-        
+
     @Override
     public Descriptor<BuildWrapper> getDescriptor() {
         //  System.out.println("getdscriptor");
@@ -170,31 +144,26 @@ public static void updateBuild(String ProjectName, String resourceName, boolean 
 
         DescriptorImpl() {
             super(IdAllocator.class);
-            System.out.println("descri");
             load();
         }
 
         public String getDisplayName() {
-            System.out.println("getdisplay");
             return "Add resource to manage exclusion";
 
         }
 
         @Override
         public String getHelpFile() {
-            System.out.println("helpfile");
             return "/plugin/port-allocator/help.html";
         }
 
         public List<IdTypeDescriptor> getIdTypes() {
-            System.out.println("gitidtypes");
             return IdTypeDescriptor.LIST;
 
         }
 
         @Override
         public BuildWrapper newInstance(StaplerRequest req, JSONObject formData) throws FormException {
-            System.out.println("new instance");
             List<IdType> ids = Descriptor.newInstancesFromHeteroList(
                     req, formData, "ids", IdTypeDescriptor.LIST);
             String[] split = req.getReferer().split("/");
@@ -203,7 +172,6 @@ public static void updateBuild(String ProjectName, String resourceName, boolean 
                     jName = split[i + 1];
                 }
             }
-
             IdAllocator portAlloc = new IdAllocator(ids.toArray(new IdType[ids.size()]));
             return portAlloc;
         }

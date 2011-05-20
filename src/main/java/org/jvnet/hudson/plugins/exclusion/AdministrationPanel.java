@@ -1,45 +1,20 @@
 package org.jvnet.hudson.plugins.exclusion;
 
-import groovy.ui.SystemOutputInterceptor;
 import hudson.Extension;
 import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
-import hudson.model.Computer;
-import hudson.model.Describable;
 import hudson.model.Descriptor;
-import hudson.model.Executor;
 import hudson.model.Hudson;
-import hudson.model.Items;
-import hudson.model.Job;
-import hudson.model.JobProperty;
-import hudson.model.ParameterDefinition;
-import hudson.model.ParameterValue;
-import hudson.model.ParametersDefinitionProperty;
 import hudson.model.Project;
 import hudson.model.RootAction;
-import hudson.model.Run;
-import hudson.model.TopLevelItem;
-import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.BuildWrapper;
-import hudson.tasks.Notifier;
-import hudson.tasks.Publisher;
-import hudson.util.FormValidation;
 import java.io.IOException;
-import java.util.AbstractList;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.ServletException;
-import net.sf.json.JSONObject;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
-import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
 
 /**
@@ -50,17 +25,10 @@ import org.kohsuke.stapler.export.ExportedBean;
 @Extension
 public class AdministrationPanel implements RootAction {
 
+    //Lien vers la list ressource de IdAllocator
     private List<RessourcesMonitor> listRessources;
+    //Copie de la list de IdAllocator en local
     private List<RessourcesMonitor> list;
-    private String currentResource;
-
-    public String getCurrentResource() {
-        return currentResource;
-    }
-
-    public void setCurrentResource(String currentResource) {
-        this.currentResource = currentResource;
-    }
 
     public List<RessourcesMonitor> getList() {
         return list;
@@ -71,8 +39,8 @@ public class AdministrationPanel implements RootAction {
         listRessources = IdAllocator.getListRessources();
     }
 
+    //Appellé à chaque chargement de la page d'administration
     public void load() {
-
 
         //List de tous les jobs
         List<String> allJobsName = new ArrayList<String>();
@@ -119,14 +87,13 @@ public class AdministrationPanel implements RootAction {
 
     public void doFreeResource(StaplerRequest res, StaplerResponse rsp, @QueryParameter("resourceName") String resourceName) throws IOException, InterruptedException {
 
-        System.out.println("lalallalal " + currentResource);
         //Pour chaque ressource
         //
         for (RessourcesMonitor rm : list) {
             //On veut prendre que les ressources qui sont donné par l'utilisateur
             // Et en cours d'utilisation
             if (rm.getRessource().equals(resourceName) && rm.getBuild()) {
-                
+
                 //On récupere l'id à libérer
                 DefaultIdType p = new DefaultIdType(resourceName);
                 Id i = p.allocate(false, rm.getAbsBuild(), CriticalBlockStart.pam, rm.getLauncher(), rm.getListener());

@@ -1,30 +1,18 @@
 package org.jvnet.hudson.plugins.exclusion;
 
-import hudson.EnvVars;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.Computer;
 import hudson.model.Descriptor;
-import hudson.model.Descriptor.FormException;
-import hudson.model.Environment;
 import hudson.model.Executor;
-import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Builder;
-import hudson.util.VariableResolver;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.StaplerRequest;
 
 /**
  *
@@ -100,12 +88,9 @@ public class CriticalBlockStart extends Builder {
                 allocated.add(p);
 
                 logger.println("  -> Assigned " + p.get());
-
             }
-           
             logger.println("Resource allocation complete");
         }
-
         return true;
     }
 
@@ -124,14 +109,6 @@ public class CriticalBlockStart extends Builder {
 
         public String getDisplayName() {
             return "Critical block start";
-        }
-
-        @Override
-        public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
-            //  formData.put(req, pa)
-
-            // save();
-            return true;
         }
     }
 }

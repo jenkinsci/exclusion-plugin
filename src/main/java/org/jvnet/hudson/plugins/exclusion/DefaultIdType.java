@@ -33,9 +33,7 @@ public class DefaultIdType extends IdType {
             n = manager.allocate(build, getFixedId(), buildListener);
         else
             n = getFixedId();
-        
-        System.out.println("oaaaaaa " + n);
-        
+       
         return new Id(this) {
 
             public String get() {

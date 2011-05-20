@@ -12,7 +12,7 @@
             <j:invoke on="${it}" method="load"/>
             <j:set var="rcs" value="${it.list}" />
             
-            <TABLE frame="border" cellpadding="40">
+            <TABLE frame="border" cellpadding="30">
                 <TR>
                     <TH align="center">  Job  </TH>
                     <TH align="center"> Resources </TH>

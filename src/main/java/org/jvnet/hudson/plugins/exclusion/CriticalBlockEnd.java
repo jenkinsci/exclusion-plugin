@@ -7,28 +7,20 @@ import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.Computer;
 import hudson.model.Descriptor;
-import hudson.model.Descriptor.FormException;
-import hudson.model.Environment;
 import hudson.model.Executor;
-import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Builder;
-import hudson.util.VariableResolver;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.StaplerRequest;
 
 /**
  *
  * @author Anthony Roux
+ * 
+ * Fin de la delimitation de la zone critique
  **/
 public class CriticalBlockEnd extends Builder {
 
@@ -41,6 +33,7 @@ public class CriticalBlockEnd extends Builder {
 
         List<RessourcesMonitor> listRessources = IdAllocator.getListRessources();
 
+        // On remet la variable pour savoir si la ressource est en cours d'utilisation à "false"
         for (RessourcesMonitor rm : listRessources) {
             if (build.getProject().getName().equals(rm.getJobName())) {
                 rm.setBuild(false);
@@ -48,10 +41,10 @@ public class CriticalBlockEnd extends Builder {
         }
         IdAllocator.setListRessources(listRessources);
 
-    
+
         final Computer cur2 = Executor.currentExecutor().getOwner();
         final IdAllocationManager pam2 = IdAllocationManager.getManager(cur2);
-         System.out.println("celui dans end " + pam2.toString());
+
         EnvVars environment = build.getEnvironment(listener);
         List<String> listId = new ArrayList<String>();
 
@@ -66,12 +59,9 @@ public class CriticalBlockEnd extends Builder {
         }
 
         for (String id : listId) {
-            System.out.println("listid --- > : " + id);
-            //System.out.println("Dans la boucle de liberation : " + id);
             // on les liberes
             DefaultIdType p = new DefaultIdType(id);
             Id i = p.allocate(false, build, pam2, launcher, listener);
-            //System.out.println("----------->  " + i.type.name);
             i.cleanUp();
         }
 
@@ -93,12 +83,6 @@ public class CriticalBlockEnd extends Builder {
 
         public String getDisplayName() {
             return "Critical block end";
-        }
-
-        @Override
-        public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
-            //save();
-            return true;
         }
     }
 }
