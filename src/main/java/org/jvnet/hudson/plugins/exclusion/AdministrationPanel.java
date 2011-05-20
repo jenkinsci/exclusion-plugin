@@ -125,12 +125,10 @@ public class AdministrationPanel implements RootAction {
             //On veut prendre que les ressources qui sont donné par l'utilisateur
             // Et en cours d'utilisation
             if (rm.getRessource().equals(resourceName) && rm.getBuild()) {
-                System.out.println("-_-_-_-_--_-_- " + rm.getJobName() + " /// " + rm.getRessource());
+                
+                //On récupere l'id à libérer
                 DefaultIdType p = new DefaultIdType(resourceName);
-                Computer cur = rm.getCur();
-                final IdAllocationManager pam = IdAllocationManager.getManager(cur);
-                System.out.println("celui qui marche pas " + pam.toString());
-                Id i = p.allocate(false, rm.getAbsBuild(), pam, rm.getLauncher(), rm.getListener());
+                Id i = p.allocate(false, rm.getAbsBuild(), CriticalBlockStart.pam, rm.getLauncher(), rm.getListener());
 
                 //On libere la ressource (en l'occurence acctuellement on libere/
                 // autant de fois qu'il y a de fois la ressource dans la list en cours d'utilisation
@@ -139,17 +137,18 @@ public class AdministrationPanel implements RootAction {
                 //On veut le faire seulement pour le cas où :
                 // le job est celui qui utilise la ressource actuellement
                 // donc on recupere le nom du job qui utilise la ressource et on cherche dans la liste
-
                 AbstractBuild get = IdAllocationManager.ids.get(resourceName);
                 if (get != null) {
-
                     if (get.getProject().getName().equals(rm.getJobName())) {
+                        //Libere la ressource
                         i.cleanUp();
+                        //Passe la ressource à "false" pour dire qu'elle n'est plus utilisé (pour l'affichage)
                         IdAllocator.updateBuild(rm.getJobName(), resourceName, false);
                     }
                 }
             }
         }
+        //On redirige sur la page du panel d'administration
         rsp.sendRedirect(res.getContextPath() + getUrlName());
     }
 

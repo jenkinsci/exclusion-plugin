@@ -49,9 +49,9 @@ public class CriticalBlockEnd extends Builder {
         IdAllocator.setListRessources(listRessources);
 
     
-        final Computer cur = Executor.currentExecutor().getOwner();
-        final IdAllocationManager pam = IdAllocationManager.getManager(cur);
-         System.out.println("celui dans end " + pam.toString());
+        final Computer cur2 = Executor.currentExecutor().getOwner();
+        final IdAllocationManager pam2 = IdAllocationManager.getManager(cur2);
+         System.out.println("celui dans end " + pam2.toString());
         EnvVars environment = build.getEnvironment(listener);
         List<String> listId = new ArrayList<String>();
 
@@ -70,7 +70,7 @@ public class CriticalBlockEnd extends Builder {
             //System.out.println("Dans la boucle de liberation : " + id);
             // on les liberes
             DefaultIdType p = new DefaultIdType(id);
-            Id i = p.allocate(false, build, pam, launcher, listener);
+            Id i = p.allocate(false, build, pam2, launcher, listener);
             //System.out.println("----------->  " + i.type.name);
             i.cleanUp();
         }

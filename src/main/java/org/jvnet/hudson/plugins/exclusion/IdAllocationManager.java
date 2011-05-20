@@ -53,21 +53,21 @@ public final class IdAllocationManager {
     }
 
     public synchronized void free(String n) {
-        System.out.println("dans le if de free");
+       /* System.out.println("dans le if de free");
         System.out.println(" avant le remove \n--------------------------");
              for (Iterator i = ids.keySet().iterator(); i.hasNext();) {
             String key = (String) i.next();
             System.out.println("key = " + key + " value = " + ids.get(key));
-        }
+        }*/
              
         ids.remove(n);
-        System.out.println("apres le remove \n----------------------------------");
+    /*    System.out.println("apres le remove \n----------------------------------");
              for (Iterator i = ids.keySet().iterator(); i.hasNext();) {
             String key = (String) i.next();
             System.out.println("key = " + key + " value = " + ids.get(key));
-        }
+        }*/
              
         notifyAll();
-        System.out.println("Notify done");
+       // System.out.println("Notify done");
     }
 }

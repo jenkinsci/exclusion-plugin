@@ -176,7 +176,7 @@ public static void updateBuild(String ProjectName, String resourceName, boolean 
 
         public String getDisplayName() {
             System.out.println("getdisplay");
-            return "Add ressource to manage exclusion";
+            return "Add resource to manage exclusion";
 
         }
 
