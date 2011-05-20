@@ -8,33 +8,47 @@
         <l:main-panel>
             <h1>${%AdministrationPanel.title}</h1>
             <h3>${%AdministrationPanel.description}</h3>
+            <!--<f:validateButton title="${%Free resource}"  method="jeTest" /> -->
             <j:invoke on="${it}" method="load"/>
             <j:set var="rcs" value="${it.list}" />
             
             <TABLE frame="border" cellpadding="40">
                 <TR>
                     <TH align="center">  Job  </TH>
-                    <TH align="center"> Ressources </TH>
+                    <TH align="center"> Resources </TH>
                     <TH align="center"> Action </TH>
                 </TR>
+                   
                 <j:forEach var="rc" items="${rcs}">
                     <TR>
                         <TD>${rc.jobName}</TD>
                         <TD>${rc.ressource}</TD>
-                       <!-- <j:if test="${rc.build==true}">
-                            <TD>  
-                              <f:validateButton title="${%Free resource}"  method="jetest" /> 
-                               <f:form on="${it}" method="jetest" >
-                                    <f:block> 
-                                        <j:invoke on="${it}" method="jeTest"/>
-                                        <f:submit value="Does Work" class="submit-button"/> 
-                                    </f:block> 
-                                </f:form> -->
+                        <j:if test="${rc.build==true}">
+                            <TD>
+                                   Currently Use
                             </TD>
-                       <!-- </j:if> -->
+                        </j:if> 
                     </TR>
                 </j:forEach>
             </TABLE>
+            <!--    <f:entry title="${%Resource name}">
+                    <f:textbox name="resourceName"/>
+                </f:entry> -->
+            <j:set var="rcs" value="${it.list}" />
+            <f:form method="post" action="freeResource">  
+                <f:entry title="${%Resource name}">
+                    <select name="resourceName">
+                        <j:forEach var="rc" items="${rcs}">
+                            <j:if test="${rc.build==true}">
+                                <f:option>${rc.ressource}</f:option>
+                            </j:if> 
+                        </j:forEach>
+                    </select>
+                </f:entry>
+                <f:entry>
+                    <f:submit value="${%Release resource}"/>
+                </f:entry>
+            </f:form>
         </l:main-panel>
     </l:layout>
 </j:jelly>

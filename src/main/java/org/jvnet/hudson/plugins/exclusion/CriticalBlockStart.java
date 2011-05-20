@@ -33,6 +33,7 @@ import org.kohsuke.stapler.StaplerRequest;
 public class CriticalBlockStart extends Builder {
 
     public static IdAllocator pa;
+    public static IdAllocationManager pam = null;
 
     @DataBoundConstructor
     public CriticalBlockStart() {
@@ -42,20 +43,25 @@ public class CriticalBlockStart extends Builder {
     //
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
-       List<RessourcesMonitor> listRessources = IdAllocator.getListRessources();
+    //    List<RessourcesMonitor> listRessources = IdAllocator.getListRessources();
 
-        for (RessourcesMonitor rm : listRessources) {
-            if(build.getProject().getName().equals(rm.getJobName())){
+        final Computer cur = Executor.currentExecutor().getOwner();
+        pam = IdAllocationManager.getManager(cur);
+
+    /*    for (RessourcesMonitor rm : listRessources) {
+            if (build.getProject().getName().equals(rm.getJobName())) {
                 rm.setBuild(true);
+                rm.setAbsBuild(build);
+                rm.setLauncher(launcher);
+                rm.setListener(listener);
             }
         }
         IdAllocator.setListRessources(listRessources);
 
-  
+        */
         //Init Builder
         PrintStream logger = listener.getLogger();
-        final Computer cur = Executor.currentExecutor().getOwner();
-        final IdAllocationManager pam = IdAllocationManager.getManager(cur);
+
 
         //Liste des IDs utilisées
         //
@@ -75,38 +81,31 @@ public class CriticalBlockStart extends Builder {
                 // Attendre tant que l'id est utilisé
                 //Quand fini on sajoute nous meme dans le dico pour dire les IDs qu'on utilise
                 //c'est la méthode synchronized
-               
+
                 Id p = pt.allocate(true, build, pam, launcher, listener);
 
+                List<RessourcesMonitor> listR = IdAllocator.getListRessources();
+
+                for (RessourcesMonitor rm : listR) {
+                    if (build.getProject().getName().equals(rm.getJobName()) && p.type.name.equals(rm.getRessource())) {
+                        rm.setBuild(true);
+                        rm.setAbsBuild(build);
+                        rm.setLauncher(launcher);
+                        rm.setListener(listener);
+                    }
+                }
+                
+                IdAllocator.setListRessources(listR);
                 //On ajoute dans allocate les IDs utilise
                 allocated.add(p);
 
                 logger.println("  -> Assigned " + p.get());
 
             }
-               // TODO: only log messages when we are blocking.
-            logger.println("Id allocation complete");
+           
+            logger.println("Resource allocation complete");
         }
 
-      /*  env = new Environment() {
-
-            @Override
-            public boolean tearDown(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
-                System.out.println("Entrer dans tearDown");
-                // Pour chaque id allouées
-                //
-                for (Id p : allocated) {
-                    System.out.println("Dans la boucle allocated : " + p.get());
-                    // on les liberes
-                    p.cleanUp();
-                }
-
-                return true;
-            }
-        };
-
-
-        CriticalBlockEnd.cbs = this;*/
         return true;
     }
 

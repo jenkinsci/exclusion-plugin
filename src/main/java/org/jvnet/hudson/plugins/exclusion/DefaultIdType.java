@@ -34,6 +34,8 @@ public class DefaultIdType extends IdType {
         else
             n = getFixedId();
         
+        System.out.println("oaaaaaa " + n);
+        
         return new Id(this) {
 
             public String get() {

@@ -29,18 +29,12 @@ public final class IdAllocationManager {
         IdAllocator.isActivated = false;
 
 
-    
-            while (ids.get(id) != null) {
-                logger.println("Waiting ressource : " + id + " currently use by : " + ids.get(id).toString());
-
-                wait();
-
-            }
-      
-
-
+        while (ids.get(id) != null) {
+            logger.println("Waiting ressource : " + id + " currently use by : " + ids.get(id).toString());
+            wait();
+        }
+        System.out.println("I'mmmmmmmmmmm freeeeeeeeeeeeeeeeeeee");
         ids.put(id, owner);
-
         return id;
     }
 
@@ -59,7 +53,21 @@ public final class IdAllocationManager {
     }
 
     public synchronized void free(String n) {
+       /* System.out.println("dans le if de free");
+        System.out.println(" avant le remove \n--------------------------");
+             for (Iterator i = ids.keySet().iterator(); i.hasNext();) {
+            String key = (String) i.next();
+            System.out.println("key = " + key + " value = " + ids.get(key));
+        }*/
+             
         ids.remove(n);
-        notifyAll(); // wake up anyone who's waiting for this id
+    /*    System.out.println("apres le remove \n----------------------------------");
+             for (Iterator i = ids.keySet().iterator(); i.hasNext();) {
+            String key = (String) i.next();
+            System.out.println("key = " + key + " value = " + ids.get(key));
+        }*/
+             
+        notifyAll();
+       // System.out.println("Notify done");
     }
 }
