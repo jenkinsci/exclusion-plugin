@@ -3,7 +3,7 @@ Plugin-Class: org.jvnet.hudson.plugins.exclusion.PluginImpl
 Short-Name: exclusion
 Long-Name: Hudson Exclusion Plug-in
 Url: http://...
-Plugin-Version: 1.6-SNAPSHOT (private-05/20/2011 09:43-aroux)
+Plugin-Version: 1.6-SNAPSHOT (private-05/20/2011 11:33-aroux)
 Hudson-Version: 1.324
 Plugin-Dependencies: maven-plugin:1.324
 Plugin-Developers: Anthony Roux:anthonyRoux:

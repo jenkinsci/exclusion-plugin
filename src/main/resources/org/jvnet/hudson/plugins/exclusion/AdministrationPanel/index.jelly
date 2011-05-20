@@ -31,12 +31,22 @@
                     </TR>
                 </j:forEach>
             </TABLE>
+            <!--    <f:entry title="${%Resource name}">
+                    <f:textbox name="resourceName"/>
+                </f:entry> -->
+            <j:set var="rcs" value="${it.list}" />
             <f:form method="post" action="freeResource">  
                 <f:entry title="${%Resource name}">
-                    <f:textbox name="resourceName"/>
+                    <select name="resourceName">
+                        <j:forEach var="rc" items="${rcs}">
+                            <j:if test="${rc.build==true}">
+                                <f:option>${rc.ressource}</f:option>
+                            </j:if> 
+                        </j:forEach>
+                    </select>
                 </f:entry>
                 <f:entry>
-                <f:submit value="${%Free resource}"/>
+                    <f:submit value="${%Release resource}"/>
                 </f:entry>
             </f:form>
         </l:main-panel>

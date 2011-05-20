@@ -119,6 +119,7 @@ public class AdministrationPanel implements RootAction {
 
     public void doFreeResource(StaplerRequest res, StaplerResponse rsp, @QueryParameter("resourceName") String resourceName) throws IOException, InterruptedException {
 
+        System.out.println("lalallalal " + currentResource);
         //Pour chaque ressource
         //
         for (RessourcesMonitor rm : list) {

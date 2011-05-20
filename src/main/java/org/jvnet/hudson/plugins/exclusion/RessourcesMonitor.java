@@ -18,24 +18,6 @@ public class RessourcesMonitor implements Cloneable {
     public boolean build = false;
     private AbstractBuild<?, ?> absBuild = null;
     private Launcher launcher = null;
-    private Computer cur;
-
-    public Computer getCur() {
-        return cur;
-    }
-
-    public void setCur(Computer cur) {
-        this.cur = cur;
-    }
-
-    public IdAllocationManager getPam() {
-        return pam;
-    }
-
-    public void setPam(IdAllocationManager pam) {
-        this.pam = pam;
-    }
-    private IdAllocationManager pam=null;
 
     public AbstractBuild<?, ?> getAbsBuild() {
         return absBuild;
