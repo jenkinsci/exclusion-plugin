@@ -43,7 +43,7 @@ public class AdministrationPanel implements RootAction {
     public void load() {
 
         //List de tous les jobs
-        List<String> allJobsName = new ArrayList<String>();
+         List<String> allJobsName = new ArrayList<String>();
 
         //List de tous les jobs qui utilisent le plugin (avec une ressource au moins)
         List<String> allExclusionJobs = new ArrayList<String>();
@@ -58,10 +58,9 @@ public class AdministrationPanel implements RootAction {
             //Pour chacun d'entre eux 
             for (Iterator i = buildWrappers.keySet().iterator(); i.hasNext();) {
                 Descriptor<BuildWrapper> key = (Descriptor<BuildWrapper>) i.next();
-                //IdAllocator.jName = p.getName();
-                // System.out.println("key = " + key.getDisplayName() + " value = " + buildWrappers.get(key).getDescriptor());
+                
                 //On regarde si le descripteur est bien "org.jvnet.hudson.plugins.exclusion.IdAllocator$DescriptorImpl"
-                if (buildWrappers.get(key).getDescriptor().toString().split("@")[0].equals("org.jvnet.hudson.plugins.exclusion.IdAllocator$DescriptorImpl")) {
+               if (buildWrappers.get(key).getDescriptor().toString().split("@")[0].equals("org.jvnet.hudson.plugins.exclusion.IdAllocator$DescriptorImpl")) {
                     //Pas de doublons
                     if (!allExclusionJobs.contains(p.getName())) {
                         allExclusionJobs.add(p.getName());
@@ -76,7 +75,6 @@ public class AdministrationPanel implements RootAction {
                 IdAllocator.deleteList(jobName);
             }
         }
-
 
         list = new ArrayList<RessourcesMonitor>();
         for (RessourcesMonitor rm : listRessources) {

@@ -89,22 +89,24 @@ public class IdAllocator extends BuildWrapper {
         }
     }
 
+
     @Override
     public Descriptor<BuildWrapper> getDescriptor() {
-        //  System.out.println("getdscriptor");
-
         String projectName = "unknow";
-        String[] threadName = Executor.currentThread().getName().split("\\\\");
-        if (threadName.length > 1) {
-            for (int i = 0; i < threadName.length; i++) {
+
+       // String[] threadName = Executor.currentThread().getName().split("\\\\");
+        String[] threadName = Executor.currentThread().getName().split(" ");
+      //  if (threadName.length > 1) {
+        if (threadName[0].equals("Loading") && threadName[1].equals("job")){
+          /*  for (int i = 0; i < threadName.length; i++) {
                 if (threadName[i].equals("jobs")) {
                     projectName = threadName[i + 1];
                 }
-            }
+            }*/
+             projectName = threadName[2];
         } else {
             projectName = jName;
         }
-
         if (!projectName.equals("unknow")) {
             for (int i = listRessources.size() - 1; i >= 0; i--) {
                 if (listRessources.get(i).getJobName().equals(projectName)) {
@@ -113,7 +115,6 @@ public class IdAllocator extends BuildWrapper {
             }
 
             //Add all object for the current job
-
             for (IdType pt : ids) {
                 listRessources.add(new RessourcesMonitor(projectName, pt.name));
             }

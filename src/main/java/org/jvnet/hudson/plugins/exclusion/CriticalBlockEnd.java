@@ -59,18 +59,26 @@ public class CriticalBlockEnd extends Builder {
         }
 
         for (String id : listId) {
-            // on les liberes
+            // On les liberes
             DefaultIdType p = new DefaultIdType(id);
             Id i = p.allocate(false, build, pam2, launcher, listener);
-            i.cleanUp();
+            AbstractBuild absBuild = IdAllocationManager.ids.get(i.type.name);
+            if (absBuild != null) {
+                if (absBuild.getProject().getName().equals(build.getProject().getName())) {
+                    i.cleanUp();
+                }
+            }
+            
         }
-
         return true;
     }
+
+    
 
     public String getDisplayName() {
         return "Critical block end";
     }
+
     @Extension
     public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
 
