@@ -89,21 +89,25 @@ public class IdAllocator extends BuildWrapper {
         }
     }
 
-
     @Override
     public Descriptor<BuildWrapper> getDescriptor() {
         String projectName = "unknow";
 
-       // String[] threadName = Executor.currentThread().getName().split("\\\\");
+        // String[] threadName = Executor.currentThread().getName().split("\\\\");
         String[] threadName = Executor.currentThread().getName().split(" ");
-      //  if (threadName.length > 1) {
-        if (threadName[0].equals("Loading") && threadName[1].equals("job")){
-          /*  for (int i = 0; i < threadName.length; i++) {
-                if (threadName[i].equals("jobs")) {
-                    projectName = threadName[i + 1];
-                }
+        //  if (threadName.length > 1) {
+        if (threadName[0].equals("Loading") && threadName[1].equals("job")) {
+            /*  for (int i = 0; i < threadName.length; i++) {
+            if (threadName[i].equals("jobs")) {
+            projectName = threadName[i + 1];
+            }
             }*/
-             projectName = threadName[2];
+            projectName="";
+            for (int i = 2; i < threadName.length-1; i++) {
+                    projectName += threadName[i] +" ";
+            }
+            projectName += threadName[threadName.length-1];
+            
         } else {
             projectName = jName;
         }
