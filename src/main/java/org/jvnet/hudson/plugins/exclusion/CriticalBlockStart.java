@@ -44,9 +44,18 @@ public class CriticalBlockStart extends Builder {
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
        List<RessourcesMonitor> listRessources = IdAllocator.getListRessources();
 
+        final Computer cur = Executor.currentExecutor().getOwner();
+        final IdAllocationManager pam = IdAllocationManager.getManager(cur);
+        
+             System.out.println("celui dans start " + pam.toString());
         for (RessourcesMonitor rm : listRessources) {
             if(build.getProject().getName().equals(rm.getJobName())){
                 rm.setBuild(true);
+                rm.setAbsBuild(build);
+                rm.setLauncher(launcher);
+                rm.setListener(listener);
+                rm.setPam(pam);
+                rm.setCur(cur);
             }
         }
         IdAllocator.setListRessources(listRessources);
@@ -54,8 +63,7 @@ public class CriticalBlockStart extends Builder {
   
         //Init Builder
         PrintStream logger = listener.getLogger();
-        final Computer cur = Executor.currentExecutor().getOwner();
-        final IdAllocationManager pam = IdAllocationManager.getManager(cur);
+       
 
         //Liste des IDs utilisées
         //

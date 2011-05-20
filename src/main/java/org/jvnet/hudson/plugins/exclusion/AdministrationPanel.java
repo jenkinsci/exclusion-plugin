@@ -2,9 +2,12 @@ package org.jvnet.hudson.plugins.exclusion;
 
 import groovy.ui.SystemOutputInterceptor;
 import hudson.Extension;
+import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
+import hudson.model.Computer;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
+import hudson.model.Executor;
 import hudson.model.Hudson;
 import hudson.model.Items;
 import hudson.model.Job;
@@ -16,7 +19,12 @@ import hudson.model.Project;
 import hudson.model.RootAction;
 import hudson.model.Run;
 import hudson.model.TopLevelItem;
+import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.BuildWrapper;
+import hudson.tasks.Notifier;
+import hudson.tasks.Publisher;
+import hudson.util.FormValidation;
 import java.io.IOException;
 import java.util.AbstractList;
 import java.util.ArrayList;
@@ -26,8 +34,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.ServletException;
 import net.sf.json.JSONObject;
+import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
 
@@ -41,18 +52,28 @@ public class AdministrationPanel implements RootAction {
 
     private List<RessourcesMonitor> listRessources;
     private List<RessourcesMonitor> list;
+    private String currentResource;
+
+    public String getCurrentResource() {
+        return currentResource;
+    }
+
+    public void setCurrentResource(String currentResource) {
+        this.currentResource = currentResource;
+    }
 
     public List<RessourcesMonitor> getList() {
         return list;
     }
 
     public AdministrationPanel() {
+        super();
         listRessources = IdAllocator.getListRessources();
     }
 
     public void load() {
 
-      
+
         //List de tous les jobs
         List<String> allJobsName = new ArrayList<String>();
 
@@ -61,7 +82,7 @@ public class AdministrationPanel implements RootAction {
 
         //On parcourt tous les projets
         for (Project<?, ?> p : Hudson.getInstance().getProjects()) {
-           
+
             //On remplie la liste des noms de tous les projets
             allJobsName.add(p.getName());
             //On veut récuperer tous les composants BuildWrappers
@@ -74,29 +95,62 @@ public class AdministrationPanel implements RootAction {
                 //On regarde si le descripteur est bien "org.jvnet.hudson.plugins.exclusion.IdAllocator$DescriptorImpl"
                 if (buildWrappers.get(key).getDescriptor().toString().split("@")[0].equals("org.jvnet.hudson.plugins.exclusion.IdAllocator$DescriptorImpl")) {
                     //Pas de doublons
-                    if(!allExclusionJobs.contains(p.getName()))
+                    if (!allExclusionJobs.contains(p.getName())) {
                         allExclusionJobs.add(p.getName());
+                    }
                 }
             }
         }
 
-            //On delete chaque job qui est dans la list global et qui n'est pas dans la liste des exclusions
-            for (String jobName : allJobsName) {
-                if (!allExclusionJobs.contains(jobName)) {
-                    IdAllocator.deleteList(jobName);
-                }
+        //On delete chaque job qui est dans la list global et qui n'est pas dans la liste des exclusions
+        for (String jobName : allJobsName) {
+            if (!allExclusionJobs.contains(jobName)) {
+                IdAllocator.deleteList(jobName);
             }
-        
+        }
+
 
         list = new ArrayList<RessourcesMonitor>();
         for (RessourcesMonitor rm : listRessources) {
             //System.out.println("build = " + rm.getBuild());
-            list.add(new RessourcesMonitor(rm.getJobName(), rm.getRessource(),rm.getBuild()));
+            list.add(new RessourcesMonitor(rm.getJobName(), rm.getRessource(), rm.getBuild()));
         }
     }
-    
-    public void jetest(){
-        System.out.println("SALUTUTUTFJRZJR");
+
+    public void doFreeResource(StaplerRequest res, StaplerResponse rsp, @QueryParameter("resourceName") String resourceName) throws IOException, InterruptedException {
+
+        //Pour chaque ressource
+        //
+        for (RessourcesMonitor rm : list) {
+            //On veut prendre que les ressources qui sont donné par l'utilisateur
+            // Et en cours d'utilisation
+            if (rm.getRessource().equals(resourceName) && rm.getBuild()) {
+                System.out.println("-_-_-_-_--_-_- " + rm.getJobName() + " /// " + rm.getRessource());
+                DefaultIdType p = new DefaultIdType(resourceName);
+                Computer cur = rm.getCur();
+                final IdAllocationManager pam = IdAllocationManager.getManager(cur);
+                System.out.println("celui qui marche pas " + pam.toString());
+                Id i = p.allocate(false, rm.getAbsBuild(), pam, rm.getLauncher(), rm.getListener());
+
+                //On libere la ressource (en l'occurence acctuellement on libere/
+                // autant de fois qu'il y a de fois la ressource dans la list en cours d'utilisation
+                //Mais ça ne pose pas de probleme une fois enlevé du dico c'est bon
+
+                //On veut le faire seulement pour le cas où :
+                // le job est celui qui utilise la ressource actuellement
+                // donc on recupere le nom du job qui utilise la ressource et on cherche dans la liste
+
+                AbstractBuild get = IdAllocationManager.ids.get(resourceName);
+                if (get != null) {
+
+                    if (get.getProject().getName().equals(rm.getJobName())) {
+                        i.cleanUp();
+                        IdAllocator.updateBuild(rm.getJobName(), resourceName, false);
+                    }
+                }
+            }
+        }
+        rsp.sendRedirect(res.getContextPath() + getUrlName());
     }
 
     public String getIconFileName() {
@@ -109,24 +163,5 @@ public class AdministrationPanel implements RootAction {
 
     public String getUrlName() {
         return "/administrationpanel";
-    }
-
-
-    public DescriptorImpl getDescriptor() {
-        return DescriptorImpl.INSTANCE;
-    }
-
-    public static final class DescriptorImpl extends Descriptor {
-
-        private DescriptorImpl() {
-            super(AdministrationPanel.class);
-        }
-
-
-        public String getDisplayName() {
-            return ""; //unsed
-        }
-        
-        public static final DescriptorImpl INSTANCE = new DescriptorImpl();
     }
 }

@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import javax.servlet.ServletException;
 import org.kohsuke.stapler.RequestImpl;
 import sun.security.jca.GetInstance;
 
@@ -63,7 +64,6 @@ public class IdAllocator extends BuildWrapper {
     @Override
     public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
         System.out.println("setup");
-        System.out.println(jName + " xxxxxxxx ");
         CriticalBlockStart.pa = this;
         isActivated = true;
         final List<String> allocated = new ArrayList<String>();
@@ -104,12 +104,22 @@ public class IdAllocator extends BuildWrapper {
         }
     }
 
+public static void updateBuild(String ProjectName, String resourceName, boolean build) {
+        for (int i = listRessources.size() - 1; i >= 0; i--) {
+            if (listRessources.get(i).getJobName().equals(ProjectName) && listRessources.get(i).getRessource().equals(resourceName)) {
+                RessourcesMonitor rmGet = listRessources.get(i);
+                listRessources.remove(i);
+                rmGet.setBuild(build);
+                listRessources.add(rmGet);
+            }
+        }
+    }
+        
     @Override
     public Descriptor<BuildWrapper> getDescriptor() {
         //  System.out.println("getdscriptor");
 
         String projectName = "unknow";
-        System.out.println(jName + " ---- ");
         String[] threadName = Executor.currentThread().getName().split("\\\\");
         if (threadName.length > 1) {
             for (int i = 0; i < threadName.length; i++) {
