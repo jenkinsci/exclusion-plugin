@@ -30,5 +30,11 @@ public class PluginImpl extends Plugin {
         public void onCreated(Item item) {
             super.onCreated(item);
         }
+
+        @Override
+        protected void finalize() throws Throwable {
+            System.out.println("Yayayayayyaay");
+            super.finalize();
+        }
     }
 }

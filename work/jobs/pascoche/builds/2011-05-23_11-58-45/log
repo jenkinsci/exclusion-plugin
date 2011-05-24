@@ -1,0 +1,13 @@
+Démarré par l'utilisateur anonymous
+FATAL: null
+java.lang.NullPointerException
+	at org.jvnet.hudson.plugins.exclusion.CriticalBlockStart.perform(CriticalBlockStart.java:60)
+	at hudson.tasks.BuildStepMonitor$1.perform(BuildStepMonitor.java:19)
+	at hudson.model.AbstractBuild$AbstractRunner.perform(AbstractBuild.java:480)
+	at hudson.model.Build$RunnerImpl.build(Build.java:159)
+	at hudson.model.Build$RunnerImpl.doRun(Build.java:98)
+	at hudson.model.AbstractBuild$AbstractRunner.run(AbstractBuild.java:354)
+	at hudson.model.Run.run(Run.java:1123)
+	at hudson.model.FreeStyleBuild.run(FreeStyleBuild.java:46)
+	at hudson.model.ResourceController.execute(ResourceController.java:88)
+	at hudson.model.Executor.run(Executor.java:123)

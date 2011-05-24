@@ -26,9 +26,7 @@ public final class IdAllocationManager {
     public synchronized String allocate(AbstractBuild owner, String id, BuildListener buildListener) throws InterruptedException, IOException {
 
         PrintStream logger = buildListener.getLogger();
-        IdAllocator.isActivated = false;
-
-
+        
         while (ids.get(id) != null){
             logger.println("Waiting ressource : " + id + " currently use by : "  + ids.get(id).toString());
             wait();

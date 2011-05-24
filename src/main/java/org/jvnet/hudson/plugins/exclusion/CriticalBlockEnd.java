@@ -52,7 +52,8 @@ public class CriticalBlockEnd extends Builder {
         Iterator it = cles.iterator();
         while (it.hasNext()) {
             String cle = (String) it.next();
-            if (cle.contains("variableEnv")) {
+            String name = "variableEnv" + build.getProject().getName();
+            if (cle.contains(name)) {
                 String valeur = environment.get(cle);
                 listId.add(valeur);
             }
@@ -65,10 +66,10 @@ public class CriticalBlockEnd extends Builder {
             AbstractBuild absBuild = IdAllocationManager.ids.get(i.type.name);
             if (absBuild != null) {
                 if (absBuild.getProject().getName().equals(build.getProject().getName())) {
+                    listener.getLogger().println("[Exclusion] -> Releasing all the resources");
                     i.cleanUp();
                 }
             }
-            
         }
         return true;
     }

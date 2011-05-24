@@ -1,0 +1,10 @@
+Démarré par l'utilisateur anonymous
+Allocating Id : 11
+  -> Assigned 11
+Allocating Id : 21
+  -> Assigned 21
+Resource allocation complete
+[workspace] $ sh -xe C:\DOCUME~1\aroux\LOCALS~1\Temp\hudson2779570386863362300.sh
++ echo lala
+lala
+Finished: SUCCESS

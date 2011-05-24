@@ -42,8 +42,9 @@ public class AdministrationPanel implements RootAction {
     //Appellé à chaque chargement de la page d'administration
     public void load() {
 
+    /* Pour le cas on l'on décoche le plugin */
         //List de tous les jobs
-         List<String> allJobsName = new ArrayList<String>();
+        List<String> allJobsName = new ArrayList<String>();
 
         //List de tous les jobs qui utilisent le plugin (avec une ressource au moins)
         List<String> allExclusionJobs = new ArrayList<String>();
@@ -58,9 +59,9 @@ public class AdministrationPanel implements RootAction {
             //Pour chacun d'entre eux 
             for (Iterator i = buildWrappers.keySet().iterator(); i.hasNext();) {
                 Descriptor<BuildWrapper> key = (Descriptor<BuildWrapper>) i.next();
-                
+
                 //On regarde si le descripteur est bien "org.jvnet.hudson.plugins.exclusion.IdAllocator$DescriptorImpl"
-               if (buildWrappers.get(key).getDescriptor().toString().split("@")[0].equals("org.jvnet.hudson.plugins.exclusion.IdAllocator$DescriptorImpl")) {
+                if (buildWrappers.get(key).getDescriptor().toString().split("@")[0].equals("org.jvnet.hudson.plugins.exclusion.IdAllocator$DescriptorImpl")) {
                     //Pas de doublons
                     if (!allExclusionJobs.contains(p.getName())) {
                         allExclusionJobs.add(p.getName());
@@ -95,10 +96,6 @@ public class AdministrationPanel implements RootAction {
                 //On récupere l'id à libérer
                 DefaultIdType p = new DefaultIdType(resourceName);
                 Id i = p.allocate(false, rm.getAbsBuild(), CriticalBlockStart.pam, rm.getLauncher(), rm.getListener());
-
-                //On libere la ressource (en l'occurence acctuellement on libere/
-                // autant de fois qu'il y a de fois la ressource dans la list en cours d'utilisation
-                //Mais ça ne pose pas de probleme une fois enlevé du dico c'est bon
 
                 //On veut le faire seulement pour le cas où :
                 // le job est celui qui utilise la ressource actuellement

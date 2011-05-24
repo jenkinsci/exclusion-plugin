@@ -17,7 +17,9 @@
     </hudson.tasks.Shell>
     <org.jvnet.hudson.plugins.exclusion.CriticalBlockEnd/>
   </builders>
-  <publishers/>
+  <publishers>
+    <org.jvnet.hudson.plugins.exclusion.EndTask/>
+  </publishers>
   <buildWrappers>
     <org.jvnet.hudson.plugins.exclusion.IdAllocator>
       <ids>
