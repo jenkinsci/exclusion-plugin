@@ -34,14 +34,15 @@ public class CriticalBlockEnd extends Builder {
         List<RessourcesMonitor> listRessources = IdAllocator.getListRessources();
 
         // On remet la variable pour savoir si la ressource est en cours d'utilisation à "false"
-        for (RessourcesMonitor rm : listRessources) {
-            if (build.getProject().getName().equals(rm.getJobName())) {
-                rm.setBuild(false);
-            }
+       /* for (RessourcesMonitor rm : listRessources) {
+        if (build.getProject().getName().equals(rm.getJobName())) {
+        rm.setBuild(false);
         }
-        IdAllocator.setListRessources(listRessources);
+        }
+        IdAllocator.setListRessources(listRessources);*/
 
-
+        
+        
         final Computer cur2 = Executor.currentExecutor().getOwner();
         final IdAllocationManager pam2 = IdAllocationManager.getManager(cur2);
 
@@ -58,7 +59,9 @@ public class CriticalBlockEnd extends Builder {
                 listId.add(valeur);
             }
         }
-
+        if(listId.size()!=0)
+            listener.getLogger().println("[Exclusion] -> Releasing all the resources");
+        
         for (String id : listId) {
             // On les liberes
             DefaultIdType p = new DefaultIdType(id);
@@ -66,7 +69,6 @@ public class CriticalBlockEnd extends Builder {
             AbstractBuild absBuild = IdAllocationManager.ids.get(i.type.name);
             if (absBuild != null) {
                 if (absBuild.getProject().getName().equals(build.getProject().getName())) {
-                    listener.getLogger().println("[Exclusion] -> Releasing all the resources");
                     i.cleanUp();
                 }
             }
@@ -74,12 +76,9 @@ public class CriticalBlockEnd extends Builder {
         return true;
     }
 
-    
-
     public String getDisplayName() {
         return "Critical block end";
     }
-
     @Extension
     public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
 

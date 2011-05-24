@@ -42,7 +42,7 @@ public class AdministrationPanel implements RootAction {
     //Appellé à chaque chargement de la page d'administration
     public void load() {
 
-    /* Pour le cas on l'on décoche le plugin */
+        /* Pour le cas on l'on décoche le plugin */
         //List de tous les jobs
         List<String> allJobsName = new ArrayList<String>();
 
@@ -77,11 +77,24 @@ public class AdministrationPanel implements RootAction {
             }
         }
 
+        //Toutes les utilisations à faux
+        for (RessourcesMonitor rm : listRessources) {
+            rm.setBuild(false);
+        }
+        
+        //On marque que les utilisations qui sont dans le hashmap d'utilisation
+        for (Iterator i = IdAllocationManager.ids.keySet().iterator(); i.hasNext();) {
+            String resource = (String) i.next();
+            IdAllocator.updateBuild(IdAllocationManager.ids.get(resource).getProject().getName(), resource, true);
+        }
+        
         list = new ArrayList<RessourcesMonitor>();
         for (RessourcesMonitor rm : listRessources) {
             //System.out.println("build = " + rm.getBuild());
             list.add(new RessourcesMonitor(rm.getJobName(), rm.getRessource(), rm.getBuild()));
         }
+
+
     }
 
     public void doFreeResource(StaplerRequest res, StaplerResponse rsp, @QueryParameter("resourceName") String resourceName) throws IOException, InterruptedException {
@@ -106,7 +119,7 @@ public class AdministrationPanel implements RootAction {
                         //Libere la ressource
                         i.cleanUp();
                         //Passe la ressource à "false" pour dire qu'elle n'est plus utilisé (pour l'affichage)
-                        IdAllocator.updateBuild(rm.getJobName(), resourceName, false);
+                        // IdAllocator.updateBuild(rm.getJobName(), resourceName, false);
                     }
                 }
             }

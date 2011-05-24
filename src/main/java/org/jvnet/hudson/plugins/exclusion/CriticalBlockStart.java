@@ -77,7 +77,7 @@ public class CriticalBlockStart extends Builder {
 
                     Id p = pt.allocate(true, build, pam, launcher, listener);
 
-                    List<RessourcesMonitor> listR = IdAllocator.getListRessources();
+                   /* List<RessourcesMonitor> listR = IdAllocator.getListRessources();
 
                     for (RessourcesMonitor rm : listR) {
                         if (build.getProject().getName().equals(rm.getJobName()) && p.type.name.equals(rm.getRessource())) {
@@ -88,13 +88,14 @@ public class CriticalBlockStart extends Builder {
                         }
                     }
 
-                    IdAllocator.setListRessources(listR);
+                    IdAllocator.setListRessources(listR);*/
                     //On ajoute dans allocate les IDs utilise
                     allocated.add(p);
 
                     logger.println("[Exclusion] -> Assigned " + p.get());
                 }
-                logger.println("[Exclusion] -> Resource allocation complete");
+                if(pa.ids.length!=0)
+                    logger.println("[Exclusion] -> Resource allocation complete");
             }
         }
         return true;

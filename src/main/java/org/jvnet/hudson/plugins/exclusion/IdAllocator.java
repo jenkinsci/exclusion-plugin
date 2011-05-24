@@ -51,12 +51,12 @@ public class IdAllocator extends BuildWrapper {
 
 
 
-                for (RessourcesMonitor rm : listRessources) {
+              /*  for (RessourcesMonitor rm : listRessources) {
                     if (abstractBuild.getProject().getName().equals(rm.getJobName())) {
                         System.out.println("On vire en action de : " + rm.getJobName() + " // " + rm.getRessource());
                         rm.setBuild(false);
                     }
-                }
+                }*/
 
                 for (Id p : alloc) {
                     AbstractBuild get = IdAllocationManager.ids.get(p.type.name);
@@ -135,7 +135,7 @@ public class IdAllocator extends BuildWrapper {
         String projectName = "unknow";
 
         //////////////// Morceau pour qu'il marche sur netbeans windows workstation
-      /*  String[] threadName = Executor.currentThread().getName().split("\\\\");
+       /* String[] threadName = Executor.currentThread().getName().split("\\\\");
         if (threadName.length > 1) {
         for (int i = 0; i < threadName.length; i++) {
         if (threadName[i].equals("jobs")) {
