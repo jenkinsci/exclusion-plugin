@@ -30,7 +30,7 @@ THE SOFTWARE.
           <f:textbox value="${loc.remote}" id="svn.remote.loc" />
         </f:entry>
         <f:entry title="${%Local module directory} (${%optional})" field="local">
-          <f:textbox value="${loc.local}" />
+          <f:textbox value="${loc!=null?loc.local:'.'}" />
         </f:entry>
         <f:entry>
           <div align="right">
@@ -41,16 +41,20 @@ THE SOFTWARE.
       </table>
     </f:repeatable>
   </f:entry>
-  <f:entry title="${%Use update}" description="${%updateDescription}" field="useUpdate">
-    <f:checkbox default="true"/>
-  </f:entry>
+  <f:dropdownDescriptorSelector title="${%Check-out Strategy}" field="workspaceUpdater" descriptors="${descriptor.getWorkspaceUpdaterDescriptors()}"/>
 
   <t:listScmBrowsers name="svn.browser" />
   <f:advanced>
     <f:entry title="${%Excluded Regions}" field="excludedRegions">
         <f:textarea />
     </f:entry>
+    <f:entry title="${%Included Regions}" field="includedRegions">
+        <f:textarea />
+    </f:entry>
     <f:entry title="${%Excluded Users}" field="excludedUsers">
+        <f:textarea />
+    </f:entry>
+    <f:entry title="${%Excluded Commit Messages}" field="excludedCommitMessages">
         <f:textarea />
     </f:entry>
     <f:entry title="${%Exclusion revprop name}" field="excludedRevprop">

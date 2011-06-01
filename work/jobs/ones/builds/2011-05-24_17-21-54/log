@@ -1,0 +1,13 @@
+Démarré par l'utilisateur anonymous
+[Exclusion] -> Allocating resource : 11
+[Exclusion] -> Assigned 11
+[Exclusion] -> Allocating resource : 21
+Waiting ressource : 21 currently use by : twos #35
+Waiting ressource : 21 currently use by : twos #35
+[Exclusion] -> Assigned 21
+[Exclusion] -> Resource allocation complete
+[workspace] $ sh -xe C:\DOCUME~1\aroux\LOCALS~1\Temp\hudson1020952169468151035.sh
++ echo lala
+lala
+[Exclusion] -> Releasing all the resources
+Finished: SUCCESS

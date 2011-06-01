@@ -2,7 +2,9 @@ package org.jvnet.hudson.plugins.exclusion;
 
 import hudson.Extension;
 import hudson.Plugin;
+import hudson.model.AbstractBuild;
 import hudson.model.Item;
+import hudson.model.TaskListener;
 import hudson.model.listeners.ItemListener;
 
 
@@ -30,11 +32,6 @@ public class PluginImpl extends Plugin {
         public void onCreated(Item item) {
             super.onCreated(item);
         }
-
-        @Override
-        protected void finalize() throws Throwable {
-            System.out.println("Yayayayayyaay");
-            super.finalize();
-        }
+                
     }
 }

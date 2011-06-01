@@ -23,7 +23,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
  **/
 public class CriticalBlockStart extends Builder {
 
-    public static IdAllocator pa;
+    //public static IdAllocator pa;
     public static IdAllocationManager pam = null;
 
     @DataBoundConstructor
@@ -56,13 +56,30 @@ public class CriticalBlockStart extends Builder {
                 listId.add(valeur);
             }
         }
-        //Liste des IDs utilisées
-        //
-        final List<Id> allocated = new ArrayList<Id>();
-       
+
+        
+        //Si il y a des ressources assignées au Job
+        if (listId != null) {
+            //On les parcours
+            for (String id : listId) {
+               
+                DefaultIdType p = new DefaultIdType(id);
+
+
+                logger.println("[Exclusion] -> Allocating resource : " + id);
+                //On alloue la ressource
+                Id resource = p.allocate(true, build, pam, launcher, listener);
+
+                logger.println("[Exclusion] -> Assigned " + resource.get());
+            }
+            if (!listId.isEmpty()) {
+                logger.println("[Exclusion] -> Resource allocation complete");
+            }
+        }
+        
         //On verifie que le plugin est bien coché (nombre de ressource de la list = nb qui est en variable d'env
         //Pour le cas ou on met un start & un end et qu'on coche pas le plugin
-        if (listId != null && pa != null && pa.ids !=null) {
+       /* if (listId != null && pa != null && pa.ids != null) {
             if (listId.size() == pa.ids.length) {
                 //Pour chaque ID du projet
                 //
@@ -77,27 +94,16 @@ public class CriticalBlockStart extends Builder {
 
                     Id p = pt.allocate(true, build, pam, launcher, listener);
 
-                   /* List<RessourcesMonitor> listR = IdAllocator.getListRessources();
-
-                    for (RessourcesMonitor rm : listR) {
-                        if (build.getProject().getName().equals(rm.getJobName()) && p.type.name.equals(rm.getRessource())) {
-                            rm.setBuild(true);
-                            rm.setAbsBuild(build);
-                            rm.setLauncher(launcher);
-                            rm.setListener(listener);
-                        }
-                    }
-
-                    IdAllocator.setListRessources(listR);*/
                     //On ajoute dans allocate les IDs utilise
-                    allocated.add(p);
+                    //allocated.add(p);
 
                     logger.println("[Exclusion] -> Assigned " + p.get());
                 }
-                if(pa.ids.length!=0)
+                if (pa.ids.length != 0) {
                     logger.println("[Exclusion] -> Resource allocation complete");
+                }
             }
-        }
+        }*/
         return true;
     }
 

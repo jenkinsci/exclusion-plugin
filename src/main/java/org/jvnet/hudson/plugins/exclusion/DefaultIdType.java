@@ -58,12 +58,13 @@ public class DefaultIdType extends IdType {
 
         public DefaultIdType newInstance(StaplerRequest req, JSONObject formData) throws FormException {
             // TODO: we need form binding from JSON
-            return new DefaultIdType(formData.getString("name"));
+           return new DefaultIdType(formData.getString("name"));
         }
 
         public String getDisplayName() {
-            return "New Ressource";
+            return "New Resource";
         }
+        
         public static final DescriptorImpl INSTANCE = new DescriptorImpl();
     }
 }

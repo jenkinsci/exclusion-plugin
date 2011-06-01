@@ -19,19 +19,16 @@ import java.util.Map;
 
 public class IdAllocator extends BuildWrapper {
 
-    public IdType[] ids = null;
+    private IdType[] ids = null;
     public static List<RessourcesMonitor> listRessources = new ArrayList<RessourcesMonitor>();
-    public static String jName = "unknow";
+    private static String jName = "unknow";
 
     public IdAllocator(IdType[] ids) {
         this.ids = ids;
-        // isActivated = true;
     }
 
     @Override
     public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
-        CriticalBlockStart.pa = this;
-        //   isActivated = true;
         final List<String> allocated = new ArrayList<String>();
         final List<Id> alloc = new ArrayList<Id>();
         final String buildName = build.getProject().getName();
@@ -48,16 +45,6 @@ public class IdAllocator extends BuildWrapper {
 
             @Override
             public boolean tearDown(AbstractBuild abstractBuild, BuildListener buildListener) throws IOException, InterruptedException {
-
-
-
-              /*  for (RessourcesMonitor rm : listRessources) {
-                    if (abstractBuild.getProject().getName().equals(rm.getJobName())) {
-                        System.out.println("On vire en action de : " + rm.getJobName() + " // " + rm.getRessource());
-                        rm.setBuild(false);
-                    }
-                }*/
-
                 for (Id p : alloc) {
                     AbstractBuild get = IdAllocationManager.ids.get(p.type.name);
                     if (get != null) {
@@ -80,6 +67,14 @@ public class IdAllocator extends BuildWrapper {
                 }
             }
         };
+    }
+
+    public IdType[] getIds() {
+        return ids;
+    }
+
+    public void setIds(IdType[] ids) {
+        this.ids = ids;
     }
 
     public static List<RessourcesMonitor> getListRessources() {
@@ -117,7 +112,6 @@ public class IdAllocator extends BuildWrapper {
      * @param ProjectName : Nom du projet
      * @param resourceName : Resource à modifie
      * @param build : etat de la ressource (true = en cours d'utilisation)
-     * 
      */
     public static void updateBuild(String ProjectName, String resourceName, boolean build) {
         for (int i = listRessources.size() - 1; i >= 0; i--) {
@@ -133,24 +127,23 @@ public class IdAllocator extends BuildWrapper {
     @Override
     public Descriptor<BuildWrapper> getDescriptor() {
         String projectName = "unknow";
-
         //////////////// Morceau pour qu'il marche sur netbeans windows workstation
-       /* String[] threadName = Executor.currentThread().getName().split("\\\\");
+   /*     String[] threadName = Executor.currentThread().getName().split("\\\\");
         if (threadName.length > 1) {
-        for (int i = 0; i < threadName.length; i++) {
-        if (threadName[i].equals("jobs")) {
-        projectName = threadName[i + 1];
-        }
-        }*/
-        ////////////////////////////////////////////////
-        /////////// Morceau pour qu'il marche sur AOFRSO077
+            for (int i = 0; i < threadName.length; i++) {
+                if (threadName[i].equals("jobs")) {
+                    projectName = threadName[i + 1];
+                }
+            }*/
+            ////////////////////////////////////////////////
+            /////////// Morceau pour qu'il marche sur AOFRSO077
         String[] threadName = Executor.currentThread().getName().split(" ");
-
-        if (threadName[0].equals("Loading") && threadName[1].equals("job")) {
-
+            
+            if (threadName[0].equals("Loading") && threadName[1].equals("job")) {
+            
             projectName = "";
             for (int i = 2; i < threadName.length - 1; i++) {
-                projectName += threadName[i] + " ";
+            projectName += threadName[i] + " ";
             }
             projectName += threadName[threadName.length - 1];
             /////////////////////////      

@@ -8,7 +8,6 @@
         <l:main-panel>
             <h1>${%AdministrationPanel.title}</h1>
             <h3>${%AdministrationPanel.description}</h3>
-            <!--<f:validateButton title="${%Free resource}"  method="jeTest" /> -->
             <j:invoke on="${it}" method="load"/>
             <j:set var="rcs" value="${it.list}" />
             
@@ -18,15 +17,12 @@
                     <TH align="center"> Resources </TH>
                     <TH align="center"> Action </TH>
                 </TR>
-                   
                 <j:forEach var="rc" items="${rcs}">
                     <TR>
-                        <TD>${rc.jobName}</TD>
-                        <TD>${rc.ressource}</TD>
+                        <TD id="jobName">${rc.jobName}</TD>
+                        <TD id="resource">${rc.ressource}</TD>
                         <j:if test="${rc.build==true}">
-                            <TD>
-                                   Currently Use
-                            </TD>
+                             <TD ID="action">Currently Use</TD>
                         </j:if> 
                     </TR>
                 </j:forEach>

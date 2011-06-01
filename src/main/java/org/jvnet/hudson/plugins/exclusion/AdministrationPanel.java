@@ -81,16 +81,16 @@ public class AdministrationPanel implements RootAction {
         for (RessourcesMonitor rm : listRessources) {
             rm.setBuild(false);
         }
-        
+
         //On marque que les utilisations qui sont dans le hashmap d'utilisation
         for (Iterator i = IdAllocationManager.ids.keySet().iterator(); i.hasNext();) {
             String resource = (String) i.next();
             IdAllocator.updateBuild(IdAllocationManager.ids.get(resource).getProject().getName(), resource, true);
         }
-        
+
         list = new ArrayList<RessourcesMonitor>();
         for (RessourcesMonitor rm : listRessources) {
-            //System.out.println("build = " + rm.getBuild());
+            System.out.println("jobName : " + rm.getJobName() + " // resource : " + rm.getRessource());
             list.add(new RessourcesMonitor(rm.getJobName(), rm.getRessource(), rm.getBuild()));
         }
 
@@ -108,7 +108,9 @@ public class AdministrationPanel implements RootAction {
 
                 //On récupere l'id à libérer
                 DefaultIdType p = new DefaultIdType(resourceName);
-                Id i = p.allocate(false, rm.getAbsBuild(), CriticalBlockStart.pam, rm.getLauncher(), rm.getListener());
+                // les variables à null ne sont pas necessaire car pas utilisé
+                // Juste pour recuperer l'id associé à la ressource
+                Id i = p.allocate(false, null, CriticalBlockStart.pam, null, null);
 
                 //On veut le faire seulement pour le cas où :
                 // le job est celui qui utilise la ressource actuellement

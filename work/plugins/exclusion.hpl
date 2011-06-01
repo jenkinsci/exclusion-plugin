@@ -1,105 +1,143 @@
 Manifest-Version: 1.0
 Plugin-Class: org.jvnet.hudson.plugins.exclusion.PluginImpl
+Group-Id: org.jenkins-ci.plugins
 Short-Name: exclusion
-Long-Name: Hudson Exclusion Plug-in
+Long-Name: Jenkins Exclusion Plug-in
 Url: http://...
-Plugin-Version: 1.6-SNAPSHOT (private-05/24/2011 12:10-aroux)
-Hudson-Version: 1.324
-Plugin-Dependencies: maven-plugin:1.324
+Plugin-Version: 2.9-SNAPSHOT (private-06/01/2011 14:46-aroux)
+Hudson-Version: 1.413
+Jenkins-Version: 1.413
+Plugin-Dependencies: subversion:1.25,ui-samples-plugin:1.413,maven-plu
+ gin:1.413
 Plugin-Developers: Anthony Roux:anthonyRoux:
 Libraries: D:\Anthony\Plugin V1\Plugin work with buildwraper\exclusion
   jenkins\target\classes,C:\Documents and Settings\aroux\.m2\repositor
- y\org\jvnet\hudson\main\hudson-war\1.324\hudson-war-1.324.war,C:\Docu
- ments and Settings\aroux\.m2\repository\org\jvnet\hudson\main\hudson-
- test-harness\1.324\hudson-test-harness-1.324.jar,C:\Documents and Set
- tings\aroux\.m2\repository\org\jvnet\hudson\main\hudson-war\1.324\hud
- son-war-1.324-war-for-test.jar,C:\Documents and Settings\aroux\.m2\re
- pository\org\jvnet\hudson\main\maven-plugin\1.324\maven-plugin-1.324.
- jar,C:\Documents and Settings\aroux\.m2\repository\org\jvnet\hudson\m
- ain\maven-agent\1.324\maven-agent-1.324.jar,C:\Documents and Settings
- \aroux\.m2\repository\org\jvnet\hudson\main\maven-interceptor\1.324\m
- aven-interceptor-1.324.jar,C:\Documents and Settings\aroux\.m2\reposi
- tory\classworlds\classworlds\1.1\classworlds-1.1.jar,C:\Documents and
-  Settings\aroux\.m2\repository\org\jvnet\hudson\maven2.1-interceptor\
- 1.2\maven2.1-interceptor-1.2.jar,C:\Documents and Settings\aroux\.m2\
- repository\org\apache\maven\maven-embedder\2.0.4\maven-embedder-2.0.4
+ y\org\jenkins-ci\main\jenkins-war\1.413\jenkins-war-1.413.war,C:\Docu
+ ments and Settings\aroux\.m2\repository\org\jenkins-ci\main\jenkins-t
+ est-harness\1.413\jenkins-test-harness-1.413.jar,C:\Documents and Set
+ tings\aroux\.m2\repository\org\jenkins-ci\main\jenkins-war\1.413\jenk
+ ins-war-1.413-war-for-test.jar,C:\Documents and Settings\aroux\.m2\re
+ pository\org\jenkins-ci\modules\instance-identity\1.1\instance-identi
+ ty-1.1.jar,C:\Documents and Settings\aroux\.m2\repository\bouncycastl
+ e\bcprov-jdk15\140\bcprov-jdk15-140.jar,C:\Documents and Settings\aro
+ ux\.m2\repository\org\jenkins-ci\main\maven-plugin\1.413\maven-plugin
+ -1.413.jar,C:\Documents and Settings\aroux\.m2\repository\org\jenkins
+ -ci\main\maven\maven-agent\1.2\maven-agent-1.2.jar,C:\Documents and S
+ ettings\aroux\.m2\repository\org\jenkins-ci\main\maven\maven-intercep
+ tor\1.2\maven-interceptor-1.2.jar,C:\Documents and Settings\aroux\.m2
+ \repository\org\jvnet\hudson\maven2.1-interceptor\1.2\maven2.1-interc
+ eptor-1.2.jar,C:\Documents and Settings\aroux\.m2\repository\org\jenk
+ ins-ci\main\maven\maven3-agent\1.2\maven3-agent-1.2.jar,C:\Documents 
+ and Settings\aroux\.m2\repository\org\jenkins-ci\main\maven\maven3-in
+ terceptor\1.2\maven3-interceptor-1.2.jar,C:\Documents and Settings\ar
+ oux\.m2\repository\org\apache\maven\maven-core\3.0.3\maven-core-3.0.3
  .jar,C:\Documents and Settings\aroux\.m2\repository\org\apache\maven\
- maven-core\2.0.9\maven-core-2.0.9.jar,C:\Documents and Settings\aroux
- \.m2\repository\org\apache\maven\maven-settings\2.0.9\maven-settings-
- 2.0.9.jar,C:\Documents and Settings\aroux\.m2\repository\org\apache\m
- aven\wagon\wagon-file\1.0-beta-2\wagon-file-1.0-beta-2.jar,C:\Documen
- ts and Settings\aroux\.m2\repository\org\apache\maven\maven-plugin-pa
- rameter-documenter\2.0.9\maven-plugin-parameter-documenter-2.0.9.jar,
- C:\Documents and Settings\aroux\.m2\repository\org\apache\maven\wagon
- \wagon-http-lightweight\1.0-beta-2\wagon-http-lightweight-1.0-beta-2.
+ maven-model\3.0.3\maven-model-3.0.3.jar,C:\Documents and Settings\aro
+ ux\.m2\repository\org\apache\maven\maven-settings\3.0.3\maven-setting
+ s-3.0.3.jar,C:\Documents and Settings\aroux\.m2\repository\org\apache
+ \maven\maven-settings-builder\3.0.3\maven-settings-builder-3.0.3.jar,
+ C:\Documents and Settings\aroux\.m2\repository\org\apache\maven\maven
+ -repository-metadata\3.0.3\maven-repository-metadata-3.0.3.jar,C:\Doc
+ uments and Settings\aroux\.m2\repository\org\apache\maven\maven-artif
+ act\3.0.3\maven-artifact-3.0.3.jar,C:\Documents and Settings\aroux\.m
+ 2\repository\org\apache\maven\maven-plugin-api\3.0.3\maven-plugin-api
+ -3.0.3.jar,C:\Documents and Settings\aroux\.m2\repository\org\apache\
+ maven\maven-model-builder\3.0.3\maven-model-builder-3.0.3.jar,C:\Docu
+ ments and Settings\aroux\.m2\repository\org\codehaus\plexus\plexus-in
+ terpolation\1.14\plexus-interpolation-1.14.jar,C:\Documents and Setti
+ ngs\aroux\.m2\repository\org\codehaus\plexus\plexus-utils\2.0.6\plexu
+ s-utils-2.0.6.jar,C:\Documents and Settings\aroux\.m2\repository\org\
+ codehaus\plexus\plexus-component-annotations\1.5.5\plexus-component-a
+ nnotations-1.5.5.jar,C:\Documents and Settings\aroux\.m2\repository\o
+ rg\sonatype\plexus\plexus-sec-dispatcher\1.3\plexus-sec-dispatcher-1.
+ 3.jar,C:\Documents and Settings\aroux\.m2\repository\org\apache\maven
+ \maven-compat\3.0.3\maven-compat-3.0.3.jar,C:\Documents and Settings\
+ aroux\.m2\repository\org\apache\maven\maven-aether-provider\3.0.3\mav
+ en-aether-provider-3.0.3.jar,C:\Documents and Settings\aroux\.m2\repo
+ sitory\org\apache\maven\maven-embedder\3.0.3\maven-embedder-3.0.3.jar
+ ,C:\Documents and Settings\aroux\.m2\repository\org\sonatype\plexus\p
+ lexus-cipher\1.4\plexus-cipher-1.4.jar,C:\Documents and Settings\arou
+ x\.m2\repository\commons-cli\commons-cli\1.2\commons-cli-1.2.jar,C:\D
+ ocuments and Settings\aroux\.m2\repository\org\sonatype\aether\aether
+ -api\1.11\aether-api-1.11.jar,C:\Documents and Settings\aroux\.m2\rep
+ ository\org\sonatype\aether\aether-impl\1.11\aether-impl-1.11.jar,C:\
+ Documents and Settings\aroux\.m2\repository\org\sonatype\aether\aethe
+ r-spi\1.11\aether-spi-1.11.jar,C:\Documents and Settings\aroux\.m2\re
+ pository\org\sonatype\aether\aether-util\1.11\aether-util-1.11.jar,C:
+ \Documents and Settings\aroux\.m2\repository\org\sonatype\aether\aeth
+ er-connector-wagon\1.11\aether-connector-wagon-1.11.jar,C:\Documents 
+ and Settings\aroux\.m2\repository\org\sonatype\sisu\sisu-inject-plexu
+ s\2.2.0\sisu-inject-plexus-2.2.0.jar,C:\Documents and Settings\aroux\
+ .m2\repository\org\sonatype\sisu\sisu-guice\3.0.1\sisu-guice-3.0.1.ja
+ r,C:\Documents and Settings\aroux\.m2\repository\javax\inject\javax.i
+ nject\1\javax.inject-1.jar,C:\Documents and Settings\aroux\.m2\reposi
+ tory\org\sonatype\sisu\sisu-inject-bean\2.2.0\sisu-inject-bean-2.2.0.
  jar,C:\Documents and Settings\aroux\.m2\repository\org\apache\maven\w
- agon\wagon-http-shared\1.0-beta-2\wagon-http-shared-1.0-beta-2.jar,C:
- \Documents and Settings\aroux\.m2\repository\org\apache\maven\reporti
- ng\maven-reporting-api\2.0.9\maven-reporting-api-2.0.9.jar,C:\Documen
- ts and Settings\aroux\.m2\repository\org\apache\maven\doxia\doxia-sin
- k-api\1.0-alpha-10\doxia-sink-api-1.0-alpha-10.jar,C:\Documents and S
- ettings\aroux\.m2\repository\org\apache\maven\maven-profile\2.0.9\mav
- en-profile-2.0.9.jar,C:\Documents and Settings\aroux\.m2\repository\o
- rg\apache\maven\maven-model\2.0.9\maven-model-2.0.9.jar,C:\Documents 
- and Settings\aroux\.m2\repository\org\apache\maven\maven-artifact\2.0
- .9\maven-artifact-2.0.9.jar,C:\Documents and Settings\aroux\.m2\repos
- itory\org\apache\maven\wagon\wagon-provider-api\1.0-beta-2\wagon-prov
- ider-api-1.0-beta-2.jar,C:\Documents and Settings\aroux\.m2\repositor
- y\org\codehaus\plexus\plexus-container-default\1.0-alpha-9-stable-1\p
- lexus-container-default-1.0-alpha-9-stable-1.jar,C:\Documents and Set
- tings\aroux\.m2\repository\org\apache\maven\maven-repository-metadata
- \2.0.9\maven-repository-metadata-2.0.9.jar,C:\Documents and Settings\
- aroux\.m2\repository\org\apache\maven\maven-error-diagnostics\2.0.9\m
- aven-error-diagnostics-2.0.9.jar,C:\Documents and Settings\aroux\.m2\
- repository\org\apache\maven\maven-project\2.0.9\maven-project-2.0.9.j
- ar,C:\Documents and Settings\aroux\.m2\repository\org\apache\maven\ma
- ven-plugin-registry\2.0.9\maven-plugin-registry-2.0.9.jar,C:\Document
- s and Settings\aroux\.m2\repository\org\apache\maven\maven-plugin-api
- \2.0.9\maven-plugin-api-2.0.9.jar,C:\Documents and Settings\aroux\.m2
- \repository\org\apache\maven\wagon\wagon-ssh-external\1.0-beta-2\wago
- n-ssh-external-1.0-beta-2.jar,C:\Documents and Settings\aroux\.m2\rep
- ository\org\apache\maven\wagon\wagon-ssh-common\1.0-beta-2\wagon-ssh-
- common-1.0-beta-2.jar,C:\Documents and Settings\aroux\.m2\repository\
- org\apache\maven\maven-plugin-descriptor\2.0.9\maven-plugin-descripto
- r-2.0.9.jar,C:\Documents and Settings\aroux\.m2\repository\org\codeha
- us\plexus\plexus-interactivity-api\1.0-alpha-4\plexus-interactivity-a
- pi-1.0-alpha-4.jar,C:\Documents and Settings\aroux\.m2\repository\org
- \apache\maven\maven-artifact-manager\2.0.9\maven-artifact-manager-2.0
- .9.jar,C:\Documents and Settings\aroux\.m2\repository\org\apache\mave
- n\maven-monitor\2.0.9\maven-monitor-2.0.9.jar,C:\Documents and Settin
- gs\aroux\.m2\repository\org\apache\maven\wagon\wagon-ssh\1.0-beta-2\w
- agon-ssh-1.0-beta-2.jar,C:\Documents and Settings\aroux\.m2\repositor
- y\com\jcraft\jsch\0.1.27\jsch-0.1.27.jar,C:\Documents and Settings\ar
- oux\.m2\repository\org\codehaus\plexus\plexus-utils\1.5.1\plexus-util
- s-1.5.1.jar,C:\Documents and Settings\aroux\.m2\repository\org\jvnet\
- hudson\wagon-webdav\1.0-beta-2-hudson-1\wagon-webdav-1.0-beta-2-hudso
- n-1.jar,C:\Documents and Settings\aroux\.m2\repository\slide\slide-we
- bdavlib\2.1\slide-webdavlib-2.1.jar,C:\Documents and Settings\aroux\.
- m2\repository\de\zeigermann\xml\xml-im-exporter\1.1\xml-im-exporter-1
- .1.jar,C:\Documents and Settings\aroux\.m2\repository\org\mortbay\jet
- ty\jetty\6.1.11\jetty-6.1.11.jar,C:\Documents and Settings\aroux\.m2\
- repository\org\mortbay\jetty\jetty-util\6.1.11\jetty-util-6.1.11.jar,
- C:\Documents and Settings\aroux\.m2\repository\org\mortbay\jetty\serv
- let-api-2.5\6.1.11\servlet-api-2.5-6.1.11.jar,C:\Documents and Settin
- gs\aroux\.m2\repository\org\jvnet\mock-javamail\mock-javamail\1.7\moc
- k-javamail-1.7.jar,C:\Documents and Settings\aroux\.m2\repository\org
- \jvnet\hudson\htmlunit\2.2-hudson-10\htmlunit-2.2-hudson-10.jar,C:\Do
- cuments and Settings\aroux\.m2\repository\xalan\xalan\2.7.0\xalan-2.7
- .0.jar,C:\Documents and Settings\aroux\.m2\repository\commons-httpcli
- ent\commons-httpclient\3.1\commons-httpclient-3.1.jar,C:\Documents an
- d Settings\aroux\.m2\repository\net\sourceforge\nekohtml\nekohtml\1.9
- .8\nekohtml-1.9.8.jar,C:\Documents and Settings\aroux\.m2\repository\
- xerces\xercesImpl\2.8.1\xercesImpl-2.8.1.jar,C:\Documents and Setting
- s\aroux\.m2\repository\net\sourceforge\cssparser\cssparser\0.9.5\cssp
- arser-0.9.5.jar,C:\Documents and Settings\aroux\.m2\repository\org\w3
- c\css\sac\1.3\sac-1.3.jar,C:\Documents and Settings\aroux\.m2\reposit
- ory\org\jvnet\hudson\htmlunit-core-js\2.2-hudson-2\htmlunit-core-js-2
- .2-hudson-2.jar,C:\Documents and Settings\aroux\.m2\repository\org\jv
- net\hudson\embedded-rhino-debugger\1.1\embedded-rhino-debugger-1.1.ja
- r,C:\Documents and Settings\aroux\.m2\repository\org\jvnet\hudson\net
- x\0.5-hudson-2\netx-0.5-hudson-2.jar,C:\Documents and Settings\aroux\
- .m2\repository\org\easymock\easymock\2.4\easymock-2.4.jar,C:\Document
- s and Settings\aroux\.m2\repository\junit\junit\4.3.1\junit-4.3.1.jar
+ agon\wagon-http-lightweight\1.0-beta-7\wagon-http-lightweight-1.0-bet
+ a-7.jar,C:\Documents and Settings\aroux\.m2\repository\org\apache\mav
+ en\wagon\wagon-http-shared\1.0-beta-7\wagon-http-shared-1.0-beta-7.ja
+ r,C:\Documents and Settings\aroux\.m2\repository\org\apache\maven\wag
+ on\wagon-file\1.0-beta-7\wagon-file-1.0-beta-7.jar,C:\Documents and S
+ ettings\aroux\.m2\repository\org\apache\maven\wagon\wagon-ftp\1.0-bet
+ a-7\wagon-ftp-1.0-beta-7.jar,C:\Documents and Settings\aroux\.m2\repo
+ sitory\commons-net\commons-net\2.0\commons-net-2.0.jar,C:\Documents a
+ nd Settings\aroux\.m2\repository\org\apache\maven\wagon\wagon-ssh\1.0
+ -beta-7\wagon-ssh-1.0-beta-7.jar,C:\Documents and Settings\aroux\.m2\
+ repository\com\jcraft\jsch\0.1.38\jsch-0.1.38.jar,C:\Documents and Se
+ ttings\aroux\.m2\repository\org\apache\maven\wagon\wagon-ssh-common\1
+ .0-beta-7\wagon-ssh-common-1.0-beta-7.jar,C:\Documents and Settings\a
+ roux\.m2\repository\org\codehaus\plexus\plexus-interactivity-api\1.0-
+ alpha-6\plexus-interactivity-api-1.0-alpha-6.jar,C:\Documents and Set
+ tings\aroux\.m2\repository\org\apache\maven\wagon\wagon-ssh-external\
+ 1.0-beta-7\wagon-ssh-external-1.0-beta-7.jar,C:\Documents and Setting
+ s\aroux\.m2\repository\org\apache\maven\wagon\wagon-provider-api\1.0-
+ beta-7\wagon-provider-api-1.0-beta-7.jar,C:\Documents and Settings\ar
+ oux\.m2\repository\org\apache\maven\reporting\maven-reporting-api\3.0
+ \maven-reporting-api-3.0.jar,C:\Documents and Settings\aroux\.m2\repo
+ sitory\org\apache\maven\doxia\doxia-sink-api\1.0\doxia-sink-api-1.0.j
+ ar,C:\Documents and Settings\aroux\.m2\repository\org\codehaus\plexus
+ \plexus-classworlds\2.3\plexus-classworlds-2.3.jar,C:\Documents and S
+ ettings\aroux\.m2\repository\org\jenkins-ci\lib\lib-jenkins-maven-art
+ ifact-manager\1.2\lib-jenkins-maven-artifact-manager-1.2.jar,C:\Docum
+ ents and Settings\aroux\.m2\repository\org\jenkins-ci\lib\lib-jenkins
+ -maven-embedder\3.4\lib-jenkins-maven-embedder-3.4.jar,C:\Documents a
+ nd Settings\aroux\.m2\repository\org\jvnet\hudson\wagon-webdav\1.0-be
+ ta-2-hudson-1\wagon-webdav-1.0-beta-2-hudson-1.jar,C:\Documents and S
+ ettings\aroux\.m2\repository\slide\slide-webdavlib\2.1\slide-webdavli
+ b-2.1.jar,C:\Documents and Settings\aroux\.m2\repository\de\zeigerman
+ n\xml\xml-im-exporter\1.1\xml-im-exporter-1.1.jar,C:\Documents and Se
+ ttings\aroux\.m2\repository\net\sourceforge\nekohtml\nekohtml\1.9.13\
+ nekohtml-1.9.13.jar,C:\Documents and Settings\aroux\.m2\repository\or
+ g\jenkins-ci\plugins\subversion\1.25\subversion-1.25.jar,C:\Documents
+  and Settings\aroux\.m2\repository\org\jenkins-ci\svnkit\svnkit\1.3.4
+ -jenkins-4\svnkit-1.3.4-jenkins-4.jar,C:\Documents and Settings\aroux
+ \.m2\repository\org\mortbay\jetty\jetty\6.1.26\jetty-6.1.26.jar,C:\Do
+ cuments and Settings\aroux\.m2\repository\org\mortbay\jetty\jetty-uti
+ l\6.1.26\jetty-util-6.1.26.jar,C:\Documents and Settings\aroux\.m2\re
+ pository\org\mortbay\jetty\servlet-api\2.5-20081211\servlet-api-2.5-2
+ 0081211.jar,C:\Documents and Settings\aroux\.m2\repository\org\jvnet\
+ hudson\test-annotations\1.0\test-annotations-1.0.jar,C:\Documents and
+  Settings\aroux\.m2\repository\org\jvnet\mock-javamail\mock-javamail\
+ 1.7\mock-javamail-1.7.jar,C:\Documents and Settings\aroux\.m2\reposit
+ ory\org\jenkins-ci\htmlunit\2.6-jenkins-4\htmlunit-2.6-jenkins-4.jar,
+ C:\Documents and Settings\aroux\.m2\repository\xalan\xalan\2.7.1\xala
+ n-2.7.1.jar,C:\Documents and Settings\aroux\.m2\repository\xalan\seri
+ alizer\2.7.1\serializer-2.7.1.jar,C:\Documents and Settings\aroux\.m2
+ \repository\commons-httpclient\commons-httpclient\3.1\commons-httpcli
+ ent-3.1.jar,C:\Documents and Settings\aroux\.m2\repository\org\jvnet\
+ hudson\htmlunit-core-js\2.6-hudson-1\htmlunit-core-js-2.6-hudson-1.ja
+ r,C:\Documents and Settings\aroux\.m2\repository\xerces\xercesImpl\2.
+ 9.1\xercesImpl-2.9.1.jar,C:\Documents and Settings\aroux\.m2\reposito
+ ry\net\sourceforge\cssparser\cssparser\0.9.5\cssparser-0.9.5.jar,C:\D
+ ocuments and Settings\aroux\.m2\repository\org\w3c\css\sac\1.3\sac-1.
+ 3.jar,C:\Documents and Settings\aroux\.m2\repository\org\jvnet\hudson
+ \embedded-rhino-debugger\1.2\embedded-rhino-debugger-1.2.jar,C:\Docum
+ ents and Settings\aroux\.m2\repository\org\jvnet\hudson\netx\0.5-huds
+ on-2\netx-0.5-hudson-2.jar,C:\Documents and Settings\aroux\.m2\reposi
+ tory\org\easymock\easymock\2.4\easymock-2.4.jar,C:\Documents and Sett
+ ings\aroux\.m2\repository\org\jenkins-ci\main\ui-samples-plugin\1.413
+ \ui-samples-plugin-1.413.jar,C:\Documents and Settings\aroux\.m2\repo
+ sitory\junit\junit\4.8.2\junit-4.8.2.jar
 Resource-Path: D:\Anthony\Plugin V1\Plugin work with buildwraper\exclu
  sion jenkins\src\main\webapp
 
