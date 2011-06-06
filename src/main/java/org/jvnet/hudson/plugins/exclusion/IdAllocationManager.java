@@ -8,11 +8,14 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.WeakHashMap;
 
+/**
+ *
+ * first @author Kohsuke Kawaguchi
+ * fork by Anthony Roux
+ */
 public final class IdAllocationManager {
 
     private final Computer node;
@@ -26,9 +29,9 @@ public final class IdAllocationManager {
     public synchronized String allocate(AbstractBuild owner, String id, BuildListener buildListener) throws InterruptedException, IOException {
 
         PrintStream logger = buildListener.getLogger();
-        
-        while (ids.get(id) != null){
-            logger.println("Waiting ressource : " + id + " currently use by : "  + ids.get(id).toString());
+
+        while (ids.get(id) != null) {
+            logger.println("Waiting ressource : " + id + " currently use by : " + ids.get(id).toString());
             wait();
         }
 

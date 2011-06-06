@@ -31,18 +31,6 @@ public class CriticalBlockEnd extends Builder {
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
 
-       // List<RessourcesMonitor> listRessources = IdAllocator.getListRessources();
-
-        // On remet la variable pour savoir si la ressource est en cours d'utilisation à "false"
-       /* for (RessourcesMonitor rm : listRessources) {
-        if (build.getProject().getName().equals(rm.getJobName())) {
-        rm.setBuild(false);
-        }
-        }
-        IdAllocator.setListRessources(listRessources);*/
-
-
-
         final Computer cur2 = Executor.currentExecutor().getOwner();
         final IdAllocationManager pam2 = IdAllocationManager.getManager(cur2);
 
@@ -59,7 +47,7 @@ public class CriticalBlockEnd extends Builder {
                 listId.add(valeur);
             }
         }
-        if (listId.size() != 0) {
+        if (!listId.isEmpty()) {
             listener.getLogger().println("[Exclusion] -> Releasing all the resources");
         }
 
@@ -92,6 +80,11 @@ public class CriticalBlockEnd extends Builder {
 
         public String getDisplayName() {
             return "Critical block end";
+        }
+
+        @Override
+        public String getHelpFile() {
+            return "/plugin/exclusion/helpCBE.html";
         }
     }
 }

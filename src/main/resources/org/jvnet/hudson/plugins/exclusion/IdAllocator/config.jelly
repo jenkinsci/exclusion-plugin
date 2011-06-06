@@ -2,7 +2,4 @@
     <f:block>
         <f:hetero-list name="ids" descriptors="${descriptor.idTypes}" items="${instance.ids}" />
     </f:block>
-  <!--  <j:invoke on="${instance}" method="setJobName">
-        <j:arg type="java.lang.String" value="${JOB_NAME}"/>
-    </j:invoke> -->
 </j:jelly>

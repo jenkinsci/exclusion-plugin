@@ -1,46 +1,22 @@
 package org.jvnet.hudson.plugins.exclusion;
 
-import com.gargoylesoftware.htmlunit.AjaxController;
-import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
-import com.gargoylesoftware.htmlunit.Page;
-import com.gargoylesoftware.htmlunit.ScriptResult;
-import com.gargoylesoftware.htmlunit.SgmlPage;
-import com.gargoylesoftware.htmlunit.WebAssert;
-import com.gargoylesoftware.htmlunit.WebRequestSettings;
-import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlButton;
 import com.gargoylesoftware.htmlunit.html.HtmlCheckBoxInput;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.html.HtmlForm;
-import com.gargoylesoftware.htmlunit.html.HtmlLink;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlTextArea;
 import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
-import com.gargoylesoftware.htmlunit.javascript.host.Node;
-import hudson.model.Descriptor;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
-import hudson.model.JobProperty;
-import hudson.model.JobPropertyDescriptor;
-import hudson.tasks.BuildWrapper;
-import hudson.tasks.Publisher;
-import hudson.util.DescribableList;
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Future;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvnet.hudson.test.HudsonTestCase;
-import org.w3c.dom.DocumentType;
 
 /**
  * @author Anthony Roux
@@ -49,7 +25,6 @@ public class AdministrationPanelTest extends HudsonTestCase {
 
     private AdministrationPanel adminPanel;
     private FreeStyleProject project;
-  
 
     @Before
     @Override
@@ -77,8 +52,8 @@ public class AdministrationPanelTest extends HudsonTestCase {
         button3.click();
 
         Thread.sleep(3000);
-     
-         // Clicker sur "New resource" pour ajouter une textbox
+
+        // Clicker sur "New resource" pour ajouter une textbox
         List<? extends Object> bouttonNewResource3 = page.getByXPath("//a[contains(text(),'New Resource')]");
         HtmlAnchor newResource = (HtmlAnchor) bouttonNewResource3.get(0);
         //on ajoute 3 ressources
@@ -87,8 +62,8 @@ public class AdministrationPanelTest extends HudsonTestCase {
         newResource.click();
 
 
-        
-         //Pour le textbox pour ressource 1
+
+        //Pour le textbox pour ressource 1
         List<? extends Object> textBoxResource1 = page.getByXPath("//tr[87]/td/div/div[1]/table/tbody/tr[1]/td[3]/input");
         HtmlTextInput nameResource1 = (HtmlTextInput) textBoxResource1.get(0);
         nameResource1.setValueAttribute("resource1");
@@ -219,7 +194,7 @@ public class AdministrationPanelTest extends HudsonTestCase {
         Future<FreeStyleBuild> scheduleBuild2 = project.scheduleBuild2(0);
         Thread.sleep(3000);
         HtmlPage page = new WebClient().goTo("/administrationpanel");
-        
+
         int count = 0;
         List<HtmlElement> elementsByIdAction = page.getElementsByIdAndOrName("action");
         for (int j = 0; j < elementsByIdAction.size(); j++) {
@@ -231,7 +206,8 @@ public class AdministrationPanelTest extends HudsonTestCase {
             }
         }
         assertEquals(3, count);
-        scheduleBuild2.cancel(true);
+        scheduleBuild2.get();
+        // scheduleBuild2.cancel(true);
     }
 
     @Test
@@ -258,14 +234,15 @@ public class AdministrationPanelTest extends HudsonTestCase {
             }
         }
         assertEquals(0, count);
-        scheduleBuild2.cancel(true);
+        scheduleBuild2.get();
+        //   scheduleBuild2.cancel(true);
     }
 
     @Test
     public void testStopJob() throws Exception {
         //////////////////////////// Deuxieme Job /////////////////////////////////
 
-        FreeStyleProject  project2 = createFreeStyleProject("fastJob");
+        FreeStyleProject project2 = createFreeStyleProject("fastJob");
         WebClient webClient = createWebClient();
         HtmlPage page = webClient.getPage(project2, "configure");
 
@@ -322,7 +299,7 @@ public class AdministrationPanelTest extends HudsonTestCase {
         Thread.sleep(8000);
         page = new WebClient().goTo("/administrationpanel");
 
-        
+
         //On verifie qu'il n'y a le bon nombre de currently use (3 car que le projet 1)
         int count = 0;
         List<HtmlElement> elementsByIdAction = page.getElementsByIdAndOrName("action");
@@ -335,8 +312,10 @@ public class AdministrationPanelTest extends HudsonTestCase {
             }
         }
         assertEquals(3, count);
-        scheduleBuild21.cancel(true);
-        scheduleBuild2.cancel(true);
+        scheduleBuild2.get();
+        scheduleBuild21.get();
+        //  scheduleBuild21.cancel(true);
+        //  scheduleBuild2.cancel(true);
     }
 
     @Test
@@ -352,15 +331,15 @@ public class AdministrationPanelTest extends HudsonTestCase {
         // click sur le boutton release
         List<? extends Object> byXPath = page.getByXPath("//span[@id='yui-gen0']/span/button");
         HtmlButton bouttonRelease = (HtmlButton) byXPath.get(0);
-       // bouttonRelease.mouseOver();
-       // Thread.sleep(3000);
+        // bouttonRelease.mouseOver();
+        // Thread.sleep(3000);
         //bouttonRelease.click();
         submit(bouttonRelease.getEnclosingForm());
 
         Thread.sleep(5000);
 
         page = new WebClient().goTo("/administrationpanel");
-         //On verifie qu'il n'y a le bon nombre de currently use (3 car que le projet 1)
+        //On verifie qu'il n'y a le bon nombre de currently use (3 car que le projet 1)
         int count = 0;
         List<HtmlElement> elementsByIdAction = page.getElementsByIdAndOrName("action");
         for (int j = 0; j < elementsByIdAction.size(); j++) {
@@ -372,6 +351,7 @@ public class AdministrationPanelTest extends HudsonTestCase {
             }
         }
         assertEquals(2, count);
-        scheduleBuild2.cancel(true);
+        scheduleBuild2.get();
+        //    scheduleBuild2.cancel(true);
     }
 }

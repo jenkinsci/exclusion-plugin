@@ -8,15 +8,11 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 /**
- * Plain Id that doesn't have
- * any special clean up processing.
  *
- * @author Kohsuke Kawaguchi
+ * first @author Kohsuke Kawaguchi
+ * fork by Anthony Roux
  */
 public class DefaultIdType extends IdType {
 
@@ -26,14 +22,15 @@ public class DefaultIdType extends IdType {
     }
 
     @Override
-    public Id allocate(boolean launchAlloc,AbstractBuild<?, ?> build, final IdAllocationManager manager,  Launcher launcher, BuildListener buildListener) throws IOException, InterruptedException {
+    public Id allocate(boolean launchAlloc, AbstractBuild<?, ?> build, final IdAllocationManager manager, Launcher launcher, BuildListener buildListener) throws IOException, InterruptedException {
         final String n;
-        
-        if(launchAlloc)
+
+        if (launchAlloc) {
             n = manager.allocate(build, getFixedId(), buildListener);
-        else
+        } else {
             n = getFixedId();
-       
+        }
+
         return new Id(this) {
 
             public String get() {
@@ -58,13 +55,12 @@ public class DefaultIdType extends IdType {
 
         public DefaultIdType newInstance(StaplerRequest req, JSONObject formData) throws FormException {
             // TODO: we need form binding from JSON
-           return new DefaultIdType(formData.getString("name"));
+            return new DefaultIdType(formData.getString("name"));
         }
 
         public String getDisplayName() {
             return "New Resource";
         }
-        
         public static final DescriptorImpl INSTANCE = new DescriptorImpl();
     }
 }

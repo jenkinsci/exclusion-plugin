@@ -7,7 +7,11 @@ import hudson.model.Item;
 import hudson.model.TaskListener;
 import hudson.model.listeners.ItemListener;
 
-
+/**
+ *
+ * first @author Kohsuke Kawaguchi
+ * fork by Anthony Roux
+ */
 public class PluginImpl extends Plugin {
 
     @Override
@@ -32,6 +36,5 @@ public class PluginImpl extends Plugin {
         public void onCreated(Item item) {
             super.onCreated(item);
         }
-                
     }
 }

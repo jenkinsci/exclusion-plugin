@@ -23,7 +23,6 @@ import org.kohsuke.stapler.DataBoundConstructor;
  **/
 public class CriticalBlockStart extends Builder {
 
-    //public static IdAllocator pa;
     public static IdAllocationManager pam = null;
 
     @DataBoundConstructor
@@ -34,7 +33,6 @@ public class CriticalBlockStart extends Builder {
     //
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
-        //    List<RessourcesMonitor> listRessources = IdAllocator.getListRessources();
 
         final Computer cur = Executor.currentExecutor().getOwner();
 
@@ -57,12 +55,12 @@ public class CriticalBlockStart extends Builder {
             }
         }
 
-        
+
         //Si il y a des ressources assignées au Job
         if (listId != null) {
             //On les parcours
             for (String id : listId) {
-               
+
                 DefaultIdType p = new DefaultIdType(id);
 
 
@@ -76,34 +74,6 @@ public class CriticalBlockStart extends Builder {
                 logger.println("[Exclusion] -> Resource allocation complete");
             }
         }
-        
-        //On verifie que le plugin est bien coché (nombre de ressource de la list = nb qui est en variable d'env
-        //Pour le cas ou on met un start & un end et qu'on coche pas le plugin
-       /* if (listId != null && pa != null && pa.ids != null) {
-            if (listId.size() == pa.ids.length) {
-                //Pour chaque ID du projet
-                //
-                for (IdType pt : pa.ids) {
-                    logger.println("[Exclusion] -> Allocating resource : " + pt.name);
-
-                    //On alloue l'id :
-                    // isActivated à faux car on lancer le job
-                    // Attendre tant que l'id est utilisé
-                    //Quand fini on sajoute nous meme dans le dico pour dire les IDs qu'on utilise
-                    //c'est la méthode synchronized
-
-                    Id p = pt.allocate(true, build, pam, launcher, listener);
-
-                    //On ajoute dans allocate les IDs utilise
-                    //allocated.add(p);
-
-                    logger.println("[Exclusion] -> Assigned " + p.get());
-                }
-                if (pa.ids.length != 0) {
-                    logger.println("[Exclusion] -> Resource allocation complete");
-                }
-            }
-        }*/
         return true;
     }
 
@@ -122,6 +92,11 @@ public class CriticalBlockStart extends Builder {
 
         public String getDisplayName() {
             return "Critical block start";
+        }
+
+        @Override
+        public String getHelpFile() {
+            return "/plugin/exclusion/helpCBS.html";
         }
     }
 }

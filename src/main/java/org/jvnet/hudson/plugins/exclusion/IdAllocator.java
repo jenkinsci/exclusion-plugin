@@ -17,6 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ *
+ * first @author Kohsuke Kawaguchi
+ * fork by Anthony Roux
+ */
 public class IdAllocator extends BuildWrapper {
 
     private IdType[] ids = null;
@@ -49,7 +54,6 @@ public class IdAllocator extends BuildWrapper {
                     AbstractBuild get = IdAllocationManager.ids.get(p.type.name);
                     if (get != null) {
                         if (get.getProject().getName().equals(abstractBuild.getProject().getName())) {
-                            System.out.println("id name -> " + p.type.name);
                             p.cleanUp();
                         }
                     }
@@ -127,23 +131,13 @@ public class IdAllocator extends BuildWrapper {
     @Override
     public Descriptor<BuildWrapper> getDescriptor() {
         String projectName = "unknow";
-        //////////////// Morceau pour qu'il marche sur netbeans windows workstation
-   /*     String[] threadName = Executor.currentThread().getName().split("\\\\");
-        if (threadName.length > 1) {
-            for (int i = 0; i < threadName.length; i++) {
-                if (threadName[i].equals("jobs")) {
-                    projectName = threadName[i + 1];
-                }
-            }*/
-            ////////////////////////////////////////////////
-            /////////// Morceau pour qu'il marche sur AOFRSO077
         String[] threadName = Executor.currentThread().getName().split(" ");
-            
-            if (threadName[0].equals("Loading") && threadName[1].equals("job")) {
-            
+
+        if (threadName[0].equals("Loading") && threadName[1].equals("job")) {
+
             projectName = "";
             for (int i = 2; i < threadName.length - 1; i++) {
-            projectName += threadName[i] + " ";
+                projectName += threadName[i] + " ";
             }
             projectName += threadName[threadName.length - 1];
             /////////////////////////      
@@ -165,7 +159,7 @@ public class IdAllocator extends BuildWrapper {
         jName = "unknow";
 
 
-        ////Version top si on arrive a get le nom du job dans le job sinon marche pas
+        //// will be good if i can get job name ...
        /* if (!jName.equals("unknow")) {
         for (int i = listRessources.size() - 1; i >= 0; i--) {
         if (listRessources.get(i).getJobName().equals(jName)) {
@@ -198,7 +192,7 @@ public class IdAllocator extends BuildWrapper {
 
         @Override
         public String getHelpFile() {
-            return "/plugin/port-allocator/help.html";
+            return "/plugin/exclusion/help.html";
         }
 
         public List<IdTypeDescriptor> getIdTypes() {

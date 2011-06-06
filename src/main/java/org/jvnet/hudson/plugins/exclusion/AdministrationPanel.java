@@ -90,7 +90,6 @@ public class AdministrationPanel implements RootAction {
 
         list = new ArrayList<RessourcesMonitor>();
         for (RessourcesMonitor rm : listRessources) {
-            System.out.println("jobName : " + rm.getJobName() + " // resource : " + rm.getRessource());
             list.add(new RessourcesMonitor(rm.getJobName(), rm.getRessource(), rm.getBuild()));
         }
 
@@ -120,8 +119,6 @@ public class AdministrationPanel implements RootAction {
                     if (get.getProject().getName().equals(rm.getJobName())) {
                         //Libere la ressource
                         i.cleanUp();
-                        //Passe la ressource à "false" pour dire qu'elle n'est plus utilisé (pour l'affichage)
-                        // IdAllocator.updateBuild(rm.getJobName(), resourceName, false);
                     }
                 }
             }

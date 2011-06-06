@@ -9,6 +9,11 @@ import hudson.model.BuildListener;
 import java.io.IOException;
 import java.io.Serializable;
 
+/**
+ *
+ * first @author Kohsuke Kawaguchi
+ * fork by Anthony Roux
+ */
 public abstract class IdType implements ExtensionPoint, Describable<IdType>, Serializable {
 
     public final String name;
@@ -17,7 +22,6 @@ public abstract class IdType implements ExtensionPoint, Describable<IdType>, Ser
         this.name = name.toUpperCase();
     }
 
-    
     public final String getFixedId() {
         if (name != null) {
             return name;

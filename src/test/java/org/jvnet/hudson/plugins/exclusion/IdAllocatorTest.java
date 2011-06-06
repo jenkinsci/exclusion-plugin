@@ -1,47 +1,21 @@
 package org.jvnet.hudson.plugins.exclusion;
 
-import com.gargoylesoftware.htmlunit.AjaxController;
-import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
-import com.gargoylesoftware.htmlunit.Page;
-import com.gargoylesoftware.htmlunit.ScriptResult;
-import com.gargoylesoftware.htmlunit.SgmlPage;
-import com.gargoylesoftware.htmlunit.WebAssert;
-import com.gargoylesoftware.htmlunit.WebRequestSettings;
-import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlButton;
 import com.gargoylesoftware.htmlunit.html.HtmlCheckBoxInput;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.html.HtmlForm;
-import com.gargoylesoftware.htmlunit.html.HtmlLink;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlTextArea;
 import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
-import com.gargoylesoftware.htmlunit.javascript.host.Node;
-import hudson.model.Descriptor;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
-import hudson.model.JobProperty;
-import hudson.model.JobPropertyDescriptor;
 import hudson.model.Result;
-import hudson.tasks.BuildWrapper;
-import hudson.tasks.Publisher;
-import hudson.util.DescribableList;
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Future;
 import org.junit.Before;
-import org.junit.Test;
 import org.jvnet.hudson.test.HudsonTestCase;
-import org.w3c.dom.DocumentType;
 
 /**
  * @author Anthony Roux
@@ -237,7 +211,7 @@ public class IdAllocatorTest extends HudsonTestCase {
         List<? extends Object> bouttonNewStep1 = page.getByXPath("//a[contains(text(),'Critical block start')]");
         HtmlAnchor newStepSCB = (HtmlAnchor) bouttonNewStep1.get(0);
         newStepSCB.click();
-        
+
         List<? extends Object> bouttonNewStep2 = page.getByXPath("//a[contains(text(),'Execute shell')] ");
         HtmlAnchor newStepShell = (HtmlAnchor) bouttonNewStep2.get(0);
         newStepShell.click();
@@ -302,7 +276,7 @@ public class IdAllocatorTest extends HudsonTestCase {
         List<? extends Object> bouttonNewStep1 = page.getByXPath("//a[contains(text(),'Critical block start')]");
         HtmlAnchor newStepSCB = (HtmlAnchor) bouttonNewStep1.get(0);
         newStepSCB.click();
-        
+
         List<? extends Object> bouttonNewStep2 = page.getByXPath("//a[contains(text(),'Execute shell')] ");
         HtmlAnchor newStepShell = (HtmlAnchor) bouttonNewStep2.get(0);
         newStepShell.click();
@@ -339,9 +313,9 @@ public class IdAllocatorTest extends HudsonTestCase {
         Result result = get.getResult();
         assertEquals(result, Result.SUCCESS);
     }
-    
+
     public void testJobWithResourceWithoutStartAndEndStep() throws Exception {
-             FreeStyleProject  project2 = createFreeStyleProject("fastJob");
+        FreeStyleProject project2 = createFreeStyleProject("fastJob");
         WebClient webClient = createWebClient();
         HtmlPage page = webClient.getPage(project2, "configure");
 
@@ -384,11 +358,11 @@ public class IdAllocatorTest extends HudsonTestCase {
         List<? extends Object> shellText = page.getByXPath("//textarea[@name='command']");
         HtmlTextArea commandShell = (HtmlTextArea) shellText.get(0);
         commandShell.setText("sleep 20");
-        
+
         List<? extends Object> byXPath = page.getByXPath("//button[contains(.,'Save')]");
         HtmlButton buttonSave = (HtmlButton) byXPath.get(0);
         submit(buttonSave.getEnclosingForm());
-        
+
         Future<FreeStyleBuild> scheduleBuild2 = project2.scheduleBuild2(0);
         Thread.sleep(3000);
         page = new WebClient().goTo("/administrationpanel");
@@ -403,11 +377,10 @@ public class IdAllocatorTest extends HudsonTestCase {
                 }
             }
         }
-        
+
         assertEquals(0, count);
         FreeStyleBuild get = scheduleBuild2.get();
         Result result = get.getResult();
         assertEquals(result, Result.SUCCESS);
     }
-    
 }

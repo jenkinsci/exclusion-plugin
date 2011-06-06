@@ -4,10 +4,10 @@ Group-Id: org.jenkins-ci.plugins
 Short-Name: exclusion
 Long-Name: Jenkins Exclusion Plug-in
 Url: http://...
-Plugin-Version: 2.9-SNAPSHOT (private-06/01/2011 14:46-aroux)
+Plugin-Version: 2.9-SNAPSHOT (private-06/06/2011 12:13-aroux)
 Hudson-Version: 1.413
 Jenkins-Version: 1.413
-Plugin-Dependencies: subversion:1.25,ui-samples-plugin:1.413,maven-plu
+Plugin-Dependencies: maven-plugin:1.413,subversion:1.25,ui-samples-plu
  gin:1.413
 Plugin-Developers: Anthony Roux:anthonyRoux:
 Libraries: D:\Anthony\Plugin V1\Plugin work with buildwraper\exclusion
