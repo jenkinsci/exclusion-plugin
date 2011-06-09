@@ -119,7 +119,7 @@ public class AdministrationPanelTest extends HudsonTestCase {
     @Test
     public void testGetIconFileName() {
         adminPanel = new AdministrationPanel();
-        assertEquals("/plugin/exclusion/icons/exclusion.png", adminPanel.getIconFileName());
+        assertEquals("/plugin/Exclusion/icons/exclusion.png", adminPanel.getIconFileName());
     }
 
     @Test
@@ -134,10 +134,7 @@ public class AdministrationPanelTest extends HudsonTestCase {
         assertEquals("/administrationpanel", adminPanel.getUrlName());
     }
 
-    /**
-     * 
-     * @throws Exception 
-     */
+  
     @Test
     public void testFormElementsPresent() throws Exception {
 
@@ -200,14 +197,13 @@ public class AdministrationPanelTest extends HudsonTestCase {
         for (int j = 0; j < elementsByIdAction.size(); j++) {
             DomNodeList<DomNode> childNodesAction = elementsByIdAction.get(j).getChildNodes();
             for (int i = 0; i < childNodesAction.size(); i++) {
-                if (childNodesAction.get(i).toString().equals("Currently Use")) {
+                if (childNodesAction.get(i).toString().equals("Currently Used")) {
                     count++;
                 }
             }
         }
         assertEquals(3, count);
         scheduleBuild2.get();
-        // scheduleBuild2.cancel(true);
     }
 
     @Test
@@ -217,8 +213,7 @@ public class AdministrationPanelTest extends HudsonTestCase {
         Thread.sleep(3000);
         HtmlPage page = new WebClient().goTo("/administrationpanel");
 
-        //List<? extends Object> byXPath = page.getByXPath("//table[@id='executors']/tbody[2]/tr[2]/td[3]/a/img");
-        //  System.out.println(byXPath.get(0));
+        
         scheduleBuild2.cancel(true);
         Thread.sleep(3000);
         page = new WebClient().goTo("/administrationpanel");
@@ -228,14 +223,13 @@ public class AdministrationPanelTest extends HudsonTestCase {
         for (int j = 0; j < elementsByIdAction.size(); j++) {
             DomNodeList<DomNode> childNodesAction = elementsByIdAction.get(j).getChildNodes();
             for (int i = 0; i < childNodesAction.size(); i++) {
-                if (childNodesAction.get(i).toString().equals("Currently Use")) {
+                if (childNodesAction.get(i).toString().equals("Currently Used")) {
                     count++;
                 }
             }
         }
         assertEquals(0, count);
         scheduleBuild2.get();
-        //   scheduleBuild2.cancel(true);
     }
 
     @Test
@@ -306,7 +300,7 @@ public class AdministrationPanelTest extends HudsonTestCase {
         for (int j = 0; j < elementsByIdAction.size(); j++) {
             DomNodeList<DomNode> childNodesAction = elementsByIdAction.get(j).getChildNodes();
             for (int i = 0; i < childNodesAction.size(); i++) {
-                if (childNodesAction.get(i).toString().equals("Currently Use")) {
+                if (childNodesAction.get(i).toString().equals("Currently Used")) {
                     count++;
                 }
             }
@@ -314,8 +308,6 @@ public class AdministrationPanelTest extends HudsonTestCase {
         assertEquals(3, count);
         scheduleBuild2.get();
         scheduleBuild21.get();
-        //  scheduleBuild21.cancel(true);
-        //  scheduleBuild2.cancel(true);
     }
 
     @Test
@@ -345,13 +337,12 @@ public class AdministrationPanelTest extends HudsonTestCase {
         for (int j = 0; j < elementsByIdAction.size(); j++) {
             DomNodeList<DomNode> childNodesAction = elementsByIdAction.get(j).getChildNodes();
             for (int i = 0; i < childNodesAction.size(); i++) {
-                if (childNodesAction.get(i).toString().equals("Currently Use")) {
+                if (childNodesAction.get(i).toString().equals("Currently Used")) {
                     count++;
                 }
             }
         }
         assertEquals(2, count);
         scheduleBuild2.get();
-        //    scheduleBuild2.cancel(true);
     }
 }

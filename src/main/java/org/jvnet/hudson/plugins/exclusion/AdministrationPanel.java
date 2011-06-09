@@ -128,7 +128,7 @@ public class AdministrationPanel implements RootAction {
     }
 
     public String getIconFileName() {
-        return "/plugin/exclusion/icons/exclusion.png";
+        return "/plugin/Exclusion/icons/exclusion.png";
     }
 
     public String getDisplayName() {

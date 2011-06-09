@@ -4,6 +4,8 @@ import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.Computer;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -73,13 +75,23 @@ public class RessourcesMonitor implements Cloneable {
 
     public RessourcesMonitor(String jobName, String ressource) {
         this.ressource = ressource;
-        this.jobName = jobName;
+        try {
+             this.jobName = URLDecoder.decode(jobName, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+          
+        }
         this.build = false;
     }
 
     public RessourcesMonitor(String jobName, String ressource, boolean build) {
         this.ressource = ressource;
-        this.jobName = jobName;
+        //delete %20 from name
+        try {
+            this.jobName = URLDecoder.decode(jobName, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+           
+        }
+        //this.jobName = jobName;
         this.build = build;
     }
 

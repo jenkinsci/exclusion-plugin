@@ -7,19 +7,22 @@ import hudson.model.Descriptor;
 import hudson.model.AbstractBuild;
 import hudson.model.Computer;
 import hudson.model.Executor;
-import hudson.model.Result;
 import hudson.tasks.BuildWrapper;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.StaplerRequest;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
  *
- * first @author Kohsuke Kawaguchi
+ * first author Kohsuke Kawaguchi
  * fork by Anthony Roux
  */
 public class IdAllocator extends BuildWrapper {
@@ -140,11 +143,14 @@ public class IdAllocator extends BuildWrapper {
                 projectName += threadName[i] + " ";
             }
             projectName += threadName[threadName.length - 1];
-            /////////////////////////      
         } else {
             projectName = jName;
         }
         if (!projectName.equals("unknow")) {
+            try {
+                projectName = URLDecoder.decode(projectName, "UTF-8");
+            } catch (UnsupportedEncodingException ex) {
+            }
             for (int i = listRessources.size() - 1; i >= 0; i--) {
                 if (listRessources.get(i).getJobName().equals(projectName)) {
                     listRessources.remove(i);
@@ -152,7 +158,7 @@ public class IdAllocator extends BuildWrapper {
             }
 
             //Add all object for the current job
-            for (IdType pt : ids) {
+            for (IdType pt : getIds()) {
                 listRessources.add(new RessourcesMonitor(projectName, pt.name));
             }
         }

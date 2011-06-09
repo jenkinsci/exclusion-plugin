@@ -14,7 +14,7 @@
             <TABLE frame="border" cellpadding="30">
                 <TR>
                     <TH align="center">  Job  </TH>
-                    <TH align="center"> Resources </TH>
+                    <TH align="center"> Resource </TH>
                     <TH align="center"> Action </TH>
                 </TR>
                 <j:forEach var="rc" items="${rcs}">
@@ -22,14 +22,11 @@
                         <TD id="jobName">${rc.jobName}</TD>
                         <TD id="resource">${rc.ressource}</TD>
                         <j:if test="${rc.build==true}">
-                             <TD ID="action">Currently Use</TD>
+                             <TD ID="action">Currently Used</TD>
                         </j:if> 
                     </TR>
                 </j:forEach>
             </TABLE>
-            <!--    <f:entry title="${%Resource name}">
-                    <f:textbox name="resourceName"/>
-                </f:entry> -->
             <j:set var="rcs" value="${it.list}" />
             <f:form method="post" action="freeResource">  
                 <f:entry title="${%Resource name}">

@@ -91,7 +91,7 @@ public class IdAllocatorTest extends HudsonTestCase {
         for (int j = 0; j < elementsByIdAction.size(); j++) {
             DomNodeList<DomNode> childNodesAction = elementsByIdAction.get(j).getChildNodes();
             for (int i = 0; i < childNodesAction.size(); i++) {
-                if (childNodesAction.get(i).toString().equals("Currently Use")) {
+                if (childNodesAction.get(i).toString().equals("Currently Used")) {
                     count++;
                 }
             }
@@ -109,7 +109,7 @@ public class IdAllocatorTest extends HudsonTestCase {
         for (int j = 0; j < elementsByIdAction.size(); j++) {
             DomNodeList<DomNode> childNodesAction = elementsByIdAction.get(j).getChildNodes();
             for (int i = 0; i < childNodesAction.size(); i++) {
-                if (childNodesAction.get(i).toString().equals("Currently Use")) {
+                if (childNodesAction.get(i).toString().equals("Currently Used")) {
                     count++;
                 }
             }
@@ -182,7 +182,7 @@ public class IdAllocatorTest extends HudsonTestCase {
         for (int j = 0; j < elementsByIdAction.size(); j++) {
             DomNodeList<DomNode> childNodesAction = elementsByIdAction.get(j).getChildNodes();
             for (int i = 0; i < childNodesAction.size(); i++) {
-                if (childNodesAction.get(i).toString().equals("Currently Use")) {
+                if (childNodesAction.get(i).toString().equals("Currently Used")) {
                     count++;
                 }
             }
@@ -237,7 +237,7 @@ public class IdAllocatorTest extends HudsonTestCase {
         for (int j = 0; j < elementsByIdAction.size(); j++) {
             DomNodeList<DomNode> childNodesAction = elementsByIdAction.get(j).getChildNodes();
             for (int i = 0; i < childNodesAction.size(); i++) {
-                if (childNodesAction.get(i).toString().equals("Currently Use")) {
+                if (childNodesAction.get(i).toString().equals("Currently Used")) {
                     count++;
                 }
             }
@@ -302,7 +302,7 @@ public class IdAllocatorTest extends HudsonTestCase {
         for (int j = 0; j < elementsByIdAction.size(); j++) {
             DomNodeList<DomNode> childNodesAction = elementsByIdAction.get(j).getChildNodes();
             for (int i = 0; i < childNodesAction.size(); i++) {
-                if (childNodesAction.get(i).toString().equals("Currently Use")) {
+                if (childNodesAction.get(i).toString().equals("Currently Used")) {
                     count++;
                 }
             }
@@ -372,7 +372,7 @@ public class IdAllocatorTest extends HudsonTestCase {
         for (int j = 0; j < elementsByIdAction.size(); j++) {
             DomNodeList<DomNode> childNodesAction = elementsByIdAction.get(j).getChildNodes();
             for (int i = 0; i < childNodesAction.size(); i++) {
-                if (childNodesAction.get(i).toString().equals("Currently Use")) {
+                if (childNodesAction.get(i).toString().equals("Currently Used")) {
                     count++;
                 }
             }

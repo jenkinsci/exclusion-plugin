@@ -187,12 +187,11 @@ public class ExclusionTest extends HudsonTestCase {
         for (int j = 0; j < elementsByIdAction.size(); j++) {
             DomNodeList<DomNode> childNodesAction = elementsByIdAction.get(j).getChildNodes();
             for (int i = 0; i < childNodesAction.size(); i++) {
-                if (childNodesAction.get(i).toString().equals("Currently Use")) {
+                if (childNodesAction.get(i).toString().equals("Currently Used")) {
                     count++;
                 }
             }
         }
-
         //Les 3 ressources du premier projet + ressourceplus qui n'est pas en commun entre les 2 projets
         assertEquals(4, count);
         FreeStyleBuild get = scheduleBuild2.get();
@@ -208,7 +207,7 @@ public class ExclusionTest extends HudsonTestCase {
         for (int j = 0; j < elementsByIdAction.size(); j++) {
             DomNodeList<DomNode> childNodesAction = elementsByIdAction.get(j).getChildNodes();
             for (int i = 0; i < childNodesAction.size(); i++) {
-                if (childNodesAction.get(i).toString().equals("Currently Use")) {
+                if (childNodesAction.get(i).toString().equals("Currently Used")) {
                     count++;
                 }
             }
@@ -227,7 +226,7 @@ public class ExclusionTest extends HudsonTestCase {
         for (int j = 0; j < elementsByIdAction.size(); j++) {
             DomNodeList<DomNode> childNodesAction = elementsByIdAction.get(j).getChildNodes();
             for (int i = 0; i < childNodesAction.size(); i++) {
-                if (childNodesAction.get(i).toString().equals("Currently Use")) {
+                if (childNodesAction.get(i).toString().equals("Currently Used")) {
                     count++;
                 }
             }
