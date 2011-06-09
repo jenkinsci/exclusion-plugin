@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Anthony Roux
+ * author Anthony Roux
  */
 public class RessourcesMonitor implements Cloneable {
 
