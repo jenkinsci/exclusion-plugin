@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  *
- * first @author Kohsuke Kawaguchi
+ * first author Kohsuke Kawaguchi
  * fork by Anthony Roux
  */
 public abstract class IdTypeDescriptor extends Descriptor<IdType> {

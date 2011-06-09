@@ -4,7 +4,7 @@ import java.io.IOException;
 
 /**
  *
- * first @author Kohsuke Kawaguchi
+ * first author Kohsuke Kawaguchi
  * fork by Anthony Roux
  */
 public abstract class Id {

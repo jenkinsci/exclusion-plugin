@@ -9,7 +9,7 @@ import hudson.model.listeners.ItemListener;
 
 /**
  *
- * first @author Kohsuke Kawaguchi
+ * first author Kohsuke Kawaguchi
  * fork by Anthony Roux
  */
 public class PluginImpl extends Plugin {

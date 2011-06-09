@@ -13,7 +13,7 @@ import java.util.WeakHashMap;
 
 /**
  *
- * first @author Kohsuke Kawaguchi
+ * first author Kohsuke Kawaguchi
  * fork by Anthony Roux
  */
 public final class IdAllocationManager {

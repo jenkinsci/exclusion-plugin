@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 /**
  *
- * first @author Kohsuke Kawaguchi
+ * first author Kohsuke Kawaguchi
  * fork by Anthony Roux
  */
 public abstract class IdType implements ExtensionPoint, Describable<IdType>, Serializable {
