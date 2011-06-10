@@ -15,7 +15,7 @@
 
   <scm>
     <connection>scm:git:ssh://github.com/jenkinsci/exclusion-plugin.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com/jenkinsci/exclusion-plugin.git</developerConnection>
+    <developerConnection>scm:git:https://anthonyroux@github.com/jenkinsci/exclusion-plugin.git</developerConnection>
     <url>https://github.com/jenkinsci/exclusion-plugin</url>
   </scm>
 
