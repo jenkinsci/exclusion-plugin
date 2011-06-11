@@ -5,6 +5,7 @@
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
         <version>1.413</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
   <artifactId>Exclusion</artifactId>
@@ -12,14 +13,6 @@
   <version>0.1</version>
   <name>Jenkins Exclusion Plug-in</name>
   <url>https://wiki.jenkins-ci.org/display/JENKINS/Exclusion-Plugin</url>
-
-
-  <distributionManagement>
-   <repository>
-    <id>maven.jenkins-ci.org</id>
-    <url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>
-   </repository>
-  </distributionManagement>
 
   <scm>
     <connection>scm:git:git://github.com/jenkinsci/exclusion-plugin.git</connection>
@@ -35,4 +28,11 @@
     </developer>
   </developers>
 
+
+<repositories>
+     <repository>
+       <id>maven.jenkins-ci.org</id>
+       <url>http://maven.jenkins-ci.org/content/repositories/releases</url>
+     </repository>
+   </repositories>
 </project>
