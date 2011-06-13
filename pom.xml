@@ -14,14 +14,6 @@
   <name>Jenkins Exclusion Plug-in</name>
   <url>https://wiki.jenkins-ci.org/display/JENKINS/Exclusion-Plugin</url>
 
-
-  <repositories>
-    <repository>
-      <id>m.g.o-public</id>
-      <url>http://maven.glassfish.org/content/groups/public/</url>
-    </repository>
-  </repositories>
-
   <pluginRepositories>
     <pluginRepository>
       <id>m.g.o-public</id>
