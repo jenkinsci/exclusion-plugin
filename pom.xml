@@ -10,7 +10,7 @@
 
   <artifactId>Exclusion</artifactId>
   <packaging>hpi</packaging>
-  <version>0.2-SNAPSHOT</version>
+  <version>0.1-SNAPSHOT</version>
   <name>Jenkins Exclusion Plug-in</name>
   <url>https://wiki.jenkins-ci.org/display/JENKINS/Exclusion-Plugin</url>
 
