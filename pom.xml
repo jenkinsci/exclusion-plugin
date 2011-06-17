@@ -22,8 +22,8 @@
   </pluginRepositories>
 
   <scm>
-    <connection>scm:git:git://github.com/jenkinsci/exclusion-plugin.git</connection>
-    <developerConnection>scm:git:git@github.com:jenkinsci/exclusion-plugin.git</developerConnection>
+    <connection>scm:git:scm:git:https://github.com/jenkinsci/exclusion-plugin.git</connection>
+    <developerConnection>scm:git:https://github.com/jenkinsci/exclusion-plugin.git</developerConnection>
     <url>https://github.com/jenkinsci/exclusion-plugin</url>
   </scm>
 
