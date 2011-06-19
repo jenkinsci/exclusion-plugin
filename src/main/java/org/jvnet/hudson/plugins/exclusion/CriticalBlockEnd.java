@@ -84,7 +84,7 @@ public class CriticalBlockEnd extends Builder {
 
         @Override
         public String getHelpFile() {
-            return "/plugin/exclusion/helpCBE.html";
+            return "/plugin/Exclusion/helpCBE.html";
         }
     }
 }

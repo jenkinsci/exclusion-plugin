@@ -198,7 +198,7 @@ public class IdAllocator extends BuildWrapper {
 
         @Override
         public String getHelpFile() {
-            return "/plugin/exclusion/help.html";
+            return "/plugin/Exclusion/help.html";
         }
 
         public List<IdTypeDescriptor> getIdTypes() {

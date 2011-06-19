@@ -96,7 +96,7 @@ public class CriticalBlockStart extends Builder {
 
         @Override
         public String getHelpFile() {
-            return "/plugin/exclusion/helpCBS.html";
+            return "/plugin/Exclusion/helpCBS.html";
         }
     }
 }
