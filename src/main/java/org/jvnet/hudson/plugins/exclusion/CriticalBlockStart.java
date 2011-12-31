@@ -3,18 +3,21 @@ package org.jvnet.hudson.plugins.exclusion;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.Launcher;
-import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
+import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
 import hudson.model.Computer;
-import hudson.model.Descriptor;
 import hudson.model.Executor;
+import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
+
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
@@ -83,7 +86,7 @@ public class CriticalBlockStart extends Builder {
     @Extension
     public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
 
-    public static final class DescriptorImpl extends Descriptor<Builder> {
+    public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
         DescriptorImpl() {
             super(CriticalBlockStart.class);
@@ -97,6 +100,11 @@ public class CriticalBlockStart extends Builder {
         @Override
         public String getHelpFile() {
             return "/plugin/Exclusion/helpCBS.html";
+        }
+
+        @Override
+        public boolean isApplicable(Class<? extends AbstractProject> arg0) {
+            return true;
         }
     }
 }
