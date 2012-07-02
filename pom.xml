@@ -5,7 +5,7 @@
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
         <version>1.413</version>
-        <relativePath>../pom.xml</relativePath>
+       <!-- <relativePath>../pom.xml</relativePath> -->
     </parent>
 
   <artifactId>Exclusion</artifactId>
