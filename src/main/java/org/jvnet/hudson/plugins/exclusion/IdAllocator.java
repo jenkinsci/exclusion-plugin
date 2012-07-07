@@ -3,15 +3,11 @@ package org.jvnet.hudson.plugins.exclusion;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.BuildListener;
-import hudson.model.Descriptor;
 import hudson.model.AbstractBuild;
 import hudson.model.Computer;
+import hudson.model.Descriptor;
 import hudson.model.Executor;
 import hudson.tasks.BuildWrapper;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import net.sf.json.JSONObject;
-import org.kohsuke.stapler.StaplerRequest;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -19,6 +15,10 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import net.sf.json.JSONObject;
+
+import org.kohsuke.stapler.StaplerRequest;
 
 /**
  *

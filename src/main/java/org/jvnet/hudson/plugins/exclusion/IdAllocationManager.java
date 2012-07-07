@@ -1,7 +1,7 @@
 package org.jvnet.hudson.plugins.exclusion;
 
-import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
+import hudson.model.AbstractBuild;
 import hudson.model.Computer;
 
 import java.io.IOException;

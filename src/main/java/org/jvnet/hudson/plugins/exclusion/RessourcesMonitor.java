@@ -1,9 +1,9 @@
 package org.jvnet.hudson.plugins.exclusion;
 
 import hudson.Launcher;
-import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
-import hudson.model.Computer;
+import hudson.model.AbstractBuild;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.logging.Level;

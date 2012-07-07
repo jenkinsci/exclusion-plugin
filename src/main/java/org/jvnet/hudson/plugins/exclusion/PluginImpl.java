@@ -2,9 +2,7 @@ package org.jvnet.hudson.plugins.exclusion;
 
 import hudson.Extension;
 import hudson.Plugin;
-import hudson.model.AbstractBuild;
 import hudson.model.Item;
-import hudson.model.TaskListener;
 import hudson.model.listeners.ItemListener;
 
 /**
