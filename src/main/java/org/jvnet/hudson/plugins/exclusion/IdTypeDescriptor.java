@@ -1,11 +1,10 @@
 package org.jvnet.hudson.plugins.exclusion;
 
 import hudson.model.Descriptor;
+import org.kohsuke.stapler.StaplerRequest;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.kohsuke.stapler.StaplerRequest;
 
 /**
  *
