@@ -1,15 +1,13 @@
 package org.jvnet.hudson.plugins.exclusion;
 
-import hudson.Launcher;
-import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
-
-import java.io.IOException;
-
+import hudson.model.BuildListener;
+import hudson.Launcher;
 import net.sf.json.JSONObject;
-
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
+
+import java.io.IOException;
 
 /**
  *

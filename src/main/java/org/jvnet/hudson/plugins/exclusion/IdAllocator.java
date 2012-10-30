@@ -3,11 +3,15 @@ package org.jvnet.hudson.plugins.exclusion;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.BuildListener;
+import hudson.model.Descriptor;
 import hudson.model.AbstractBuild;
 import hudson.model.Computer;
-import hudson.model.Descriptor;
 import hudson.model.Executor;
 import hudson.tasks.BuildWrapper;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.sf.json.JSONObject;
+import org.kohsuke.stapler.StaplerRequest;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -16,10 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONObject;
-
-import org.kohsuke.stapler.StaplerRequest;
-
 /**
  *
  * first author Kohsuke Kawaguchi
@@ -27,6 +27,7 @@ import org.kohsuke.stapler.StaplerRequest;
  */
 public class IdAllocator extends BuildWrapper {
 
+	//Resources currently configured in the job
     private IdType[] ids = null;
     public static List<RessourcesMonitor> listRessources = new ArrayList<RessourcesMonitor>();
     private static String jName = "unknow";
@@ -35,6 +36,7 @@ public class IdAllocator extends BuildWrapper {
         this.ids = ids;
     }
 
+	//Called when a job which use Exclusion plugin is started
     @Override
     public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
         final List<String> allocated = new ArrayList<String>();
@@ -51,6 +53,8 @@ public class IdAllocator extends BuildWrapper {
 
         return new Environment() {
 
+			//Called when a job finished
+			// Released resource
             @Override
             public boolean tearDown(AbstractBuild abstractBuild, BuildListener buildListener) throws IOException, InterruptedException {
                 for (Id p : alloc) {
@@ -64,6 +68,8 @@ public class IdAllocator extends BuildWrapper {
                 return true;
             }
 
+			//Called when a job started
+			// Add environmental variables for each resource
             @Override
             public void buildEnvVars(Map<String, String> env) {
                 int i = 0;
@@ -92,6 +98,11 @@ public class IdAllocator extends BuildWrapper {
         listRessources = list;
     }
 
+    /**
+     * This method update Job name
+     * @param oldProjecName : Old project name
+	 * @param newProjectName : New project name
+     */
     public static void updateList(String oldProjecName, String newProjectName) {
         for (int i = listRessources.size() - 1; i >= 0; i--) {
             if (listRessources.get(i).getJobName().equals(oldProjecName)) {
@@ -103,8 +114,8 @@ public class IdAllocator extends BuildWrapper {
     }
 
     /**
-     * Cette methode permet de supprimer toutes les ressources d'un projet (Job)
-     * @param ProjectName : Nom du projet
+     * This method removes all the resources of a project (Job)
+     * @param ProjectName : Project name
      */
     public static void deleteList(String ProjectName) {
         for (int i = listRessources.size() - 1; i >= 0; i--) {
@@ -115,10 +126,10 @@ public class IdAllocator extends BuildWrapper {
     }
 
     /**
-     * Cette méthode change l'état d'une ressource (en cours d'utilisation ou non)
-     * @param ProjectName : Nom du projet
-     * @param resourceName : Resource à modifie
-     * @param build : etat de la ressource (true = en cours d'utilisation)
+	 * This method changes the state of a resource (in use or not)
+     * @param ProjectName : Project name
+     * @param resourceName : Resource name
+     * @param build : resource state (true = in use)
      */
     public static void updateBuild(String ProjectName, String resourceName, boolean build) {
         for (int i = listRessources.size() - 1; i >= 0; i--) {
@@ -131,13 +142,14 @@ public class IdAllocator extends BuildWrapper {
         }
     }
 
+	
     @Override
     public Descriptor<BuildWrapper> getDescriptor() {
         String projectName = "unknow";
+	//A way to get the current project name
         String[] threadName = Executor.currentThread().getName().split(" ");
 
         if (threadName[0].equals("Loading") && threadName[1].equals("job")) {
-
             projectName = "";
             for (int i = 2; i < threadName.length - 1; i++) {
                 projectName += threadName[i] + " ";
@@ -146,11 +158,14 @@ public class IdAllocator extends BuildWrapper {
         } else {
             projectName = jName;
         }
+
         if (!projectName.equals("unknow")) {
             try {
+		//Encoding for spaces
                 projectName = URLDecoder.decode(projectName, "UTF-8");
             } catch (UnsupportedEncodingException ex) {
             }
+			//Remove all resources
             for (int i = listRessources.size() - 1; i >= 0; i--) {
                 if (listRessources.get(i).getJobName().equals(projectName)) {
                     listRessources.remove(i);
@@ -181,6 +196,7 @@ public class IdAllocator extends BuildWrapper {
         }*/
         return DESCRIPTOR;
     }
+	
     @Extension
     public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
 
@@ -210,6 +226,7 @@ public class IdAllocator extends BuildWrapper {
         public BuildWrapper newInstance(StaplerRequest req, JSONObject formData) throws FormException {
             List<IdType> ids = Descriptor.newInstancesFromHeteroList(
                     req, formData, "ids", IdTypeDescriptor.LIST);
+			// In some cases you can not get the job name as previously, so we let Newinstance do it
             String[] split = req.getReferer().split("/");
             for (int i = 0; i < split.length; i++) {
                 if (split[i].equals("job")) {
