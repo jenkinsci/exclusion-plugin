@@ -30,11 +30,13 @@ public final class IdAllocationManager {
 
         PrintStream logger = buildListener.getLogger();
 
+	//if resource already used just wait
         while (ids.get(id) != null) {
-            logger.println("Waiting ressource : " + id + " currently use by : " + ids.get(id).toString());
-            wait();
+            logger.println("Waiting ressource : " + id + " currently used by : " + ids.get(id).toString());
+            wait(10000);
         }
 
+	// When allocate a resource, add it to the hashmap
         ids.put(id, owner);
         return id;
     }
@@ -53,6 +55,7 @@ public final class IdAllocationManager {
         return pam;
     }
 
+   //Release a resource
     public synchronized void free(String n) {
         ids.remove(n);
         notifyAll();
