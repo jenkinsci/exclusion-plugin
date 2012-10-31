@@ -27,9 +27,9 @@ import org.kohsuke.stapler.export.ExportedBean;
 @Extension
 public class AdministrationPanel implements RootAction {
 
-    //Lien vers la list ressource de IdAllocator
+    // Link to the IdAllocator resources list
     private List<RessourcesMonitor> listRessources;
-    //Copie de la list de IdAllocator en local
+	// Local copy of the IdAllocator list
     private List<RessourcesMonitor> list;
 
     public List<RessourcesMonitor> getList() {
@@ -41,30 +41,30 @@ public class AdministrationPanel implements RootAction {
         listRessources = IdAllocator.getListRessources();
     }
 
-    //Appellé à chaque chargement de la page d'administration
+    //Called for each page load of administration
     public void load() {
 
-        /* Pour le cas on l'on décoche le plugin */
-        //List de tous les jobs
+		/* In case plugin is uncheck */
+         // List all jobs
         List<String> allJobsName = new ArrayList<String>();
 
-        //List de tous les jobs qui utilisent le plugin (avec une ressource au moins)
+        // List all the jobs that use the plugin (with at least one resource)
         List<String> allExclusionJobs = new ArrayList<String>();
 
-        //On parcourt tous les projets
+        // Check all projects
         for (Project<?, ?> p : Hudson.getInstance().getProjects()) {
 
-            //On remplie la liste des noms de tous les projets
+            // Add all jobs names to the list
             allJobsName.add(p.getName());
-            //On veut récuperer tous les composants BuildWrappers
+            // We want to retrieve all components BuildWrappers
             Map<Descriptor<BuildWrapper>, BuildWrapper> buildWrappers = p.getBuildWrappers();
-            //Pour chacun d'entre eux 
+            // For each of them
             for (Iterator i = buildWrappers.keySet().iterator(); i.hasNext();) {
                 Descriptor<BuildWrapper> key = (Descriptor<BuildWrapper>) i.next();
 
-                //On regarde si le descripteur est bien "org.jvnet.hudson.plugins.exclusion.IdAllocator$DescriptorImpl"
+                // We check if the descriptor is "org.jvnet.hudson.plugins.exclusion.IdAllocator $ DescriptorImpl"
                 if (buildWrappers.get(key).getDescriptor().toString().split("@")[0].equals("org.jvnet.hudson.plugins.exclusion.IdAllocator$DescriptorImpl")) {
-                    //Pas de doublons
+                    // No duplicates
                     if (!allExclusionJobs.contains(p.getName())) {
                         allExclusionJobs.add(p.getName());
                     }
@@ -72,25 +72,26 @@ public class AdministrationPanel implements RootAction {
             }
         }
 
-        //On delete chaque job qui est dans la list global et qui n'est pas dans la liste des exclusions
+		// We delete each job that is in the global list and not in the list of exclusions
         for (String jobName : allJobsName) {
             if (!allExclusionJobs.contains(jobName)) {
                 IdAllocator.deleteList(jobName);
             }
         }
 
-        //Toutes les utilisations à faux
+        // Set all builds to false (build = currently used)
         for (RessourcesMonitor rm : listRessources) {
             rm.setBuild(false);
         }
 
-        //On marque que les utilisations qui sont dans le hashmap d'utilisation
+        // For each resource Job, set build to true if a resource is used
         for (Iterator i = IdAllocationManager.ids.keySet().iterator(); i.hasNext();) {
             String resource = (String) i.next();
             IdAllocator.updateBuild(IdAllocationManager.ids.get(resource).getProject().getName(), resource, true);
         }
 
         list = new ArrayList<RessourcesMonitor>();
+		// Local copy of the list
         for (RessourcesMonitor rm : listRessources) {
             list.add(new RessourcesMonitor(rm.getJobName(), rm.getRessource(), rm.getBuild()));
         }
@@ -98,34 +99,32 @@ public class AdministrationPanel implements RootAction {
 
     }
 
+	//Called when we click on "release resource" button
     public void doFreeResource(StaplerRequest res, StaplerResponse rsp, @QueryParameter("resourceName") String resourceName) throws IOException, InterruptedException {
 
-        //Pour chaque ressource
-        //
+        // For each resource
         for (RessourcesMonitor rm : list) {
-            //On veut prendre que les ressources qui sont donné par l'utilisateur
-            // Et en cours d'utilisation
+            // Check if the resource is the one chosen by the user
             if (rm.getRessource().equals(resourceName) && rm.getBuild()) {
 
-                //On récupere l'id à libérer
+                // Get the Id by resource name
                 DefaultIdType p = new DefaultIdType(resourceName);
-                // les variables à null ne sont pas necessaire car pas utilisé
-                // Juste pour recuperer l'id associé à la ressource
+                // "null" for params not used
+                // Only used to get the Id
                 Id i = p.allocate(false, null, CriticalBlockStart.pam, null, null);
 
-                //On veut le faire seulement pour le cas où :
-                // le job est celui qui utilise la ressource actuellement
-                // donc on recupere le nom du job qui utilise la ressource et on cherche dans la liste
+                // Cleanup only if the job is currently using the resource
+                // So we get the name of the job that uses the resource and we look in the list
                 AbstractBuild get = IdAllocationManager.ids.get(resourceName);
                 if (get != null) {
                     if (get.getProject().getName().equals(rm.getJobName())) {
-                        //Libere la ressource
+                        // Release resource
                         i.cleanUp();
                     }
                 }
             }
         }
-        //On redirige sur la page du panel d'administration
+        // Redirectsto the administration panel
         rsp.sendRedirect(res.getContextPath() + getUrlName());
     }
 

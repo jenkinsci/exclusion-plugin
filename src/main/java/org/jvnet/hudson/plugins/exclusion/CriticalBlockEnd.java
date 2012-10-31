@@ -23,7 +23,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
  *
  * @author Anthony Roux
  * 
- * Fin de la delimitation de la zone critique
+ * Build step -> End of critical zone
  **/
 public class CriticalBlockEnd extends Builder {
 
@@ -37,13 +37,17 @@ public class CriticalBlockEnd extends Builder {
         final Computer cur2 = Executor.currentExecutor().getOwner();
         final IdAllocationManager pam2 = IdAllocationManager.getManager(cur2);
 
+		//Get environemental variables
         EnvVars environment = build.getEnvironment(listener);
         List<String> listId = new ArrayList<String>();
-
+		
+		//Add to a list all "variableEnv" (which are added by IdAllocator)
+		// Each variableEnv is a resource
         Set cles = environment.keySet();
         Iterator it = cles.iterator();
         while (it.hasNext()) {
             String cle = (String) it.next();
+			//Only environmental variables from the current job
             String name = "variableEnv" + build.getProject().getName();
             if (cle.contains(name)) {
                 String valeur = environment.get(cle);
@@ -54,13 +58,16 @@ public class CriticalBlockEnd extends Builder {
             listener.getLogger().println("[Exclusion] -> Releasing all the resources");
         }
 
+		//For each resource
         for (String id : listId) {
-            // On les liberes
+            
             DefaultIdType p = new DefaultIdType(id);
             Id i = p.allocate(false, build, pam2, launcher, listener);
             AbstractBuild absBuild = IdAllocationManager.ids.get(i.type.name);
             if (absBuild != null) {
+				//We want to release only resources from the current job
                 if (absBuild.getProject().getName().equals(build.getProject().getName())) {
+				    //Releasing
                     i.cleanUp();
                 }
             }
