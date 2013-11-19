@@ -14,7 +14,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import jenkins.model.Jenkins;
 import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.export.ExportedBean;
@@ -25,7 +27,7 @@ import org.kohsuke.stapler.export.ExportedBean;
  */
 @ExportedBean
 @Extension
-public class AdministrationPanel implements RootAction {
+public class AdministrationPanel implements RootAction, StaplerProxy {
 
     // Link to the IdAllocator resources list
     private List<RessourcesMonitor> listRessources;
@@ -39,6 +41,11 @@ public class AdministrationPanel implements RootAction {
     public AdministrationPanel() {
         super();
         listRessources = IdAllocator.getListRessources();
+    }
+
+    public Object getTarget() {
+        Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
+        return this;
     }
 
     //Called for each page load of administration
