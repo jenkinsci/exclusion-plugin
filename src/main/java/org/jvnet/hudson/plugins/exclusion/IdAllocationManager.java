@@ -3,13 +3,17 @@ package org.jvnet.hudson.plugins.exclusion;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
 import hudson.model.Computer;
+import hudson.model.AbstractProject;
 
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.List;
+
 
 /**
  *
@@ -27,20 +31,43 @@ public final class IdAllocationManager {
     }
 
     public synchronized String allocate(AbstractBuild owner, String id, BuildListener buildListener) throws InterruptedException, IOException {
-
         PrintStream logger = buildListener.getLogger();
+        boolean printed = false;
 
-	//if resource already used just wait
         while (ids.get(id) != null) {
-            logger.println("Waiting ressource : " + id + " currently used by : " + ids.get(id).toString());
-            wait(10000);
+
+        if (printed == false) { logger.println("Waiting ressource : " + id + " currently use by : " + ids.get(id).toString()); printed = true; }
+        wait(1000);
+
+        // periodically detect if any locked resource belongs to the completed build
+        releaseDeadlockedResource(id, buildListener);
         }
 
-	// When allocate a resource, add it to the hashmap
+        // When allocate a resource, add it to the hashmap
         ids.put(id, owner);
         return id;
     }
 
+    private void releaseDeadlockedResource(String id, BuildListener buildListener) throws InterruptedException, IOException {
+        PrintStream logger = buildListener.getLogger();
+        // check if 'lockable resource' exists
+        AbstractBuild resourceOwner = ids.get(id);
+        if (resourceOwner != null && !resourceOwner.isBuilding()) { // build was completed
+        List<AbstractProject> downstreamProjects = resourceOwner.getProject().getDownstreamProjects();
+        boolean canRelease = true;
+        for (Iterator<AbstractProject> it = downstreamProjects.iterator(); it.hasNext();)
+        {
+            AbstractProject proj = it.next();
+            if (proj.isBuilding()) 
+            { 
+                canRelease = false; break; }
+            }
+            if (canRelease) { 
+                logger.println("Release resource from completed build: " + resourceOwner.toString()); ids.remove(id); 
+            }
+        }
+     }
+    
     public static IdAllocationManager getManager(Computer node) {
         IdAllocationManager pam;
         WeakReference<IdAllocationManager> ref = INSTANCES.get(node);
