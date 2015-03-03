@@ -23,10 +23,12 @@
  */
 package org.jvnet.hudson.plugins.exclusion;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import hudson.Launcher;
 import hudson.model.BuildListener;
 import hudson.model.FreeStyleBuild;
+import hudson.model.Result;
 import hudson.model.AbstractBuild;
 import hudson.model.FreeStyleProject;
 import hudson.model.queue.QueueTaskFuture;
@@ -34,6 +36,8 @@ import hudson.util.OneShotEvent;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
+import jenkins.model.CauseOfInterruption;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -102,6 +106,56 @@ public class ExclusionTest {
         assertSame(waitingBuild, IdAllocationManager.ids.get("RESOURCE"));
     }
 
+    @Test
+    public void interruptBuildWaitingToResource() throws Exception {
+        BlockingBuilder blocker = new BlockingBuilder();
+
+        FreeStyleProject waiting = j.createFreeStyleProject();
+        waiting.getBuildWrappersList().add(defaultAlocatorForResources("resource"));
+        waiting.getBuildersList().add(new CriticalBlockStart());
+        waiting.getBuildersList().add(blocker);
+        waiting.getBuildersList().add(new CriticalBlockEnd());
+
+        QueueTaskFuture<FreeStyleBuild> feature = waiting.scheduleBuild2(0);
+        FreeStyleBuild build = feature.waitForStart();
+        Thread.sleep(1000);
+
+        build.getExecutor().interrupt();
+
+        feature.get();
+
+        assertNull("Resource should be available", IdAllocationManager.ids.get("RESOURCE"));
+
+        // Should be available for further builds
+        feature = waiting.scheduleBuild2(0);
+        feature.waitForStart();
+        Thread.sleep(1000);
+        blocker.event.signal();
+        j.assertBuildStatusSuccess(feature);
+    }
+
+    @Test
+    public void ommitEndStep() throws Exception {
+        BlockingBuilder blocker = new BlockingBuilder();
+
+        FreeStyleProject waiting = j.createFreeStyleProject();
+        waiting.getBuildWrappersList().add(defaultAlocatorForResources("resource"));
+        waiting.getBuildersList().add(new CriticalBlockStart());
+        waiting.getBuildersList().add(blocker);
+
+        final QueueTaskFuture<FreeStyleBuild> feature = waiting.scheduleBuild2(0);
+        FreeStyleBuild build = feature.waitForStart();
+        Thread.sleep(1000);
+
+        assertSame(build, IdAllocationManager.ids.get("RESOURCE"));
+
+        j.assertLogContains("Assigned RESOURCE", build);
+        blocker.event.signal();
+        feature.get();
+
+        assertNull("Resource should be available", IdAllocationManager.ids.get("RESOURCE"));
+    }
+
     private IdAllocator defaultAlocatorForResources(String... resources) {
         DefaultIdType[] out = new DefaultIdType[resources.length];
         for (int i = 0; i < resources.length; i++) {
@@ -118,6 +172,7 @@ public class ExclusionTest {
             try {
                 event.block();
             } catch (InterruptedException ex) {
+                ex.printStackTrace(listener.getLogger());
                 // Allowed on teardown
             }
             return true;
