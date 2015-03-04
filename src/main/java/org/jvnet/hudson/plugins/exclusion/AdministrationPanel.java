@@ -50,26 +50,12 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
     }
 
     @Restricted(NoExternalUse.class) // Exported for view
+    // TODO why does this update stuff?
     public List<RessourcesMonitor> getList() {
 
-        List<String> allJobsName = new ArrayList<String>();
-        List<String> allExclusionJobs = new ArrayList<String>();
         for (Project<?, ?> p : Hudson.getInstance().getProjects()) {
-
-            // Add all jobs names to the list
-            allJobsName.add(p.getName());
-            if (p.getBuildWrappersList().get(IdAllocator.class) != null) {
-                // No duplicates
-                if (!allExclusionJobs.contains(p.getName())) {
-                    allExclusionJobs.add(p.getName());
-                }
-            }
-        }
-
-		// We delete each job that is in the global list and not in the list of exclusions
-        for (String jobName : allJobsName) {
-            if (!allExclusionJobs.contains(jobName)) {
-                IdAllocator.deleteList(jobName);
+            if (p.getBuildWrappersList().get(IdAllocator.class) == null) {
+                IdAllocator.deleteList(p.getName());
             }
         }
 
@@ -84,8 +70,7 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
         }
 
         ArrayList<RessourcesMonitor> list = new ArrayList<RessourcesMonitor>(listRessources.size());
-		// Local copy of the list
-        for (RessourcesMonitor rm : listRessources) {
+		for (RessourcesMonitor rm : listRessources) {
             list.add(new RessourcesMonitor(rm.getJobName(), rm.getRessource(), rm.getBuild()));
         }
 
@@ -96,7 +81,6 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
     @RequirePOST
     @Restricted(NoExternalUse.class) // Exported for view
     public void doFreeResource(StaplerRequest res, StaplerResponse rsp, @QueryParameter("resourceName") String resourceName) throws IOException, InterruptedException {
-        // For each resource
         for (RessourcesMonitor rm : getList()) {
             // Check if the resource is the one chosen by the user
             if (rm.getRessource().equals(resourceName) && rm.getBuild()) {
