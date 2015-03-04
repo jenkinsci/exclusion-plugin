@@ -23,6 +23,7 @@
  */
 package org.jvnet.hudson.plugins.exclusion;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -191,6 +192,25 @@ public class ExclusionTest {
         }
 
         assertNull(IdAllocationManager.getOwnerBuild("RESOURCE"));
+    }
+
+    @Test
+    public void configRoundtrip() throws Exception {
+        FreeStyleProject p = j.createFreeStyleProject("job");
+        final IdAllocator wrapper = defaultAlocatorForResources("job", "resource");
+
+        p.getBuildWrappersList().add(wrapper);
+        p.getBuildersList().add(new CriticalBlockStart());
+        p.getBuildersList().add(new CriticalBlockEnd());
+
+        FreeStyleBuild b1 = j.buildAndAssertSuccess(p);
+
+        j.configRoundtrip(p);
+
+        FreeStyleBuild b2 = j.buildAndAssertSuccess(p);
+
+        j.assertLogContains("Assigned RESOURCE", b1);
+        assertEquals(b1.getLog(), b2.getLog());
     }
 
     private IdAllocator defaultAlocatorForResources(String jobName, String... resources) {
