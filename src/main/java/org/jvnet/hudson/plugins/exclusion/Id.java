@@ -3,6 +3,8 @@ package org.jvnet.hudson.plugins.exclusion;
 import java.io.IOException;
 
 /**
+ * Exclusion resource.
+ *
  * @author Kohsuke Kawaguchi
  * @author Anthony Roux
  */

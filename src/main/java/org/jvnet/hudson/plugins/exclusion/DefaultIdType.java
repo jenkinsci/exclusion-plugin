@@ -10,6 +10,8 @@ import java.io.IOException;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
+ * Exclusion resource that can be configured per job.
+ *
  * @author Kohsuke Kawaguchi
  * @author Anthony Roux
  */

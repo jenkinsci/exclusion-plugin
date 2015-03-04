@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.Serializable;
 
 /**
+ * Exclusion resource factory.
+ *
  * @author Kohsuke Kawaguchi
  * @author Anthony Roux
  */
