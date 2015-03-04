@@ -90,6 +90,7 @@ public class CriticalBlockStart extends Builder {
             load();
         }
 
+        @Override
         public String getDisplayName() {
             return "Critical block start";
         }

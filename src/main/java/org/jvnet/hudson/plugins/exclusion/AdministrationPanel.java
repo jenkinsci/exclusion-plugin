@@ -81,7 +81,7 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
         }
 
         // For each resource Job, set build to true if a resource is used
-        for (Entry<String, AbstractBuild> allocation: IdAllocationManager.getAllocations().entrySet()) {
+        for (Entry<String, AbstractBuild<?, ?>> allocation: IdAllocationManager.getAllocations().entrySet()) {
             IdAllocator.updateBuild(allocation.getValue().getProject().getName(), allocation.getKey(), true);
         }
 
@@ -108,7 +108,7 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
 
                 // Cleanup only if the job is currently using the resource
                 // So we get the name of the job that uses the resource and we look in the list
-                AbstractBuild get = IdAllocationManager.getOwnerBuild(resourceName);
+                AbstractBuild<?, ?> get = IdAllocationManager.getOwnerBuild(resourceName);
                 if (get != null) {
                     if (get.getProject().getName().equals(rm.getJobName())) {
                         // Release resource
@@ -117,7 +117,7 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
                 }
             }
         }
-        // Redirectsto the administration panel
+        // Redirects to the administration panel
         rsp.sendRedirect(res.getContextPath() + getUrlName());
     }
 

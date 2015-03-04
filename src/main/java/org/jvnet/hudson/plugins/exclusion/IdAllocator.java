@@ -2,6 +2,7 @@ package org.jvnet.hudson.plugins.exclusion;
 
 import hudson.Extension;
 import hudson.Launcher;
+import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
 import hudson.model.Computer;
@@ -58,7 +59,7 @@ public class IdAllocator extends BuildWrapper {
             @Override
             public boolean tearDown(AbstractBuild abstractBuild, BuildListener buildListener) throws IOException, InterruptedException {
                 for (Id p : alloc) {
-                    AbstractBuild get = IdAllocationManager.getOwnerBuild(p.type.name);
+                    AbstractBuild<?, ?> get = IdAllocationManager.getOwnerBuild(p.type.name);
                     if (get != null) {
                         if (get.getProject().getName().equals(abstractBuild.getProject().getName())) {
                             p.cleanUp();
@@ -203,6 +204,7 @@ public class IdAllocator extends BuildWrapper {
             load();
         }
 
+        @Override
         public String getDisplayName() {
             return "Add resource to manage exclusion";
 

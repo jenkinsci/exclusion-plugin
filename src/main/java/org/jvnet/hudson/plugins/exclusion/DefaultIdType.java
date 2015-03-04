@@ -35,16 +35,19 @@ public class DefaultIdType extends IdType {
 
         return new Id(this) {
 
+            @Override
             public String get() {
                 return n;
             }
 
+            @Override
             public void cleanUp() {
                 manager.free(n);
             }
         };
     }
 
+    @Override
     public DescriptorImpl getDescriptor() {
         return DescriptorImpl.INSTANCE;
     }
@@ -55,11 +58,13 @@ public class DefaultIdType extends IdType {
             super(DefaultIdType.class);
         }
 
+        @Override
         public DefaultIdType newInstance(StaplerRequest req, JSONObject formData) throws FormException {
             // TODO: we need form binding from JSON
             return new DefaultIdType(formData.getString("name"));
         }
 
+        @Override
         public String getDisplayName() {
             return "New Resource";
         }

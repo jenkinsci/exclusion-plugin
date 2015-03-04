@@ -21,15 +21,15 @@ import java.util.List;
  */
 public final class IdAllocationManager {
 
-    private final Computer node;
-    private final static Map<String, AbstractBuild> ids = new HashMap<String, AbstractBuild>();
+    private final Computer node; // TODO unused
+    private final static Map<String, AbstractBuild<?, ?>> ids = new HashMap<String, AbstractBuild<?, ?>>();
     private static final Map<Computer, WeakReference<IdAllocationManager>> INSTANCES = new WeakHashMap<Computer, WeakReference<IdAllocationManager>>();
 
     private IdAllocationManager(Computer node) {
         this.node = node;
     }
 
-    public synchronized String allocate(AbstractBuild owner, String id, BuildListener buildListener) throws InterruptedException, IOException {
+    public synchronized String allocate(AbstractBuild<?, ?> owner, String id, BuildListener buildListener) throws InterruptedException, IOException {
         PrintStream logger = buildListener.getLogger();
         boolean printed = false;
 
@@ -50,11 +50,11 @@ public final class IdAllocationManager {
     private void releaseDeadlockedResource(String id, BuildListener buildListener) throws InterruptedException, IOException {
         PrintStream logger = buildListener.getLogger();
         // check if 'lockable resource' exists
-        AbstractBuild resourceOwner = ids.get(id);
+        AbstractBuild<?, ?> resourceOwner = ids.get(id);
         if (resourceOwner != null && !resourceOwner.isBuilding()) { // build was completed
             List<AbstractProject> downstreamProjects = resourceOwner.getProject().getDownstreamProjects();
             boolean canRelease = true;
-            for (AbstractProject proj: downstreamProjects) {
+            for (AbstractProject<?, ?> proj: downstreamProjects) {
                 if (proj.isBuilding()) {
                     canRelease = false;
                     break;
@@ -88,11 +88,11 @@ public final class IdAllocationManager {
         notifyAll();
     }
 
-    /*package*/ static AbstractBuild getOwnerBuild(String resource) {
+    /*package*/ static AbstractBuild<?, ?> getOwnerBuild(String resource) {
         return ids.get(resource);
     }
 
-    /*package*/ static HashMap<String, AbstractBuild> getAllocations() {
-        return new HashMap<String, AbstractBuild>(ids);
+    /*package*/ static HashMap<String, AbstractBuild<?, ?>> getAllocations() {
+        return new HashMap<String, AbstractBuild<?, ?>>(ids);
     }
 }
