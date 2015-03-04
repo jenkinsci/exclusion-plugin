@@ -7,10 +7,7 @@ import hudson.model.AbstractBuild;
 
 import java.io.IOException;
 
-import net.sf.json.JSONObject;
-
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.StaplerRequest;
 
 /**
  * @author Kohsuke Kawaguchi
@@ -54,12 +51,6 @@ public class DefaultIdType extends IdType {
 
     @Extension
     public static final class DescriptorImpl extends IdTypeDescriptor {
-
-        @Override
-        public DefaultIdType newInstance(StaplerRequest req, JSONObject formData) throws FormException {
-            // TODO: we need form binding from JSON
-            return new DefaultIdType(formData.getString("name"));
-        }
 
         @Override
         public String getDisplayName() {

@@ -89,10 +89,6 @@ public class IdAllocator extends BuildWrapper {
         return ids;
     }
 
-    public void setIds(IdType[] ids) {
-        this.ids = ids;
-    }
-
     public static List<RessourcesMonitor> getListRessources() {
         return listRessources;
     }
@@ -236,7 +232,6 @@ public class IdAllocator extends BuildWrapper {
 
         public List<IdTypeDescriptor> getIdTypes() {
             return IdTypeDescriptor.all();
-
         }
 
         @Override
