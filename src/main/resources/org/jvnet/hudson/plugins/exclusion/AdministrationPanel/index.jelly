@@ -8,7 +8,6 @@
         <l:main-panel>
             <h1>${%AdministrationPanel.title}</h1>
             <h3>${%AdministrationPanel.description}</h3>
-            <j:invoke on="${it}" method="load"/>
             <j:set var="rcs" value="${it.list}" />
 
             <table class="sortable pane bigtable">
@@ -27,7 +26,6 @@
                     </tr>
                 </j:forEach>
             </table>
-            <j:set var="rcs" value="${it.list}" />
             <f:form method="post" action="freeResource" name="freeResource">
                 <f:entry title="${%Resource name}">
                     <select name="resourceName">

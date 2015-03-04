@@ -23,6 +23,7 @@ import org.kohsuke.stapler.export.ExportedBean;
 import org.kohsuke.stapler.interceptor.RequirePOST;
 
 /**
+ * Administration page model object.
  *
  * @author Anthony Roux
  */
@@ -32,12 +33,6 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
 
     // Link to the IdAllocator resources list
     private List<RessourcesMonitor> listRessources;
-	// Local copy of the IdAllocator list
-    private List<RessourcesMonitor> list;
-
-    public List<RessourcesMonitor> getList() {
-        return list;
-    }
 
     public AdministrationPanel() {
         super();
@@ -49,16 +44,16 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
         return this;
     }
 
-    //Called for each page load of administration
+    @Deprecated
     public void load() {
-		/* In case plugin is uncheck */
-         // List all jobs
+        getList();
+    }
+
+    @Restricted(NoExternalUse.class) // Exported for view
+    public List<RessourcesMonitor> getList() {
+
         List<String> allJobsName = new ArrayList<String>();
-
-        // List all the jobs that use the plugin (with at least one resource)
         List<String> allExclusionJobs = new ArrayList<String>();
-
-        // Check all projects
         for (Project<?, ?> p : Hudson.getInstance().getProjects()) {
 
             // Add all jobs names to the list
@@ -88,19 +83,21 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
             IdAllocator.updateBuild(allocation.getValue().getProject().getName(), allocation.getKey(), true);
         }
 
-        list = new ArrayList<RessourcesMonitor>();
+        ArrayList<RessourcesMonitor> list = new ArrayList<RessourcesMonitor>(listRessources.size());
 		// Local copy of the list
         for (RessourcesMonitor rm : listRessources) {
             list.add(new RessourcesMonitor(rm.getJobName(), rm.getRessource(), rm.getBuild()));
         }
+
+        return list;
     }
 
 	//Called when we click on "release resource" button
     @RequirePOST
-    @Restricted(NoExternalUse.class)
+    @Restricted(NoExternalUse.class) // Exported for view
     public void doFreeResource(StaplerRequest res, StaplerResponse rsp, @QueryParameter("resourceName") String resourceName) throws IOException, InterruptedException {
         // For each resource
-        for (RessourcesMonitor rm : list) {
+        for (RessourcesMonitor rm : getList()) {
             // Check if the resource is the one chosen by the user
             if (rm.getRessource().equals(resourceName) && rm.getBuild()) {
 
