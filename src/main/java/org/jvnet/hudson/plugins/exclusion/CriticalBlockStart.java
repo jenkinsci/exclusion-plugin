@@ -14,9 +14,8 @@ import hudson.tasks.Builder;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
+import java.util.Map.Entry;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -44,24 +43,21 @@ public class CriticalBlockStart extends Builder {
         //Init Builder
         PrintStream logger = listener.getLogger();
 
-        //Get environemental variables
         EnvVars environment = build.getEnvironment(listener);
         List<String> listId = new ArrayList<String>();
-        Set cles = environment.keySet();
-        Iterator it = cles.iterator();
-        //Add to a list all "variableEnv" (which are added by IdAllocator)
+        // Add to a list all "variableEnv" (which are added by IdAllocator)
         // Each variableEnv is a resource
-        while (it.hasNext()) {
-            String cle = (String) it.next();
-			//Only environmental variables from the current job
+        for (Entry<String, String> e: environment.entrySet()) {
+            String cle = e.getKey();
+
             String name = "variableEnv" + build.getProject().getName();
             if (cle.contains(name)) {
-                String valeur = environment.get(cle);
+                String valeur = e.getValue();
                 listId.add(valeur);
             }
         }
 
-	// if resources are allocated to this Job
+        // if resources are allocated to this Job
         if (listId != null) {
 
             for (String id : listId) {

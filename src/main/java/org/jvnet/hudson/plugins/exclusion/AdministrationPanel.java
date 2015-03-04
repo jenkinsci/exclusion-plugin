@@ -3,18 +3,16 @@ package org.jvnet.hudson.plugins.exclusion;
 import hudson.Extension;
 import hudson.model.RootAction;
 import hudson.model.AbstractBuild;
-import hudson.model.Descriptor;
 import hudson.model.Hudson;
 import hudson.model.Project;
-import hudson.tasks.BuildWrapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.Map.Entry;
 
 import jenkins.model.Jenkins;
+
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.StaplerRequest;
@@ -62,16 +60,10 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
 
             // Add all jobs names to the list
             allJobsName.add(p.getName());
-            // We want to retrieve all components BuildWrappers
-            Map<Descriptor<BuildWrapper>, BuildWrapper> buildWrappers = p.getBuildWrappers();
-            // For each of them
-            for (Iterator i = buildWrappers.keySet().iterator(); i.hasNext();) {
-                Descriptor<BuildWrapper> key = (Descriptor<BuildWrapper>) i.next();
-                if (buildWrappers.get(key).getDescriptor() instanceof IdAllocator.DescriptorImpl) {
-                    // No duplicates
-                    if (!allExclusionJobs.contains(p.getName())) {
-                        allExclusionJobs.add(p.getName());
-                    }
+            if (p.getBuildWrappersList().get(IdAllocator.class) != null) {
+                // No duplicates
+                if (!allExclusionJobs.contains(p.getName())) {
+                    allExclusionJobs.add(p.getName());
                 }
             }
         }
@@ -89,9 +81,8 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
         }
 
         // For each resource Job, set build to true if a resource is used
-        for (Iterator i = IdAllocationManager.ids.keySet().iterator(); i.hasNext();) {
-            String resource = (String) i.next();
-            IdAllocator.updateBuild(IdAllocationManager.ids.get(resource).getProject().getName(), resource, true);
+        for (Entry<String, AbstractBuild> allocation: IdAllocationManager.getAllocations().entrySet()) {
+            IdAllocator.updateBuild(allocation.getValue().getProject().getName(), allocation.getKey(), true);
         }
 
         list = new ArrayList<RessourcesMonitor>();
@@ -99,8 +90,6 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
         for (RessourcesMonitor rm : listRessources) {
             list.add(new RessourcesMonitor(rm.getJobName(), rm.getRessource(), rm.getBuild()));
         }
-
-
     }
 
 	//Called when we click on "release resource" button
@@ -119,7 +108,7 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
 
                 // Cleanup only if the job is currently using the resource
                 // So we get the name of the job that uses the resource and we look in the list
-                AbstractBuild get = IdAllocationManager.ids.get(resourceName);
+                AbstractBuild get = IdAllocationManager.getOwnerBuild(resourceName);
                 if (get != null) {
                     if (get.getProject().getName().equals(rm.getJobName())) {
                         // Release resource

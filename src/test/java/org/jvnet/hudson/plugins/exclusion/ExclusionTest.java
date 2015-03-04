@@ -63,8 +63,8 @@ public class ExclusionTest {
         FreeStyleBuild b = future.waitForStart();
         Thread.sleep(1000);
 
-        assertSame(b, IdAllocationManager.ids.get("RESOURCE1"));
-        assertSame(b, IdAllocationManager.ids.get("RESOURCE2"));
+        assertSame(b, IdAllocationManager.getOwnerBuild("RESOURCE1"));
+        assertSame(b, IdAllocationManager.getOwnerBuild("RESOURCE2"));
         j.assertLogContains("Assigned RESOURCE1", b);
         j.assertLogContains("Assigned RESOURCE2", b);
 
@@ -95,7 +95,7 @@ public class ExclusionTest {
         final QueueTaskFuture<FreeStyleBuild> owningFuture = owning.scheduleBuild2(0);
         FreeStyleBuild owningBuild = owningFuture.waitForStart();
         Thread.sleep(1000);
-        assertSame(owningBuild, IdAllocationManager.ids.get("RESOURCE"));
+        assertSame(owningBuild, IdAllocationManager.getOwnerBuild("RESOURCE"));
 
         FreeStyleBuild waitingBuild = waiting.scheduleBuild2(0).waitForStart();
         Thread.sleep(1000);
@@ -110,7 +110,7 @@ public class ExclusionTest {
         owningFuture.get();
         Thread.sleep(1000);
 
-        assertSame(waitingBuild, IdAllocationManager.ids.get("RESOURCE"));
+        assertSame(waitingBuild, IdAllocationManager.getOwnerBuild("RESOURCE"));
     }
 
     @Test
@@ -131,7 +131,7 @@ public class ExclusionTest {
 
         feature.get();
 
-        assertNull("Resource should be available", IdAllocationManager.ids.get("RESOURCE"));
+        assertNull("Resource should be available", IdAllocationManager.getOwnerBuild("RESOURCE"));
 
         // Should be available for further builds
         feature = waiting.scheduleBuild2(0);
@@ -154,13 +154,13 @@ public class ExclusionTest {
         FreeStyleBuild build = feature.waitForStart();
         Thread.sleep(1000);
 
-        assertSame(build, IdAllocationManager.ids.get("RESOURCE"));
+        assertSame(build, IdAllocationManager.getOwnerBuild("RESOURCE"));
 
         j.assertLogContains("Assigned RESOURCE", build);
         blocker.event.signal();
         feature.get();
 
-        assertNull("Resource should be available", IdAllocationManager.ids.get("RESOURCE"));
+        assertNull("Resource should be available", IdAllocationManager.getOwnerBuild("RESOURCE"));
     }
 
     private IdAllocator defaultAlocatorForResources(String jobName, String... resources) {

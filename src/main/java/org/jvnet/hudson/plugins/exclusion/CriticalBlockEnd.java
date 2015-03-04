@@ -13,9 +13,8 @@ import hudson.tasks.Builder;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
+import java.util.Map.Entry;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -43,14 +42,12 @@ public class CriticalBlockEnd extends Builder {
 		
 		//Add to a list all "variableEnv" (which are added by IdAllocator)
 		// Each variableEnv is a resource
-        Set cles = environment.keySet();
-        Iterator it = cles.iterator();
-        while (it.hasNext()) {
-            String cle = (String) it.next();
+        for (Entry<String, String> e: environment.entrySet()) {
+            String cle = e.getKey();
 			//Only environmental variables from the current job
             String name = "variableEnv" + build.getProject().getName();
             if (cle.contains(name)) {
-                String valeur = environment.get(cle);
+                String valeur = e.getValue();
                 listId.add(valeur);
             }
         }
@@ -63,7 +60,7 @@ public class CriticalBlockEnd extends Builder {
             
             DefaultIdType p = new DefaultIdType(id);
             Id i = p.allocate(false, build, pam2, launcher, listener);
-            AbstractBuild absBuild = IdAllocationManager.ids.get(i.type.name);
+            AbstractBuild absBuild = IdAllocationManager.getOwnerBuild(i.type.name);
             if (absBuild != null) {
 				//We want to release only resources from the current job
                 if (absBuild.getProject().getName().equals(build.getProject().getName())) {

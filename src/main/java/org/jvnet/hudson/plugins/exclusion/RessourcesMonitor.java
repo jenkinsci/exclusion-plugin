@@ -17,7 +17,7 @@ public class RessourcesMonitor implements Cloneable {
 
     private String ressource;
     private String jobName;
-    public boolean build = false;
+    private boolean build = false;
     private AbstractBuild<?, ?> absBuild = null;
     private Launcher launcher = null;
 

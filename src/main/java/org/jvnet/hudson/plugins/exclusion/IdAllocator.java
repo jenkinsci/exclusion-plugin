@@ -58,7 +58,7 @@ public class IdAllocator extends BuildWrapper {
             @Override
             public boolean tearDown(AbstractBuild abstractBuild, BuildListener buildListener) throws IOException, InterruptedException {
                 for (Id p : alloc) {
-                    AbstractBuild get = IdAllocationManager.ids.get(p.type.name);
+                    AbstractBuild get = IdAllocationManager.getOwnerBuild(p.type.name);
                     if (get != null) {
                         if (get.getProject().getName().equals(abstractBuild.getProject().getName())) {
                             p.cleanUp();
