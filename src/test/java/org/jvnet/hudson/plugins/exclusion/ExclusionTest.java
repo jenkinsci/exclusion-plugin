@@ -103,7 +103,7 @@ public class ExclusionTest {
 
         FreeStyleBuild waitingBuild = waiting.scheduleBuild2(0).waitForStart();
         Thread.sleep(1000);
-        j.assertLogContains("Waiting ressource : RESOURCE currently use by : a #1", waitingBuild);
+        j.assertLogContains("Waiting for resource 'RESOURCE' currently used by 'a #1'", waitingBuild);
 
         WebClient wc = j.createWebClient();
         HtmlPage page = wc.goTo("administrationpanel");
@@ -185,7 +185,7 @@ public class ExclusionTest {
             }
         });
 
-        MatrixBuild build = j.buildAndAssertSuccess(p);
+        j.buildAndAssertSuccess(p);
         for (char i = 'a'; i <= 'e'; i++) {
             j.assertBuildStatusSuccess(p.getItem("axis=" + i).getLastBuild());
         }

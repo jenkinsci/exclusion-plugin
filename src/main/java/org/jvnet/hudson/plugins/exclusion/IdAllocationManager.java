@@ -36,7 +36,7 @@ public final class IdAllocationManager {
         while (ids.get(id) != null) {
 
             if (printed == false) {
-                logger.println("Waiting ressource : " + id + " currently use by : " + ids.get(id).toString());
+                logger.printf("[Exclusion] -> Waiting for resource '%s' currently used by '%s'%n", id, ids.get(id).toString());
                 printed = true;
             }
             wait(1000);
@@ -64,7 +64,7 @@ public final class IdAllocationManager {
                 }
             }
             if (canRelease) { 
-                logger.println("Release resource from completed build: " + resourceOwner.toString()); ids.remove(id); 
+                logger.println("[Exclusion] -> Release resource from completed build: " + resourceOwner.toString()); ids.remove(id);
             }
         }
      }
