@@ -36,6 +36,7 @@ import hudson.model.BuildListener;
 import hudson.model.FreeStyleBuild;
 import hudson.model.AbstractBuild;
 import hudson.model.FreeStyleProject;
+import hudson.model.Job;
 import hudson.model.queue.QueueTaskFuture;
 import hudson.util.OneShotEvent;
 
@@ -205,7 +206,7 @@ public class ExclusionTest {
 
         FreeStyleBuild b1 = j.buildAndAssertSuccess(p);
 
-        j.configRoundtrip(p);
+        j.configRoundtrip((Job<?, ?>) p);
 
         FreeStyleBuild b2 = j.buildAndAssertSuccess(p);
 

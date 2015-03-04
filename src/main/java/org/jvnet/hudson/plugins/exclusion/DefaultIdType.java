@@ -1,5 +1,6 @@
 package org.jvnet.hudson.plugins.exclusion;
 
+import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
@@ -12,9 +13,8 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
 /**
- *
- * first author Kohsuke Kawaguchi
- * fork by Anthony Roux
+ * @author Kohsuke Kawaguchi
+ * @author Anthony Roux
  */
 public class DefaultIdType extends IdType {
 
@@ -52,11 +52,8 @@ public class DefaultIdType extends IdType {
         return DescriptorImpl.INSTANCE;
     }
 
+    @Extension
     public static final class DescriptorImpl extends IdTypeDescriptor {
-
-        private DescriptorImpl() {
-            super(DefaultIdType.class);
-        }
 
         @Override
         public DefaultIdType newInstance(StaplerRequest req, JSONObject formData) throws FormException {

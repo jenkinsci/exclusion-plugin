@@ -1,16 +1,15 @@
 package org.jvnet.hudson.plugins.exclusion;
 
+import hudson.DescriptorExtensionList;
 import hudson.model.Descriptor;
 
-import java.util.ArrayList;
-import java.util.List;
+import jenkins.model.Jenkins;
 
 import org.kohsuke.stapler.StaplerRequest;
 
 /**
- *
- * first author Kohsuke Kawaguchi
- * fork by Anthony Roux
+ * @author Kohsuke Kawaguchi
+ * @author Anthony Roux
  */
 public abstract class IdTypeDescriptor extends Descriptor<IdType> {
 
@@ -18,9 +17,16 @@ public abstract class IdTypeDescriptor extends Descriptor<IdType> {
         super(clazz);
     }
 
+    public IdTypeDescriptor() {
+        super();
+    }
+
     @Override
     public final IdType newInstance(StaplerRequest req) throws FormException {
         throw new UnsupportedOperationException();
     }
-    public static final List<IdTypeDescriptor> LIST = new ArrayList<IdTypeDescriptor>();
+
+    public static DescriptorExtensionList<IdType,IdTypeDescriptor> all() {
+        return Jenkins.getInstance().<IdType,IdTypeDescriptor>getDescriptorList(IdType.class);
+    }
 }

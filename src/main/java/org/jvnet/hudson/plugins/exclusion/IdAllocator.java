@@ -8,6 +8,8 @@ import hudson.model.AbstractBuild;
 import hudson.model.Computer;
 import hudson.model.Descriptor;
 import hudson.model.Executor;
+import hudson.model.Item;
+import hudson.model.listeners.ItemListener;
 import hudson.tasks.BuildWrapper;
 
 import java.io.IOException;
@@ -19,12 +21,13 @@ import java.util.Map;
 
 import net.sf.json.JSONObject;
 
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.StaplerRequest;
 
 /**
- *
- * first author Kohsuke Kawaguchi
- * fork by Anthony Roux
+ * @author Kohsuke Kawaguchi
+ * @author Anthony Roux
  */
 public class IdAllocator extends BuildWrapper {
 
@@ -100,7 +103,7 @@ public class IdAllocator extends BuildWrapper {
      * @param oldProjecName : Old project name
 	 * @param newProjectName : New project name
      */
-    public static void updateList(String oldProjecName, String newProjectName) {
+    private static void updateList(String oldProjecName, String newProjectName) {
         for (int i = listRessources.size() - 1; i >= 0; i--) {
             if (listRessources.get(i).getJobName().equals(oldProjecName)) {
                 String ressource = listRessources.get(i).getRessource();
@@ -114,7 +117,7 @@ public class IdAllocator extends BuildWrapper {
      * This method removes all the resources of a project (Job)
      * @param ProjectName : Project name
      */
-    public static void deleteList(String ProjectName) {
+    /*package*/ static void deleteList(String ProjectName) {
         for (int i = listRessources.size() - 1; i >= 0; i--) {
             if (listRessources.get(i).getJobName().equals(ProjectName)) {
                 listRessources.remove(i);
@@ -128,7 +131,7 @@ public class IdAllocator extends BuildWrapper {
      * @param resourceName : Resource name
      * @param build : resource state (true = in use)
      */
-    public static void updateBuild(String ProjectName, String resourceName, boolean build) {
+    /*package*/ static void updateBuild(String ProjectName, String resourceName, boolean build) {
         for (int i = listRessources.size() - 1; i >= 0; i--) {
             if (listRessources.get(i).getJobName().equals(ProjectName) && listRessources.get(i).getRessource().equals(resourceName)) {
                 RessourcesMonitor rmGet = listRessources.get(i);
@@ -139,7 +142,24 @@ public class IdAllocator extends BuildWrapper {
         }
     }
 
-	
+    /**
+     * Update allocations metadata in case Item is deleted or renamed.
+     */
+    @Restricted(NoExternalUse.class)
+    @Extension
+    public static final class RenameListener extends ItemListener {
+
+        @Override
+        public void onRenamed(Item item, String oldName, String newName) {
+            IdAllocator.updateList(oldName, newName);
+        }
+
+        @Override
+        public void onDeleted(Item item) {
+            IdAllocator.deleteList(item.getName());
+        }
+    }
+
     @Override
     public Descriptor<BuildWrapper> getDescriptor() {
         String projectName = "unknow";
@@ -216,14 +236,14 @@ public class IdAllocator extends BuildWrapper {
         }
 
         public List<IdTypeDescriptor> getIdTypes() {
-            return IdTypeDescriptor.LIST;
+            return IdTypeDescriptor.all();
 
         }
 
         @Override
         public BuildWrapper newInstance(StaplerRequest req, JSONObject formData) throws FormException {
             List<IdType> ids = Descriptor.newInstancesFromHeteroList(
-                    req, formData, "ids", IdTypeDescriptor.LIST);
+                    req, formData, "ids", IdTypeDescriptor.all());
 			// In some cases you can not get the job name as previously, so we let Newinstance do it
             String[] split = req.getReferer().split("/");
             for (int i = 0; i < split.length; i++) {
