@@ -28,7 +28,7 @@
                 </j:forEach>
             </table>
             <j:set var="rcs" value="${it.list}" />
-            <f:form method="post" action="freeResource">
+            <f:form method="post" action="freeResource" name="freeResource">
                 <f:entry title="${%Resource name}">
                     <select name="resourceName">
                         <j:forEach var="rc" items="${rcs}">

@@ -24,6 +24,7 @@
 package org.jvnet.hudson.plugins.exclusion;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -49,6 +50,7 @@ import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.JenkinsRule.WebClient;
 import org.jvnet.hudson.test.TestBuilder;
 
+import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class ExclusionTest {
@@ -212,6 +214,30 @@ public class ExclusionTest {
 
         j.assertLogContains("Assigned RESOURCE", b1);
         assertEquals(b1.getLog(), b2.getLog());
+    }
+
+    @Test
+    public void releaseResource() throws Exception {
+        BlockingBuilder blocker = new BlockingBuilder();
+
+        FreeStyleProject p = j.createFreeStyleProject("job");
+        p.getBuildWrappersList().add(defaultAlocatorForResources("job", "resource"));
+        p.getBuildersList().add(new CriticalBlockStart());
+        p.getBuildersList().add(blocker);
+
+        FreeStyleBuild b = p.scheduleBuild2(0).waitForStart();
+        Thread.sleep(1000);
+
+        assertNotNull(IdAllocationManager.getOwnerBuild("RESOURCE"));
+
+        // release via UI
+        WebClient wc = j.createWebClient();
+        HtmlPage adminPage = wc.goTo("administrationpanel");
+        HtmlForm form = adminPage.getFormByName("freeResource");
+        // The only resource is preselected
+        j.submit(form);
+
+        assertNull(IdAllocationManager.getOwnerBuild("RESOURCE"));
     }
 
     private IdAllocator defaultAlocatorForResources(String jobName, String... resources) {

@@ -13,11 +13,14 @@ import java.util.Map.Entry;
 
 import jenkins.model.Jenkins;
 
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.export.ExportedBean;
+import org.kohsuke.stapler.interceptor.RequirePOST;
 
 /**
  *
@@ -93,8 +96,9 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
     }
 
 	//Called when we click on "release resource" button
+    @RequirePOST
+    @Restricted(NoExternalUse.class)
     public void doFreeResource(StaplerRequest res, StaplerResponse rsp, @QueryParameter("resourceName") String resourceName) throws IOException, InterruptedException {
-
         // For each resource
         for (RessourcesMonitor rm : list) {
             // Check if the resource is the one chosen by the user
