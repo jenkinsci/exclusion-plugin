@@ -39,7 +39,6 @@ public class IdAllocator extends BuildWrapper {
         this.ids = ids;
     }
 
-	//Called when a job which use Exclusion plugin is started
     @Override
     public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
         final List<String> allocated = new ArrayList<String>();
@@ -53,11 +52,7 @@ public class IdAllocator extends BuildWrapper {
             alloc.add(p);
         }
 
-
         return new Environment() {
-
-			//Called when a job finished
-			// Released resource
             @Override
             public boolean tearDown(AbstractBuild abstractBuild, BuildListener buildListener) throws IOException, InterruptedException {
                 for (Id p : alloc) {
@@ -71,7 +66,6 @@ public class IdAllocator extends BuildWrapper {
                 return true;
             }
 
-			//Called when a job started
 			// Add environmental variables for each resource
             @Override
             public void buildEnvVars(Map<String, String> env) {
@@ -214,15 +208,9 @@ public class IdAllocator extends BuildWrapper {
 
     public static final class DescriptorImpl extends Descriptor<BuildWrapper> {
 
-        DescriptorImpl() {
-            super(IdAllocator.class);
-            load();
-        }
-
         @Override
         public String getDisplayName() {
             return "Add resource to manage exclusion";
-
         }
 
         @Override

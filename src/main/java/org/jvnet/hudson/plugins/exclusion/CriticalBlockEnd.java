@@ -74,15 +74,11 @@ public class CriticalBlockEnd extends Builder {
     public String getDisplayName() {
         return "Critical block end";
     }
+
     @Extension
     public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
 
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
-
-        DescriptorImpl() {
-            super(CriticalBlockEnd.class);
-            load();
-        }
 
         @Override
         public String getDisplayName() {

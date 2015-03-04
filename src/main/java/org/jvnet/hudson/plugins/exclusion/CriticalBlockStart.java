@@ -32,7 +32,6 @@ public class CriticalBlockStart extends Builder {
     public CriticalBlockStart() {
     }
 
-    //Called when step "Critical Block Start" started
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
 
@@ -43,7 +42,7 @@ public class CriticalBlockStart extends Builder {
         PrintStream logger = listener.getLogger();
 
         EnvVars environment = build.getEnvironment(listener);
-        List<String> listId = new ArrayList<String>();
+        final List<String> listId = new ArrayList<String>();
         // Add to a list all "variableEnv" (which are added by IdAllocator)
         // Each variableEnv is a resource
         for (Entry<String, String> e: environment.entrySet()) {
@@ -56,22 +55,18 @@ public class CriticalBlockStart extends Builder {
             }
         }
 
-        // if resources are allocated to this Job
-        if (listId != null) {
+        for (String id : listId) {
+            DefaultIdType p = new DefaultIdType(id);
 
-            for (String id : listId) {
-                DefaultIdType p = new DefaultIdType(id);
+           logger.println("[Exclusion] -> Allocating resource : " + id);
+            //Allocating resources
+			// if one is already used, just wait for it to be released
+            Id resource = p.allocate(true, build, pam, launcher, listener);
 
-               logger.println("[Exclusion] -> Allocating resource : " + id);
-                //Allocating resources
-				// if one is already used, just wait for it to be released
-                Id resource = p.allocate(true, build, pam, launcher, listener);
-
-                logger.println("[Exclusion] -> Assigned " + resource.get());
-            }
-            if (!listId.isEmpty()) {
-                logger.println("[Exclusion] -> Resource allocation complete");
-            }
+            logger.println("[Exclusion] -> Assigned " + resource.get());
+        }
+        if (!listId.isEmpty()) {
+            logger.println("[Exclusion] -> Resource allocation complete");
         }
         return true;
     }
@@ -83,11 +78,6 @@ public class CriticalBlockStart extends Builder {
     public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
 
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
-
-        DescriptorImpl() {
-            super(CriticalBlockStart.class);
-            load();
-        }
 
         @Override
         public String getDisplayName() {
