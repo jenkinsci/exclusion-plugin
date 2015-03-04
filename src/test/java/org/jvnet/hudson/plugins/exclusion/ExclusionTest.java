@@ -39,6 +39,7 @@ import hudson.model.AbstractBuild;
 import hudson.model.FreeStyleProject;
 import hudson.model.Job;
 import hudson.model.queue.QueueTaskFuture;
+import hudson.slaves.DumbSlave;
 import hudson.util.OneShotEvent;
 
 import java.io.IOException;
@@ -238,6 +239,28 @@ public class ExclusionTest {
         j.submit(form);
 
         assertNull(IdAllocationManager.getOwnerBuild("RESOURCE"));
+    }
+
+    @Test
+    public void multipleSlaves() throws Exception {
+        DumbSlave slave = j.createOnlineSlave();
+        FreeStyleProject owner = j.createFreeStyleProject("job");
+        owner.getBuildWrappersList().add(defaultAlocatorForResources("job", "resource"));
+        owner.getBuildersList().add(new CriticalBlockStart());
+        owner.getBuildersList().add(new BlockingBuilder());
+        owner.setAssignedNode(slave);
+        FreeStyleBuild ownerBuild = owner.scheduleBuild2(0).waitForStart();
+        Thread.sleep(1000);
+
+        FreeStyleProject blocked = j.createFreeStyleProject("job2");
+        blocked.getBuildWrappersList().add(defaultAlocatorForResources("job2", "resource"));
+        blocked.getBuildersList().add(new CriticalBlockStart());
+        blocked.getBuildersList().add(new BlockingBuilder());
+        blocked.setAssignedNode(j.jenkins);
+        FreeStyleBuild blockedBuild = blocked.scheduleBuild2(0).waitForStart();
+        Thread.sleep(1000);
+
+        j.assertLogContains("Waiting for resource 'RESOURCE' currently used by 'job #1'", blockedBuild);
     }
 
     private IdAllocator defaultAlocatorForResources(String jobName, String... resources) {
