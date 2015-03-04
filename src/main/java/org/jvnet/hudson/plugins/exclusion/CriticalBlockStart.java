@@ -35,10 +35,8 @@ public class CriticalBlockStart extends Builder {
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
 
-        final Computer cur = Executor.currentExecutor().getOwner();
-        pam = IdAllocationManager.getManager(cur);
+        pam = IdAllocationManager.getManager(Executor.currentExecutor().getOwner());
 
-        //Init Builder
         PrintStream logger = listener.getLogger();
 
         EnvVars environment = build.getEnvironment(listener);

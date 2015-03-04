@@ -32,10 +32,9 @@ public class CriticalBlockEnd extends Builder {
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
 
-        final Computer cur2 = Executor.currentExecutor().getOwner();
-        final IdAllocationManager pam2 = IdAllocationManager.getManager(cur2);
+        final IdAllocationManager pam = IdAllocationManager.getManager(Executor.currentExecutor().getOwner());
 
-		//Get environemental variables
+		//Get environmental variables
         EnvVars environment = build.getEnvironment(listener);
         List<String> listId = new ArrayList<String>();
 		
@@ -54,12 +53,11 @@ public class CriticalBlockEnd extends Builder {
             listener.getLogger().println("[Exclusion] -> Releasing all the resources");
         }
 
-		//For each resource
         for (String id : listId) {
             
             DefaultIdType p = new DefaultIdType(id);
-            Id i = p.allocate(false, build, pam2, launcher, listener);
-            AbstractBuild absBuild = IdAllocationManager.getOwnerBuild(i.type.name);
+            Id i = p.allocate(false, build, pam, launcher, listener);
+            AbstractBuild<?, ?> absBuild = IdAllocationManager.getOwnerBuild(i.type.name);
             if (absBuild != null) {
 				//We want to release only resources from the current job
                 if (absBuild.getProject().getName().equals(build.getProject().getName())) {
