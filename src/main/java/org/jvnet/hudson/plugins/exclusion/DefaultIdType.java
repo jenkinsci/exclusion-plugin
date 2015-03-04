@@ -7,6 +7,8 @@ import hudson.model.AbstractBuild;
 
 import java.io.IOException;
 
+import jenkins.model.Jenkins;
+
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
@@ -48,7 +50,7 @@ public class DefaultIdType extends IdType {
 
     @Override
     public DescriptorImpl getDescriptor() {
-        return DescriptorImpl.INSTANCE;
+        return (DescriptorImpl) Jenkins.getInstance().getDescriptorOrDie(getClass());
     }
 
     @Extension
@@ -58,6 +60,5 @@ public class DefaultIdType extends IdType {
         public String getDisplayName() {
             return "New Resource";
         }
-        public static final DescriptorImpl INSTANCE = new DescriptorImpl();
     }
 }
