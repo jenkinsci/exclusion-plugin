@@ -25,10 +25,10 @@ package org.jvnet.hudson.plugins.exclusion;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import hudson.Launcher;
 import hudson.model.BuildListener;
 import hudson.model.FreeStyleBuild;
-import hudson.model.Result;
 import hudson.model.AbstractBuild;
 import hudson.model.FreeStyleProject;
 import hudson.model.queue.QueueTaskFuture;
@@ -37,12 +37,13 @@ import hudson.util.OneShotEvent;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import jenkins.model.CauseOfInterruption;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.JenkinsRule.WebClient;
 import org.jvnet.hudson.test.TestBuilder;
+
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class ExclusionTest {
 
@@ -52,8 +53,8 @@ public class ExclusionTest {
     public void acquireTheResource() throws Exception {
         BlockingBuilder blocker = new BlockingBuilder();
 
-        FreeStyleProject p = j.createFreeStyleProject();
-        p.getBuildWrappersList().add(defaultAlocatorForResources("resource1", "resource2"));
+        FreeStyleProject p = j.createFreeStyleProject("job");
+        p.getBuildWrappersList().add(defaultAlocatorForResources("job", "resource1", "resource2"));
         p.getBuildersList().add(new CriticalBlockStart());
         p.getBuildersList().add(blocker);
         p.getBuildersList().add(new CriticalBlockEnd());
@@ -77,17 +78,19 @@ public class ExclusionTest {
     public void blockBuildUntilOwnerCompletes() throws Exception {
         BlockingBuilder blocker = new BlockingBuilder();
 
-        FreeStyleProject owning = j.createFreeStyleProject();
-        owning.getBuildWrappersList().add(defaultAlocatorForResources("resource"));
+        FreeStyleProject owning = j.createFreeStyleProject("a");
+        owning.getBuildWrappersList().add(defaultAlocatorForResources("a", "RESOURCE"));
         owning.getBuildersList().add(new CriticalBlockStart());
         owning.getBuildersList().add(blocker);
         owning.getBuildersList().add(new CriticalBlockEnd());
+        owning.setAssignedLabel(null);
 
-        FreeStyleProject waiting = j.createFreeStyleProject();
-        waiting.getBuildWrappersList().add(defaultAlocatorForResources("resource"));
+        FreeStyleProject waiting = j.createFreeStyleProject("b");
+        waiting.getBuildWrappersList().add(defaultAlocatorForResources("b", "RESOURCE"));
         waiting.getBuildersList().add(new CriticalBlockStart());
         waiting.getBuildersList().add(new BlockingBuilder()); // Block forever
         waiting.getBuildersList().add(new CriticalBlockEnd());
+        waiting.setAssignedLabel(null);
 
         final QueueTaskFuture<FreeStyleBuild> owningFuture = owning.scheduleBuild2(0);
         FreeStyleBuild owningBuild = owningFuture.waitForStart();
@@ -96,7 +99,11 @@ public class ExclusionTest {
 
         FreeStyleBuild waitingBuild = waiting.scheduleBuild2(0).waitForStart();
         Thread.sleep(1000);
-        j.assertLogContains("Waiting ressource : RESOURCE currently use by : test0 #1", waitingBuild);
+        j.assertLogContains("Waiting ressource : RESOURCE currently use by : a #1", waitingBuild);
+
+        WebClient wc = j.createWebClient();
+        HtmlPage page = wc.goTo("administrationpanel");
+        assertTrue(page.asText().contains("b\tRESOURCE"));
 
         blocker.event.signal();
 
@@ -110,8 +117,8 @@ public class ExclusionTest {
     public void interruptBuildWaitingToResource() throws Exception {
         BlockingBuilder blocker = new BlockingBuilder();
 
-        FreeStyleProject waiting = j.createFreeStyleProject();
-        waiting.getBuildWrappersList().add(defaultAlocatorForResources("resource"));
+        FreeStyleProject waiting = j.createFreeStyleProject("job");
+        waiting.getBuildWrappersList().add(defaultAlocatorForResources("job", "resource"));
         waiting.getBuildersList().add(new CriticalBlockStart());
         waiting.getBuildersList().add(blocker);
         waiting.getBuildersList().add(new CriticalBlockEnd());
@@ -138,8 +145,8 @@ public class ExclusionTest {
     public void ommitEndStep() throws Exception {
         BlockingBuilder blocker = new BlockingBuilder();
 
-        FreeStyleProject waiting = j.createFreeStyleProject();
-        waiting.getBuildWrappersList().add(defaultAlocatorForResources("resource"));
+        FreeStyleProject waiting = j.createFreeStyleProject("job");
+        waiting.getBuildWrappersList().add(defaultAlocatorForResources("jobs", "resource"));
         waiting.getBuildersList().add(new CriticalBlockStart());
         waiting.getBuildersList().add(blocker);
 
@@ -156,11 +163,13 @@ public class ExclusionTest {
         assertNull("Resource should be available", IdAllocationManager.ids.get("RESOURCE"));
     }
 
-    private IdAllocator defaultAlocatorForResources(String... resources) {
+    private IdAllocator defaultAlocatorForResources(String jobName, String... resources) {
         DefaultIdType[] out = new DefaultIdType[resources.length];
         for (int i = 0; i < resources.length; i++) {
             out[i] = new DefaultIdType(resources[i]);
         }
+        // TODO how can this even work?
+        IdAllocator.DESCRIPTOR.setName(jobName);
         return new IdAllocator(out);
     }
 

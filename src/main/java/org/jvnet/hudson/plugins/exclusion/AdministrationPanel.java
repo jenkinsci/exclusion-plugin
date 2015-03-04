@@ -50,7 +50,6 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
 
     //Called for each page load of administration
     public void load() {
-
 		/* In case plugin is uncheck */
          // List all jobs
         List<String> allJobsName = new ArrayList<String>();
@@ -68,9 +67,7 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
             // For each of them
             for (Iterator i = buildWrappers.keySet().iterator(); i.hasNext();) {
                 Descriptor<BuildWrapper> key = (Descriptor<BuildWrapper>) i.next();
-
-                // We check if the descriptor is "org.jvnet.hudson.plugins.exclusion.IdAllocator $ DescriptorImpl"
-                if (buildWrappers.get(key).getDescriptor().toString().split("@")[0].equals("org.jvnet.hudson.plugins.exclusion.IdAllocator$DescriptorImpl")) {
+                if (buildWrappers.get(key).getDescriptor() instanceof IdAllocator.DescriptorImpl) {
                     // No duplicates
                     if (!allExclusionJobs.contains(p.getName())) {
                         allExclusionJobs.add(p.getName());

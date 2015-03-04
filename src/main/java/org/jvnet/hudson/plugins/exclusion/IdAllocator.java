@@ -29,7 +29,7 @@ public class IdAllocator extends BuildWrapper {
 
 	//Resources currently configured in the job
     private IdType[] ids = null;
-    public static List<RessourcesMonitor> listRessources = new ArrayList<RessourcesMonitor>();
+    private static List<RessourcesMonitor> listRessources = new ArrayList<RessourcesMonitor>();
     private static String jName = "unknow";
 
     public IdAllocator(IdType[] ids) {
@@ -92,10 +92,6 @@ public class IdAllocator extends BuildWrapper {
 
     public static List<RessourcesMonitor> getListRessources() {
         return listRessources;
-    }
-
-    public static void setListRessources(List<RessourcesMonitor> list) {
-        listRessources = list;
     }
 
     /**
@@ -230,11 +226,16 @@ public class IdAllocator extends BuildWrapper {
             String[] split = req.getReferer().split("/");
             for (int i = 0; i < split.length; i++) {
                 if (split[i].equals("job")) {
-                    jName = split[i + 1];
+                    setName(split[i + 1]);
                 }
             }
             IdAllocator portAlloc = new IdAllocator(ids.toArray(new IdType[ids.size()]));
             return portAlloc;
+        }
+
+        // TODO introduced to keep things working in unittest too. jName has to die as soon as we have decent coverage.
+        /*package*/ void setName(String name) {
+            jName = name;
         }
     }
 }
