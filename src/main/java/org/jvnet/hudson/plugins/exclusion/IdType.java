@@ -10,9 +10,8 @@ import java.io.IOException;
 import java.io.Serializable;
 
 /**
- *
- * first author Kohsuke Kawaguchi
- * fork by Anthony Roux
+ * @author Kohsuke Kawaguchi
+ * @author Anthony Roux
  */
 public abstract class IdType implements ExtensionPoint, Describable<IdType>, Serializable {
 

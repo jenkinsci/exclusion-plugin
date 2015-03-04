@@ -13,11 +13,9 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.List;
 
-
 /**
- *
- * first author Kohsuke Kawaguchi
- * fork by Anthony Roux
+ * @author Kohsuke Kawaguchi
+ * @author Anthony Roux
  */
 public final class IdAllocationManager {
 

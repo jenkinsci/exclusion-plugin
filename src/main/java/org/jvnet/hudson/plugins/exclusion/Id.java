@@ -3,9 +3,8 @@ package org.jvnet.hudson.plugins.exclusion;
 import java.io.IOException;
 
 /**
- *
- * first author Kohsuke Kawaguchi
- * fork by Anthony Roux
+ * @author Kohsuke Kawaguchi
+ * @author Anthony Roux
  */
 public abstract class Id {
 

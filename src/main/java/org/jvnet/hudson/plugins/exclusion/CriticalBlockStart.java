@@ -20,11 +20,10 @@ import java.util.Map.Entry;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
- *
- * @author Anthony Roux
  * Build step -> Start of critical zone
  *
- **/
+ * @author Anthony Roux
+ */
 public class CriticalBlockStart extends Builder {
 
     public static IdAllocationManager pam = null;

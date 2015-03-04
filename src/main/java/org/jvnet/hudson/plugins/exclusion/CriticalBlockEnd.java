@@ -19,11 +19,10 @@ import java.util.Map.Entry;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
+ * Build step -> End of critical zone
  *
  * @author Anthony Roux
- * 
- * Build step -> End of critical zone
- **/
+ */
 public class CriticalBlockEnd extends Builder {
 
     @DataBoundConstructor
