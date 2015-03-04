@@ -35,11 +35,14 @@ public final class IdAllocationManager {
 
         while (ids.get(id) != null) {
 
-        if (printed == false) { logger.println("Waiting ressource : " + id + " currently use by : " + ids.get(id).toString()); printed = true; }
-        wait(1000);
+            if (printed == false) {
+                logger.println("Waiting ressource : " + id + " currently use by : " + ids.get(id).toString());
+                printed = true;
+            }
+            wait(1000);
 
-        // periodically detect if any locked resource belongs to the completed build
-        releaseDeadlockedResource(id, buildListener);
+            // periodically detect if any locked resource belongs to the completed build
+            releaseDeadlockedResource(id, buildListener);
         }
 
         // When allocate a resource, add it to the hashmap
@@ -47,7 +50,7 @@ public final class IdAllocationManager {
         return id;
     }
 
-    private void releaseDeadlockedResource(String id, BuildListener buildListener) throws InterruptedException, IOException {
+    private void releaseDeadlockedResource(String id, BuildListener buildListener) {
         PrintStream logger = buildListener.getLogger();
         // check if 'lockable resource' exists
         AbstractBuild<?, ?> resourceOwner = ids.get(id);
