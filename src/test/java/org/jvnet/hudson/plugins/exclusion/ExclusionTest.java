@@ -27,6 +27,10 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import hudson.Launcher;
+import hudson.matrix.AxisList;
+import hudson.matrix.MatrixBuild;
+import hudson.matrix.MatrixProject;
+import hudson.matrix.TextAxis;
 import hudson.model.BuildListener;
 import hudson.model.FreeStyleBuild;
 import hudson.model.AbstractBuild;
@@ -161,6 +165,32 @@ public class ExclusionTest {
         feature.get();
 
         assertNull("Resource should be available", IdAllocationManager.getOwnerBuild("RESOURCE"));
+    }
+
+    @Test
+    public void matrixProject() throws Exception {
+        j.jenkins.setNumExecutors(5); // We have enough executors for all configurations
+
+        MatrixProject p = j.createMatrixProject();
+        p.setAxes(new AxisList(new TextAxis(
+                "axis", "a", "b", "c", "d", "e"
+        )));
+        p.getBuildWrappersList().add(defaultAlocatorForResources("job", "resource"));
+        p.getBuildersList().add(new CriticalBlockStart());
+        p.getBuildersList().add(new TestBuilder() {
+            @Override
+            public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+                assertSame(build, IdAllocationManager.getOwnerBuild("RESOURCE"));
+                return true;
+            }
+        });
+
+        MatrixBuild build = j.buildAndAssertSuccess(p);
+        for (char i = 'a'; i <= 'e'; i++) {
+            j.assertBuildStatusSuccess(p.getItem("axis=" + i).getLastBuild());
+        }
+
+        assertNull(IdAllocationManager.getOwnerBuild("RESOURCE"));
     }
 
     private IdAllocator defaultAlocatorForResources(String jobName, String... resources) {
