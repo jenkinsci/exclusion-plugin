@@ -1,5 +1,5 @@
 
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">                                                       
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     <l:layout title="Exclusion">
         <l:side-panel>
             <t:queue items="${app.queue.items}"/>
@@ -10,31 +10,31 @@
             <h3>${%AdministrationPanel.description}</h3>
             <j:invoke on="${it}" method="load"/>
             <j:set var="rcs" value="${it.list}" />
-            
-            <TABLE frame="border" cellpadding="30">
-                <TR>
-                    <TH align="center">  Job  </TH>
-                    <TH align="center"> Resource </TH>
-                    <TH align="center"> Action </TH>
-                </TR>
+
+            <table class="sortable pane bigtable">
+                <tr>
+                    <th>${%Job}</th>
+                    <th>${%Resource}</th>
+                    <th>${%Action}</th>
+                </tr>
                 <j:forEach var="rc" items="${rcs}">
-                    <TR>
-                        <TD id="jobName">${rc.jobName}</TD>
-                        <TD id="resource">${rc.ressource}</TD>
-                        <j:if test="${rc.build==true}">
-                             <TD ID="action">Currently Used</TD>
-                        </j:if> 
-                    </TR>
+                    <tr>
+                        <td id="jobName">${rc.jobName}</td>
+                        <td id="resource">${rc.ressource}</td>
+                        <td id="action">
+                            <j:if test="${rc.build==true}">Currently Used</j:if>
+                        </td>
+                    </tr>
                 </j:forEach>
-            </TABLE>
+            </table>
             <j:set var="rcs" value="${it.list}" />
-            <f:form method="post" action="freeResource">  
+            <f:form method="post" action="freeResource">
                 <f:entry title="${%Resource name}">
                     <select name="resourceName">
                         <j:forEach var="rc" items="${rcs}">
                             <j:if test="${rc.build==true}">
                                 <f:option>${rc.ressource}</f:option>
-                            </j:if> 
+                            </j:if>
                         </j:forEach>
                     </select>
                 </f:entry>
