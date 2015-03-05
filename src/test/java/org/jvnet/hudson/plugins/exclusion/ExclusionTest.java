@@ -35,6 +35,7 @@ import hudson.matrix.MatrixProject;
 import hudson.matrix.TextAxis;
 import hudson.model.BuildListener;
 import hudson.model.FreeStyleBuild;
+import hudson.model.TopLevelItem;
 import hudson.model.AbstractBuild;
 import hudson.model.FreeStyleProject;
 import hudson.model.Job;
@@ -45,18 +46,23 @@ import hudson.util.OneShotEvent;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import jenkins.model.ModifiableTopLevelItemGroup;
+
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.JenkinsRule.WebClient;
 import org.jvnet.hudson.test.TestBuilder;
 
+import com.cloudbees.hudson.plugins.folder.Folder;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class ExclusionTest {
 
     @Rule public JenkinsRule j = new JenkinsRule();
+    private ModifiableTopLevelItemGroup group;
 
     @Test
     public void acquireTheResource() throws Exception {
@@ -261,6 +267,35 @@ public class ExclusionTest {
         Thread.sleep(1000);
 
         j.assertLogContains("Waiting for resource 'RESOURCE' currently used by 'job #1'", blockedBuild);
+    }
+
+    @Test
+    public void testFolder() throws Exception {
+        final BlockingBuilder blocker = new BlockingBuilder();
+        Folder fa = j.jenkins.createProject(Folder.class, "folderA");
+
+        FreeStyleProject owner = fa.createProject(FreeStyleProject.class, "job");
+
+        owner.getBuildWrappersList().add(defaultAlocatorForResources("job", "resource"));
+        owner.getBuildersList().add(new CriticalBlockStart());
+        owner.getBuildersList().add(blocker);
+
+        FreeStyleProject blocked = j.createFreeStyleProject("job");
+        blocked.getBuildWrappersList().add(defaultAlocatorForResources("job", "resource"));
+        blocked.getBuildersList().add(new CriticalBlockStart());
+
+        FreeStyleBuild ob = owner.scheduleBuild2(0).waitForStart();
+        Thread.sleep(1000);
+
+        final QueueTaskFuture<FreeStyleBuild> blockedFeature = blocked.scheduleBuild2(0);
+        FreeStyleBuild bb = blockedFeature.waitForStart();
+        Thread.sleep(1000);
+
+        assertSame(ob, IdAllocationManager.getOwnerBuild("RESOURCE"));
+        j.assertLogContains("Waiting for resource 'RESOURCE' currently used by 'folderA » job #1'", bb);
+        blocker.event.signal();
+        blockedFeature.get();
+        j.assertBuildStatusSuccess(bb);
     }
 
     private IdAllocator defaultAlocatorForResources(String jobName, String... resources) {
