@@ -1,34 +1,29 @@
 package org.jvnet.hudson.plugins.exclusion;
 
+import hudson.EnvVars;
 import hudson.Extension;
+import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.BuildListener;
-import hudson.model.AbstractBuild;
-import hudson.model.Computer;
-import hudson.model.Descriptor;
-import hudson.model.Executor;
-import hudson.model.Item;
+import hudson.model.*;
 import hudson.model.listeners.ItemListener;
 import hudson.tasks.BuildWrapper;
+import jenkins.tasks.SimpleBuildWrapper;
+import net.sf.json.JSONObject;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
+import org.kohsuke.stapler.StaplerRequest;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import net.sf.json.JSONObject;
-
-import org.kohsuke.accmod.Restricted;
-import org.kohsuke.accmod.restrictions.NoExternalUse;
-import org.kohsuke.stapler.StaplerRequest;
 
 /**
  * @author Kohsuke Kawaguchi
  * @author Anthony Roux
  */
-public class IdAllocator extends BuildWrapper {
+public class IdAllocator extends SimpleBuildWrapper {
 
 	//Resources currently configured in the job
     private IdType[] ids = null;
@@ -40,44 +35,45 @@ public class IdAllocator extends BuildWrapper {
     }
 
     @Override
-    public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
+    public void setUp(Context context, Run<?, ?> run, FilePath filePath, Launcher launcher, TaskListener taskListener, EnvVars envVars) throws IOException, InterruptedException {
         final List<String> allocated = new ArrayList<String>();
         final List<Id> alloc = new ArrayList<Id>();
-        final String buildName = build.getProject().getName();
+        final String buildName = run.getParent().getName();
         final Computer cur = Executor.currentExecutor().getOwner();
         final IdAllocationManager pam = IdAllocationManager.getManager(cur);
+
         for (IdType pt : ids) {
             allocated.add(pt.name);
-            Id p = pt.allocate(false, build, pam, launcher, listener);
+            Id p = pt.allocate(false, run, pam, launcher, taskListener);
             alloc.add(p);
         }
 
-        return new Environment() {
+        int i = 0;
+        for (String p : allocated) {
+            context.env("variableEnv" + buildName + i, p);
+            context.env(p, p);
+            i++;
+        }
+
+        context.setDisposer(new Disposer() {
+            private static final long serialVersionUID = 1L;
+
             @Override
-            public boolean tearDown(AbstractBuild abstractBuild, BuildListener buildListener) throws IOException, InterruptedException {
+            public void tearDown(Run<?, ?> run, FilePath filePath, Launcher launcher, TaskListener taskListener) throws IOException, InterruptedException {
                 for (Id p : alloc) {
-                    AbstractBuild<?, ?> get = IdAllocationManager.getOwnerBuild(p.type.name);
+                    Run<?, ?> get = IdAllocationManager.getOwnerBuild(p.type.name);
                     if (get != null) {
-                        if (get.getProject().getName().equals(abstractBuild.getProject().getName())) {
+                        if (get.getParent().getName().equals(run.getParent().getName())) {
                             p.cleanUp();
                         }
                     }
                 }
-                return true;
             }
+        });
 
-			// Add environmental variables for each resource
-            @Override
-            public void buildEnvVars(Map<String, String> env) {
-                int i = 0;
-                for (String p : allocated) {
-                    env.put("variableEnv" + buildName + i, p);
-                    env.put(p, p);
-                    i++;
-                }
-            }
-        };
+
     }
+
 
     public IdType[] getIds() {
         return ids;
@@ -151,7 +147,7 @@ public class IdAllocator extends BuildWrapper {
 
     @Override
     public Descriptor<BuildWrapper> getDescriptor() {
-        String projectName = "unknow";
+        String projectName;
 	//A way to get the current project name
         String[] threadName = Executor.currentThread().getName().split(" ");
 
@@ -226,15 +222,14 @@ public class IdAllocator extends BuildWrapper {
         public BuildWrapper newInstance(StaplerRequest req, JSONObject formData) throws FormException {
             List<IdType> ids = Descriptor.newInstancesFromHeteroList(
                     req, formData, "ids", IdTypeDescriptor.all());
-			// In some cases you can not get the job name as previously, so we let Newinstance do it
+            // In some cases you can not get the job name as previously, so we let Newinstance do it
             String[] split = req.getReferer().split("/");
             for (int i = 0; i < split.length; i++) {
                 if (split[i].equals("job")) {
                     setName(split[i + 1]);
                 }
             }
-            IdAllocator portAlloc = new IdAllocator(ids.toArray(new IdType[ids.size()]));
-            return portAlloc;
+            return new IdAllocator(ids.toArray(new IdType[ids.size()]));
         }
 
         // TODO introduced to keep things working in unittest too. jName has to die as soon as we have decent coverage.

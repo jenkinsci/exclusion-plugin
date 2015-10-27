@@ -2,29 +2,27 @@ package org.jvnet.hudson.plugins.exclusion;
 
 import hudson.EnvVars;
 import hudson.Extension;
+import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.BuildListener;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
-import hudson.model.Computer;
-import hudson.model.Executor;
+import hudson.model.*;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
+import jenkins.tasks.SimpleBuildStep;
+import org.kohsuke.stapler.DataBoundConstructor;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.kohsuke.stapler.DataBoundConstructor;
-
 /**
  * Build step -> Start of critical zone
  *
  * @author Anthony Roux
  */
-public class CriticalBlockStart extends Builder {
+public class CriticalBlockStart extends Builder implements SimpleBuildStep {
 
     public static IdAllocationManager pam = null;
 
@@ -32,48 +30,46 @@ public class CriticalBlockStart extends Builder {
     public CriticalBlockStart() {
     }
 
-    @Override
-    public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+    public String getDisplayName() {
+        return "Critical block start";
+    }
+    @Extension
+    public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
 
+    @Override
+    public void perform(@Nonnull Run<?, ?> run, @Nonnull FilePath filePath, @Nonnull Launcher launcher, @Nonnull TaskListener taskListener) throws InterruptedException, IOException {
         pam = IdAllocationManager.getManager(Executor.currentExecutor().getOwner());
 
-        PrintStream logger = listener.getLogger();
+        PrintStream logger = taskListener.getLogger();
 
-        EnvVars environment = build.getEnvironment(listener);
+        EnvVars environment = run.getEnvironment(taskListener);
         final List<String> listId = new ArrayList<String>();
         // Add to a list all "variableEnv" (which are added by IdAllocator)
         // Each variableEnv is a resource
         for (Entry<String, String> e: environment.entrySet()) {
             String cle = e.getKey();
 
-            String name = "variableEnv" + build.getProject().getName();
+            String name = "variableEnv" + run.getParent().getName();
             if (cle.contains(name)) {
-                String valeur = e.getValue();
-                listId.add(valeur);
+                String value = e.getValue();
+                listId.add(value);
             }
         }
 
         for (String id : listId) {
             DefaultIdType p = new DefaultIdType(id);
 
-           logger.println("[Exclusion] -> Allocating resource : " + id);
+            logger.println("[Exclusion] -> Allocating resource : " + id);
             //Allocating resources
-			// if one is already used, just wait for it to be released
-            Id resource = p.allocate(true, build, pam, launcher, listener);
+            // if one is already used, just wait for it to be released
+            Id resource = p.allocate(true, run, pam, launcher, taskListener);
 
             logger.println("[Exclusion] -> Assigned " + resource.get());
         }
         if (!listId.isEmpty()) {
             logger.println("[Exclusion] -> Resource allocation complete");
         }
-        return true;
     }
-
-    public String getDisplayName() {
-        return "Critical block start";
-    }
-    @Extension
-    public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
 
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
