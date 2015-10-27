@@ -1,18 +1,10 @@
 package org.jvnet.hudson.plugins.exclusion;
 
 import hudson.Extension;
-import hudson.model.RootAction;
-import hudson.model.AbstractBuild;
-import hudson.model.Hudson;
 import hudson.model.Project;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-
+import hudson.model.RootAction;
+import hudson.model.Run;
 import jenkins.model.Jenkins;
-
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.QueryParameter;
@@ -21,6 +13,11 @@ import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.export.ExportedBean;
 import org.kohsuke.stapler.interceptor.RequirePOST;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * Administration page model object.
@@ -53,7 +50,7 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
     // TODO why does this update stuff?
     public List<RessourcesMonitor> getList() {
 
-        for (Project<?, ?> p : Hudson.getInstance().getProjects()) {
+        for (Project<?, ?> p : Jenkins.getInstance().getProjects()) {
             if (p.getBuildWrappersList().get(IdAllocator.class) == null) {
                 IdAllocator.deleteList(p.getName());
             }
@@ -65,8 +62,8 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
         }
 
         // For each resource Job, set build to true if a resource is used
-        for (Entry<String, AbstractBuild<?, ?>> allocation: IdAllocationManager.getAllocations().entrySet()) {
-            IdAllocator.updateBuild(allocation.getValue().getProject().getName(), allocation.getKey(), true);
+        for (Entry<String, Run<?, ?>> allocation: IdAllocationManager.getAllocations().entrySet()) {
+            IdAllocator.updateBuild(allocation.getValue().getParent().getName(), allocation.getKey(), true);
         }
 
         ArrayList<RessourcesMonitor> list = new ArrayList<RessourcesMonitor>(listRessources.size());
@@ -93,9 +90,9 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
 
                 // Cleanup only if the job is currently using the resource
                 // So we get the name of the job that uses the resource and we look in the list
-                AbstractBuild<?, ?> get = IdAllocationManager.getOwnerBuild(resourceName);
+                Run<?, ?> get = IdAllocationManager.getOwnerBuild(resourceName);
                 if (get != null) {
-                    if (get.getProject().getName().equals(rm.getJobName())) {
+                    if (get.getParent().getName().equals(rm.getJobName())) {
                         // Release resource
                         i.cleanUp();
                     }

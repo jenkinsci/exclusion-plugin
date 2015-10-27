@@ -2,14 +2,12 @@ package org.jvnet.hudson.plugins.exclusion;
 
 import hudson.Extension;
 import hudson.Launcher;
-import hudson.model.BuildListener;
-import hudson.model.AbstractBuild;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import jenkins.model.Jenkins;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.IOException;
-
-import jenkins.model.Jenkins;
-
-import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
  * Exclusion resource that can be configured per job.
@@ -25,11 +23,11 @@ public class DefaultIdType extends IdType {
     }
 
     @Override
-    public Id allocate(boolean launchAlloc, AbstractBuild<?, ?> build, final IdAllocationManager manager, Launcher launcher, BuildListener buildListener) throws IOException, InterruptedException {
+    public Id allocate(boolean launchAlloc, Run<?, ?> run, final IdAllocationManager manager, Launcher launcher, TaskListener taskListener) throws IOException, InterruptedException {
         final String n;
 
         if (launchAlloc) {
-            n = manager.allocate(build, getFixedId(), buildListener);
+            n = manager.allocate(run, getFixedId(), taskListener);
         } else {
             n = getFixedId();
         }

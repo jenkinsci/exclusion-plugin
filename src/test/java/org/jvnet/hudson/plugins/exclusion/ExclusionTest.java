@@ -23,53 +23,38 @@
  */
 package org.jvnet.hudson.plugins.exclusion;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import com.cloudbees.hudson.plugins.folder.Folder;
+import com.gargoylesoftware.htmlunit.html.HtmlForm;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import hudson.Launcher;
 import hudson.matrix.AxisList;
-import hudson.matrix.MatrixBuild;
 import hudson.matrix.MatrixProject;
 import hudson.matrix.TextAxis;
-import hudson.model.BuildListener;
-import hudson.model.FreeStyleBuild;
-import hudson.model.TopLevelItem;
-import hudson.model.AbstractBuild;
-import hudson.model.FreeStyleProject;
-import hudson.model.Job;
+import hudson.model.*;
 import hudson.model.queue.QueueTaskFuture;
 import hudson.slaves.DumbSlave;
 import hudson.util.OneShotEvent;
-
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
-import jenkins.model.ModifiableTopLevelItemGroup;
-
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.JenkinsRule.WebClient;
 import org.jvnet.hudson.test.TestBuilder;
 
-import com.cloudbees.hudson.plugins.folder.Folder;
-import com.gargoylesoftware.htmlunit.html.HtmlForm;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.Assert.*;
 
 public class ExclusionTest {
 
     @Rule public JenkinsRule j = new JenkinsRule();
-    private ModifiableTopLevelItemGroup group;
 
     @Test
     public void acquireTheResource() throws Exception {
         BlockingBuilder blocker = new BlockingBuilder();
 
         FreeStyleProject p = j.createFreeStyleProject("job");
-        p.getBuildWrappersList().add(defaultAlocatorForResources("job", "resource1", "resource2"));
+        p.getBuildWrappersList().add(defaultAllocatorForResources("job", "resource1", "resource2"));
         p.getBuildersList().add(new CriticalBlockStart());
         p.getBuildersList().add(blocker);
         p.getBuildersList().add(new CriticalBlockEnd());
@@ -94,14 +79,14 @@ public class ExclusionTest {
         BlockingBuilder blocker = new BlockingBuilder();
 
         FreeStyleProject owning = j.createFreeStyleProject("a");
-        owning.getBuildWrappersList().add(defaultAlocatorForResources("a", "RESOURCE"));
+        owning.getBuildWrappersList().add(defaultAllocatorForResources("a", "RESOURCE"));
         owning.getBuildersList().add(new CriticalBlockStart());
         owning.getBuildersList().add(blocker);
         owning.getBuildersList().add(new CriticalBlockEnd());
         owning.setAssignedLabel(null);
 
         FreeStyleProject waiting = j.createFreeStyleProject("b");
-        waiting.getBuildWrappersList().add(defaultAlocatorForResources("b", "RESOURCE"));
+        waiting.getBuildWrappersList().add(defaultAllocatorForResources("b", "RESOURCE"));
         waiting.getBuildersList().add(new CriticalBlockStart());
         waiting.getBuildersList().add(new BlockingBuilder()); // Block forever
         waiting.getBuildersList().add(new CriticalBlockEnd());
@@ -133,7 +118,7 @@ public class ExclusionTest {
         BlockingBuilder blocker = new BlockingBuilder();
 
         FreeStyleProject waiting = j.createFreeStyleProject("job");
-        waiting.getBuildWrappersList().add(defaultAlocatorForResources("job", "resource"));
+        waiting.getBuildWrappersList().add(defaultAllocatorForResources("job", "resource"));
         waiting.getBuildersList().add(new CriticalBlockStart());
         waiting.getBuildersList().add(blocker);
         waiting.getBuildersList().add(new CriticalBlockEnd());
@@ -157,11 +142,11 @@ public class ExclusionTest {
     }
 
     @Test
-    public void ommitEndStep() throws Exception {
+    public void omitEndStep() throws Exception {
         BlockingBuilder blocker = new BlockingBuilder();
 
         FreeStyleProject waiting = j.createFreeStyleProject("job");
-        waiting.getBuildWrappersList().add(defaultAlocatorForResources("jobs", "resource"));
+        waiting.getBuildWrappersList().add(defaultAllocatorForResources("jobs", "resource"));
         waiting.getBuildersList().add(new CriticalBlockStart());
         waiting.getBuildersList().add(blocker);
 
@@ -186,7 +171,7 @@ public class ExclusionTest {
         p.setAxes(new AxisList(new TextAxis(
                 "axis", "a", "b", "c", "d", "e"
         )));
-        p.getBuildWrappersList().add(defaultAlocatorForResources("job", "resource"));
+        p.getBuildWrappersList().add(defaultAllocatorForResources("job", "resource"));
         p.getBuildersList().add(new CriticalBlockStart());
         p.getBuildersList().add(new TestBuilder() {
             @Override
@@ -205,9 +190,9 @@ public class ExclusionTest {
     }
 
     @Test
-    public void configRoundtrip() throws Exception {
+    public void configRoundTrip() throws Exception {
         FreeStyleProject p = j.createFreeStyleProject("job");
-        final IdAllocator wrapper = defaultAlocatorForResources("job", "resource");
+        final IdAllocator wrapper = defaultAllocatorForResources("job", "resource");
 
         p.getBuildWrappersList().add(wrapper);
         p.getBuildersList().add(new CriticalBlockStart());
@@ -220,7 +205,7 @@ public class ExclusionTest {
         FreeStyleBuild b2 = j.buildAndAssertSuccess(p);
 
         j.assertLogContains("Assigned RESOURCE", b1);
-        assertEquals(b1.getLog(), b2.getLog());
+        assertEquals(b1.getLog(1000), b2.getLog(1000));
     }
 
     @Test
@@ -228,11 +213,11 @@ public class ExclusionTest {
         BlockingBuilder blocker = new BlockingBuilder();
 
         FreeStyleProject p = j.createFreeStyleProject("job");
-        p.getBuildWrappersList().add(defaultAlocatorForResources("job", "resource"));
+        p.getBuildWrappersList().add(defaultAllocatorForResources("job", "resource"));
         p.getBuildersList().add(new CriticalBlockStart());
         p.getBuildersList().add(blocker);
 
-        FreeStyleBuild b = p.scheduleBuild2(0).waitForStart();
+        p.scheduleBuild2(0).waitForStart();
         Thread.sleep(1000);
 
         assertNotNull(IdAllocationManager.getOwnerBuild("RESOURCE"));
@@ -251,15 +236,15 @@ public class ExclusionTest {
     public void multipleSlaves() throws Exception {
         DumbSlave slave = j.createOnlineSlave();
         FreeStyleProject owner = j.createFreeStyleProject("job");
-        owner.getBuildWrappersList().add(defaultAlocatorForResources("job", "resource"));
+        owner.getBuildWrappersList().add(defaultAllocatorForResources("job", "resource"));
         owner.getBuildersList().add(new CriticalBlockStart());
         owner.getBuildersList().add(new BlockingBuilder());
         owner.setAssignedNode(slave);
-        FreeStyleBuild ownerBuild = owner.scheduleBuild2(0).waitForStart();
+        owner.scheduleBuild2(0).waitForStart();
         Thread.sleep(1000);
 
         FreeStyleProject blocked = j.createFreeStyleProject("job2");
-        blocked.getBuildWrappersList().add(defaultAlocatorForResources("job2", "resource"));
+        blocked.getBuildWrappersList().add(defaultAllocatorForResources("job2", "resource"));
         blocked.getBuildersList().add(new CriticalBlockStart());
         blocked.getBuildersList().add(new BlockingBuilder());
         blocked.setAssignedNode(j.jenkins);
@@ -276,12 +261,12 @@ public class ExclusionTest {
 
         FreeStyleProject owner = fa.createProject(FreeStyleProject.class, "job");
 
-        owner.getBuildWrappersList().add(defaultAlocatorForResources("job", "resource"));
+        owner.getBuildWrappersList().add(defaultAllocatorForResources("job", "resource"));
         owner.getBuildersList().add(new CriticalBlockStart());
         owner.getBuildersList().add(blocker);
 
         FreeStyleProject blocked = j.createFreeStyleProject("job");
-        blocked.getBuildWrappersList().add(defaultAlocatorForResources("job", "resource"));
+        blocked.getBuildWrappersList().add(defaultAllocatorForResources("job", "resource"));
         blocked.getBuildersList().add(new CriticalBlockStart());
 
         FreeStyleBuild ob = owner.scheduleBuild2(0).waitForStart();
@@ -292,13 +277,13 @@ public class ExclusionTest {
         Thread.sleep(1000);
 
         assertSame(ob, IdAllocationManager.getOwnerBuild("RESOURCE"));
-        j.assertLogContains("Waiting for resource 'RESOURCE' currently used by 'folderA » job #1'", bb);
+        j.assertLogContains("Waiting for resource 'RESOURCE' currently used by 'folderA/job #1'", bb);
         blocker.event.signal();
         blockedFeature.get();
         j.assertBuildStatusSuccess(bb);
     }
 
-    private IdAllocator defaultAlocatorForResources(String jobName, String... resources) {
+    private IdAllocator defaultAllocatorForResources(String jobName, String... resources) {
         DefaultIdType[] out = new DefaultIdType[resources.length];
         for (int i = 0; i < resources.length; i++) {
             out[i] = new DefaultIdType(resources[i]);

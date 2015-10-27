@@ -20,6 +20,6 @@ public abstract class IdTypeDescriptor extends Descriptor<IdType> {
     }
 
     public static DescriptorExtensionList<IdType,IdTypeDescriptor> all() {
-        return Jenkins.getInstance().<IdType,IdTypeDescriptor>getDescriptorList(IdType.class);
+        return Jenkins.getInstance().getDescriptorList(IdType.class);
     }
 }
