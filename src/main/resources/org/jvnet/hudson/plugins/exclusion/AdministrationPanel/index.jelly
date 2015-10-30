@@ -7,14 +7,14 @@
         </l:side-panel>
         <l:main-panel>
             <h1>${%AdministrationPanel.title}</h1>
-            <h3>${%AdministrationPanel.description}</h3>
+            <h3>${%AdministrationPanel.declared.title}</h3>
             <j:set var="rcs" value="${it.list}" />
 
             <table class="sortable pane bigtable">
                 <tr>
-                    <th>${%Job}</th>
+                    <th>${%Project}</th>
                     <th>${%Resource}</th>
-                    <th>${%Action}</th>
+                    <th>${%State}</th>
                 </tr>
                 <j:forEach var="rc" items="${rcs}">
                     <tr>
@@ -26,20 +26,44 @@
                     </tr>
                 </j:forEach>
             </table>
-            <f:form method="post" action="freeResource" name="freeResource">
-                <f:entry title="${%Resource name}">
-                    <select name="resourceName">
-                        <j:forEach var="rc" items="${rcs}">
-                            <j:if test="${rc.build==true}">
-                                <f:option>${rc.ressource}</f:option>
-                            </j:if>
-                        </j:forEach>
-                    </select>
-                </f:entry>
-                <f:entry>
-                    <f:submit value="${%Release resource}"/>
-                </f:entry>
-            </f:form>
+
+            <script>
+                function releaseExclusionResource(e)
+                {
+                var form = document.freeResource;
+                form.resourceId.value = e.dataset.resourceid;
+                form.runId.value = e.dataset.runid;
+                form.submit();
+                }
+            </script>
+
+            <form method="post" action="freeResource" name="freeResource">
+                <input name="resourceId" type="hidden"></input>
+                <input name="runId" type="hidden"></input>
+            </form>
+
+            <j:set var="resources" value="${it.allocatedResources}" />
+            <h3>${%AdministrationPanel.allocated.title}</h3>
+            <table class="sortable pane bigtable">
+                <tr>
+                    <th>${%Resource}</th>
+                    <th>${%Build}</th>
+                    <th>${%Action}</th>
+                </tr>
+                <j:forEach var="resource" items="${resources}">
+                    <tr>
+                        <td>${resource.resourceId}</td>
+                        <td><a href="${rootURL}/${resource.runUrl}">${resource.runId}</a></td>
+                        <td><a title="Forse to release resource" href="#"
+                               onclick="releaseExclusionResource(this); return false;"
+                               data-runid="${resource.runId}"
+                               data-resourceid="${resource.resourceId}">
+                               Release </a>
+                        </td>
+                    </tr>
+                </j:forEach>
+            </table>
+
         </l:main-panel>
     </l:layout>
 </j:jelly>
