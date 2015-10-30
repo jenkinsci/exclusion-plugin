@@ -47,7 +47,8 @@ import static org.junit.Assert.*;
 
 public class ExclusionTest {
 
-    @Rule public JenkinsRule j = new JenkinsRule();
+    @Rule
+    public JenkinsRule j = new JenkinsRule();
 
     @Test
     public void acquireTheResource() throws Exception {
@@ -227,7 +228,7 @@ public class ExclusionTest {
         HtmlPage adminPage = wc.goTo("administrationpanel");
         HtmlForm form = adminPage.getFormByName("freeResource");
         // The only resource is preselected
-        j.submit(form);
+        adminPage.getAnchorByText("Release").click();
 
         assertNull(IdAllocationManager.getOwnerBuild("RESOURCE"));
     }

@@ -12,7 +12,7 @@
 
             <table class="sortable pane bigtable">
                 <tr>
-                    <th>${%Project}</th>
+                    <th>${%Job}</th>
                     <th>${%Resource}</th>
                     <th>${%State}</th>
                 </tr>
@@ -31,8 +31,11 @@
                 function releaseExclusionResource(e)
                 {
                 var form = document.freeResource;
-                form.resourceId.value = e.dataset.resourceid;
-                form.runId.value = e.dataset.runid;
+                    // Jenkins tests use HtmlUnit which does not support dataset
+                    //form.resourceId.value = e.dataset.resourceid;
+                    //form.runId.value = e.dataset.runid;
+                    form.resourceId.value = e.getAttribute('data-resourceid');
+                    form.runId.value = e.getAttribute('data-runid');
                 form.submit();
                 }
             </script>
