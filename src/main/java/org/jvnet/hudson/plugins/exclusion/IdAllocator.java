@@ -189,7 +189,7 @@ public class IdAllocator extends SimpleBuildWrapper {
         listRessources.remove(i);
         }
         }
-        
+
         //Add all object for the current job
         for (IdType pt : ids) {
         System.out.println("jname " + jName + " / ressource :" + pt.name);
@@ -198,7 +198,7 @@ public class IdAllocator extends SimpleBuildWrapper {
         }*/
         return DESCRIPTOR;
     }
-	
+
     @Extension
     public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
 
@@ -207,11 +207,6 @@ public class IdAllocator extends SimpleBuildWrapper {
         @Override
         public String getDisplayName() {
             return "Add resource to manage exclusion";
-        }
-
-        @Override
-        public String getHelpFile() {
-            return "/plugin/Exclusion/help.html";
         }
 
         public List<IdTypeDescriptor> getIdTypes() {

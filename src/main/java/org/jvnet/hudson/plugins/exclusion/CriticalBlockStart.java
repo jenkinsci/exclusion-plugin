@@ -79,11 +79,6 @@ public class CriticalBlockStart extends Builder implements SimpleBuildStep {
         }
 
         @Override
-        public String getHelpFile() {
-            return "/plugin/Exclusion/helpCBS.html";
-        }
-
-        @Override
         public boolean isApplicable(Class<? extends AbstractProject> arg0) {
             return true;
         }
