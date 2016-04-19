@@ -18,9 +18,9 @@
                 </tr>
                 <j:forEach var="rc" items="${rcs}">
                     <tr>
-                        <td>${rc.jobName}</td>
-                        <td>${rc.ressource}</td>
-                        <td>
+                        <td align="center">${rc.jobName}</td>
+                        <td align="center">${rc.ressource}</td>
+                        <td align="center">
                             <j:if test="${rc.build==true}">Currently Used</j:if>
                         </td>
                     </tr>
@@ -55,9 +55,9 @@
                 </tr>
                 <j:forEach var="resource" items="${resources}">
                     <tr>
-                        <td>${resource.resourceId}</td>
-                        <td><a href="${rootURL}/${resource.runUrl}">${resource.runId}</a></td>
-                        <td><a title="Forse to release resource" href="#"
+                        <td align="center">${resource.resourceId}</td>
+                        <td align="center"><a href="${rootURL}/${resource.runUrl}">${resource.runId}</a></td>
+                        <td align="center"><a title="Forse to release resource" href="#"
                                onclick="releaseExclusionResource(this); return false;"
                                data-runid="${resource.runId}"
                                data-resourceid="${resource.resourceId}">
