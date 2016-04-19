@@ -17,12 +17,14 @@ import org.kohsuke.stapler.interceptor.RequirePOST;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 /**
  * Administration page model object.
  *
  * @author Anthony Roux
+ * @author Oleksandr Kulychok
  */
 @ExportedBean
 @Extension
@@ -46,6 +48,8 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
         getList();
     }
 
+
+    // List of declared resources over all Jobs (Oleksandr Kulychok: leave as is for now)
     @Restricted(NoExternalUse.class) // Exported for view
     // TODO why does this update stuff?
     public List<RessourcesMonitor> getList() {
@@ -62,44 +66,70 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
         }
 
         // For each resource Job, set build to true if a resource is used
-        for (Entry<String, Run<?, ?>> allocation: IdAllocationManager.getAllocations().entrySet()) {
+        for (Entry<String, Run<?, ?>> allocation : IdAllocationManager.getAllocations().entrySet()) {
             IdAllocator.updateBuild(allocation.getValue().getParent().getName(), allocation.getKey(), true);
         }
 
         ArrayList<RessourcesMonitor> list = new ArrayList<RessourcesMonitor>(listRessources.size());
-		for (RessourcesMonitor rm : listRessources) {
+        for (RessourcesMonitor rm : listRessources) {
             list.add(new RessourcesMonitor(rm.getJobName(), rm.getRessource(), rm.getBuild()));
         }
 
         return list;
     }
 
-	//Called when we click on "release resource" button
+
+    @Restricted(NoExternalUse.class) // Exported for view
+    public List<AllocatedResource> getAllocatedResources() {
+        Map<String, Run<?, ?>> allocations = IdAllocationManager.getAllocations();
+
+        List<AllocatedResource> result = new ArrayList<AllocatedResource>();
+        for (String id : allocations.keySet()) {
+            Run<?, ?> run = allocations.get(id);
+            AllocatedResource allocatedResource = new AllocatedResource();
+            allocatedResource.resourceId = id;
+            allocatedResource.runId = run.getExternalizableId(); // it is unique, see javadoc
+            allocatedResource.runUrl = run.getUrl();
+            result.add(allocatedResource);
+        }
+
+        return result;
+
+    }
+
+
+    public class AllocatedResource {
+        public String resourceId;
+        public String runUrl;  // url to 'build', but lets use jenkins core naming in java code
+        public String runId;
+    }
+
+
+    //Called when we click on "release " link
     @RequirePOST
     @Restricted(NoExternalUse.class) // Exported for view
-    public void doFreeResource(StaplerRequest res, StaplerResponse rsp, @QueryParameter("resourceName") String resourceName) throws IOException, InterruptedException {
-        for (RessourcesMonitor rm : getList()) {
+    public void doFreeResource(StaplerRequest res, StaplerResponse rsp,
+                               @QueryParameter("resourceId") String resourceId,
+                               @QueryParameter("runId") String runId
+    ) throws IOException, InterruptedException {
+
+        for (AllocatedResource resource : getAllocatedResources()) {
+
             // Check if the resource is the one chosen by the user
-            if (rm.getRessource().equals(resourceName) && rm.getBuild()) {
-
-                // Get the Id by resource name
-                DefaultIdType p = new DefaultIdType(resourceName);
-                // "null" for params not used
-                // Only used to get the Id
-                Id i = p.allocate(false, null, CriticalBlockStart.pam, null, null);
-
-                // Cleanup only if the job is currently using the resource
-                // So we get the name of the job that uses the resource and we look in the list
-                Run<?, ?> get = IdAllocationManager.getOwnerBuild(resourceName);
-                if (get != null) {
-                    if (get.getParent().getName().equals(rm.getJobName())) {
-                        // Release resource
-                        i.cleanUp();
-                    }
+            if (resource.resourceId.equals(resourceId)) {
+                // Check if the resource belong to the same run which user selected (he can has deprecated page)
+                Run<?, ?> run = IdAllocationManager.getOwnerBuild(resourceId);
+                if (run != null && run.getExternalizableId().equals(runId)) {
+                    // Get the Id by resource name
+                    DefaultIdType p = new DefaultIdType(resourceId);
+                    // "null" for params not used, Only used to get the Id. TODO: should be refactored
+                    Id id = p.allocate(false, null, CriticalBlockStart.pam, null, null);
+                    // Release resource
+                    id.cleanUp();
                 }
             }
         }
-        // Redirects to the administration panel
+        // Redirects  to the administration panel (refresh it)
         rsp.sendRedirect(res.getContextPath() + getUrlName());
     }
 

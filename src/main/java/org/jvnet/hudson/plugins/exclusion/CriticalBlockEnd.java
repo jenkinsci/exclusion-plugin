@@ -81,11 +81,6 @@ public class CriticalBlockEnd extends Builder implements SimpleBuildStep {
         }
 
         @Override
-        public String getHelpFile() {
-            return "/plugin/Exclusion/helpCBE.html";
-        }
-
-        @Override
         public boolean isApplicable(Class<? extends AbstractProject> arg0) {
             return true;
         }
