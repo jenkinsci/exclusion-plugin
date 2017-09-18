@@ -1,8 +1,8 @@
-This plugin is inspired by Port-Allocator plugin.
-
 The purpose of this plugin is to manage conflicts between jobs.
 
-Exclusion plugin allows you to assign resources name to every jobs on Jenkins. This feature will be in charge of not building jobs that have same resources at the same time. Exclusion plugin is based on a semaphore system.
-With the second part of the plugin you can, in an administration panel, see all resources currently configured in each job. You can also see when a resource is allocated and, thanks to the release button, you can release a resource currently in use.
+The Exclusion plugin allows you to assign resource names to jobs in Jenkins.
+The plugin will ensure that jobs sharing a same resource will not be executed at the same time. The resource name is a semaphore.
+With the second part of the plugin you can, in an administration panel, see the list of resources configured in each job, see when a resource is allocated and, thanks to the release button, you can release a resource currently used.
 
-See : https://wiki.jenkins-ci.org/display/JENKINS/Exclusion-Plugin
+See: [Exclusion-Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Exclusion-Plugin)
+Maintainer of the project: [GitHub](https://github.com/anthonyroux) & [Twitter](https://twitter.com/AnthonyRoux_)
