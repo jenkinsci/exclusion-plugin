@@ -85,12 +85,12 @@ public class IdAllocator extends SimpleBuildWrapper {
 
     /**
      * This method update Job name
-     * @param oldProjecName : Old project name
+     * @param oldProjectName : Old project name
 	 * @param newProjectName : New project name
      */
-    private static void updateList(String oldProjecName, String newProjectName) {
+    private static void updateList(String oldProjectName, String newProjectName) {
         for (int i = listRessources.size() - 1; i >= 0; i--) {
-            if (listRessources.get(i).getJobName().equals(oldProjecName)) {
+            if (listRessources.get(i).getJobName().equals(oldProjectName)) {
                 String ressource = listRessources.get(i).getRessource();
                 listRessources.remove(i);
                 listRessources.add(new RessourcesMonitor(newProjectName, ressource));
