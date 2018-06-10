@@ -19,7 +19,7 @@
                 <j:forEach var="rc" items="${rcs}">
                     <tr>
                         <td align="center">${rc.jobName}</td>
-                        <td align="center">${rc.ressource}</td>
+                        <td align="center">${rc.resource}</td>
                         <td align="center">
                             <j:if test="${rc.build==true}">Currently Used</j:if>
                         </td>

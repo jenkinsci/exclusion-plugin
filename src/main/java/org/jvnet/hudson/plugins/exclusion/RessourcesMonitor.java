@@ -8,18 +8,18 @@ import java.util.logging.Logger;
 /**
  * @author Anthony Roux
  */
-public class RessourcesMonitor implements Cloneable {
+public class ResourcesMonitor implements Cloneable {
 
-    private String ressource;
+    private String resource;
     private String jobName;
     private boolean build = false;
 
-    public RessourcesMonitor(String jobName, String ressource) {
-        this(jobName, ressource, false);
+    public ResourcesMonitor(String jobName, String resource) {
+        this(jobName, resource, false);
     }
 
-    public RessourcesMonitor(String jobName, String ressource, boolean build) {
-        this.ressource = ressource;
+    public ResourcesMonitor(String jobName, String resource, boolean build) {
+        this.resource = resource;
         // For spaces, delete %20 from name
         try {
             this.jobName = URLDecoder.decode(jobName, "UTF-8");
@@ -30,12 +30,12 @@ public class RessourcesMonitor implements Cloneable {
     }
 
     @Override
-    public RessourcesMonitor clone() {
-        RessourcesMonitor rm = null;
+    public ResourcesMonitor clone() {
+        ResourcesMonitor rm = null;
         try {
-            rm = (RessourcesMonitor) super.clone();
+            rm = (ResourcesMonitor) super.clone();
         } catch (CloneNotSupportedException ex) {
-            Logger.getLogger(RessourcesMonitor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResourcesMonitor.class.getName()).log(Level.SEVERE, null, ex);
         }
         return rm;
     }
@@ -52,7 +52,7 @@ public class RessourcesMonitor implements Cloneable {
         return jobName;
     }
 
-    public String getRessource() {
-        return ressource;
+    public String getResource() {
+        return resource;
     }
 }
