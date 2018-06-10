@@ -28,7 +28,7 @@ public class IdAllocator extends SimpleBuildWrapper {
 	//Resources currently configured in the job
     private IdType[] ids = null;
     private static List<ResourcesMonitor> listResources = new ArrayList<ResourcesMonitor>();
-    private static String jName = "unknow";
+    private static String jName = "unknown";
 
     public IdAllocator(IdType[] ids) {
         this.ids = ids;
@@ -161,7 +161,7 @@ public class IdAllocator extends SimpleBuildWrapper {
             projectName = jName;
         }
 
-        if (!projectName.equals("unknow")) {
+        if (!projectName.equals("unknown")) {
             try {
 		//Encoding for spaces
                 projectName = URLDecoder.decode(projectName, "UTF-8");
@@ -179,11 +179,11 @@ public class IdAllocator extends SimpleBuildWrapper {
                 listResources.add(new ResourcesMonitor(projectName, pt.name));
             }
         }
-        jName = "unknow";
+        jName = "unknown";
 
 
         //// will be good if i can get job name ...
-       /* if (!jName.equals("unknow")) {
+       /* if (!jName.equals("unknown")) {
         for (int i = listResources.size() - 1; i >= 0; i--) {
         if (listResources.get(i).getJobName().equals(jName)) {
         listResources.remove(i);
