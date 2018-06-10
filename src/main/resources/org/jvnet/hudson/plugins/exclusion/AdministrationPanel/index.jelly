@@ -57,7 +57,7 @@
                     <tr>
                         <td align="center">${resource.resourceId}</td>
                         <td align="center"><a href="${rootURL}/${resource.runUrl}">${resource.runId}</a></td>
-                        <td align="center"><a title="Forse to release resource" href="#"
+                        <td align="center"><a title="Force to release resource" href="#"
                                onclick="releaseExclusionResource(this); return false;"
                                data-runid="${resource.runId}"
                                data-resourceid="${resource.resourceId}">
