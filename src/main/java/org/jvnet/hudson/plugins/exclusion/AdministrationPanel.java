@@ -31,11 +31,11 @@ import java.util.Map.Entry;
 public class AdministrationPanel implements RootAction, StaplerProxy {
 
     // Link to the IdAllocator resources list
-    private List<RessourcesMonitor> listRessources;
+    private List<ResourcesMonitor> listResources;
 
     public AdministrationPanel() {
         super();
-        listRessources = IdAllocator.getListRessources();
+        listResources = IdAllocator.getListResources();
     }
 
     public Object getTarget() {
@@ -52,7 +52,7 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
     // List of declared resources over all Jobs (Oleksandr Kulychok: leave as is for now)
     @Restricted(NoExternalUse.class) // Exported for view
     // TODO why does this update stuff?
-    public List<RessourcesMonitor> getList() {
+    public List<ResourcesMonitor> getList() {
 
         for (Project<?, ?> p : Jenkins.getInstance().getProjects()) {
             if (p.getBuildWrappersList().get(IdAllocator.class) == null) {
@@ -61,7 +61,7 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
         }
 
         // Set all builds to false (build = currently used)
-        for (RessourcesMonitor rm : listRessources) {
+        for (ResourcesMonitor rm : listResources) {
             rm.setBuild(false);
         }
 
@@ -70,9 +70,9 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
             IdAllocator.updateBuild(allocation.getValue().getParent().getName(), allocation.getKey(), true);
         }
 
-        ArrayList<RessourcesMonitor> list = new ArrayList<RessourcesMonitor>(listRessources.size());
-        for (RessourcesMonitor rm : listRessources) {
-            list.add(new RessourcesMonitor(rm.getJobName(), rm.getRessource(), rm.getBuild()));
+        ArrayList<ResourcesMonitor> list = new ArrayList<ResourcesMonitor>(listResources.size());
+        for (ResourcesMonitor rm : listResources) {
+            list.add(new ResourcesMonitor(rm.getJobName(), rm.getResource(), rm.getBuild()));
         }
 
         return list;

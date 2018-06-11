@@ -27,8 +27,8 @@ public class IdAllocator extends SimpleBuildWrapper {
 
 	//Resources currently configured in the job
     private IdType[] ids = null;
-    private static List<RessourcesMonitor> listRessources = new ArrayList<RessourcesMonitor>();
-    private static String jName = "unknow";
+    private static List<ResourcesMonitor> listResources = new ArrayList<ResourcesMonitor>();
+    private static String jName = "unknown";
 
     public IdAllocator(IdType[] ids) {
         this.ids = ids;
@@ -79,21 +79,21 @@ public class IdAllocator extends SimpleBuildWrapper {
         return ids;
     }
 
-    public static List<RessourcesMonitor> getListRessources() {
-        return listRessources;
+    public static List<ResourcesMonitor> getListResources() {
+        return listResources;
     }
 
     /**
      * This method update Job name
-     * @param oldProjecName : Old project name
+     * @param oldProjectName : Old project name
 	 * @param newProjectName : New project name
      */
-    private static void updateList(String oldProjecName, String newProjectName) {
-        for (int i = listRessources.size() - 1; i >= 0; i--) {
-            if (listRessources.get(i).getJobName().equals(oldProjecName)) {
-                String ressource = listRessources.get(i).getRessource();
-                listRessources.remove(i);
-                listRessources.add(new RessourcesMonitor(newProjectName, ressource));
+    private static void updateList(String oldProjectName, String newProjectName) {
+        for (int i = listResources.size() - 1; i >= 0; i--) {
+            if (listResources.get(i).getJobName().equals(oldProjectName)) {
+                String resource = listResources.get(i).getResource();
+                listResources.remove(i);
+                listResources.add(new ResourcesMonitor(newProjectName, resource));
             }
         }
     }
@@ -103,9 +103,9 @@ public class IdAllocator extends SimpleBuildWrapper {
      * @param ProjectName : Project name
      */
     /*package*/ static void deleteList(String ProjectName) {
-        for (int i = listRessources.size() - 1; i >= 0; i--) {
-            if (listRessources.get(i).getJobName().equals(ProjectName)) {
-                listRessources.remove(i);
+        for (int i = listResources.size() - 1; i >= 0; i--) {
+            if (listResources.get(i).getJobName().equals(ProjectName)) {
+                listResources.remove(i);
             }
         }
     }
@@ -117,12 +117,12 @@ public class IdAllocator extends SimpleBuildWrapper {
      * @param build : resource state (true = in use)
      */
     /*package*/ static void updateBuild(String ProjectName, String resourceName, boolean build) {
-        for (int i = listRessources.size() - 1; i >= 0; i--) {
-            if (listRessources.get(i).getJobName().equals(ProjectName) && listRessources.get(i).getRessource().equals(resourceName)) {
-                RessourcesMonitor rmGet = listRessources.get(i);
-                listRessources.remove(i);
+        for (int i = listResources.size() - 1; i >= 0; i--) {
+            if (listResources.get(i).getJobName().equals(ProjectName) && listResources.get(i).getResource().equals(resourceName)) {
+                ResourcesMonitor rmGet = listResources.get(i);
+                listResources.remove(i);
                 rmGet.setBuild(build);
-                listRessources.add(rmGet);
+                listResources.add(rmGet);
             }
         }
     }
@@ -161,39 +161,39 @@ public class IdAllocator extends SimpleBuildWrapper {
             projectName = jName;
         }
 
-        if (!projectName.equals("unknow")) {
+        if (!projectName.equals("unknown")) {
             try {
 		//Encoding for spaces
                 projectName = URLDecoder.decode(projectName, "UTF-8");
             } catch (UnsupportedEncodingException ex) {
             }
 			//Remove all resources
-            for (int i = listRessources.size() - 1; i >= 0; i--) {
-                if (listRessources.get(i).getJobName().equals(projectName)) {
-                    listRessources.remove(i);
+            for (int i = listResources.size() - 1; i >= 0; i--) {
+                if (listResources.get(i).getJobName().equals(projectName)) {
+                    listResources.remove(i);
                 }
             }
 
             //Add all object for the current job
             for (IdType pt : getIds()) {
-                listRessources.add(new RessourcesMonitor(projectName, pt.name));
+                listResources.add(new ResourcesMonitor(projectName, pt.name));
             }
         }
-        jName = "unknow";
+        jName = "unknown";
 
 
         //// will be good if i can get job name ...
-       /* if (!jName.equals("unknow")) {
-        for (int i = listRessources.size() - 1; i >= 0; i--) {
-        if (listRessources.get(i).getJobName().equals(jName)) {
-        listRessources.remove(i);
+       /* if (!jName.equals("unknown")) {
+        for (int i = listResources.size() - 1; i >= 0; i--) {
+        if (listResources.get(i).getJobName().equals(jName)) {
+        listResources.remove(i);
         }
         }
 
         //Add all object for the current job
         for (IdType pt : ids) {
-        System.out.println("jname " + jName + " / ressource :" + pt.name);
-        listRessources.add(new RessourcesMonitor(jName, pt.name));
+        System.out.println("jname " + jName + " / resource :" + pt.name);
+        listResources.add(new ResourcesMonitor(jName, pt.name));
         }
         }*/
         return DESCRIPTOR;
