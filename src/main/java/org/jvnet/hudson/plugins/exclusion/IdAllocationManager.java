@@ -1,14 +1,14 @@
 package org.jvnet.hudson.plugins.exclusion;
 
-import com.google.common.collect.MapMaker;
 import hudson.model.*;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
+import java.util.WeakHashMap;
 
 /**
  * @author Kohsuke Kawaguchi
@@ -18,7 +18,7 @@ public final class IdAllocationManager {
 
     private final Computer node;
     private static final Map<String, Run<?, ?>> CURRENT_OWNERS = new HashMap<String, Run<?, ?>>();
-    private static final ConcurrentMap<Computer, IdAllocationManager> INSTANCES = new MapMaker().weakKeys().weakValues().makeMap();
+    private static final Map<Computer, WeakReference<IdAllocationManager>> INSTANCES = new WeakHashMap();
 
     private IdAllocationManager(Computer node) {
         this.node = node;
@@ -67,13 +67,17 @@ public final class IdAllocationManager {
         }
      }
     
-    public static IdAllocationManager getManager(Computer node) {
-        IdAllocationManager idAllocationManager = INSTANCES.get(node);
-        if (idAllocationManager == null) {
-            idAllocationManager = new IdAllocationManager(node);
-            INSTANCES.put(node, idAllocationManager);
+    public static synchronized IdAllocationManager getManager(Computer node) {
+        WeakReference<IdAllocationManager> idAllocationManagerRef = INSTANCES.get(node);
+        if (idAllocationManagerRef != null) {
+            IdAllocationManager idAllocationManager = idAllocationManagerRef.get();
+            if (idAllocationManager != null) {
+                return idAllocationManager;
+            }
         }
-        return INSTANCES.get(node);
+        IdAllocationManager idAllocationManager = new IdAllocationManager(node);
+        INSTANCES.put(node, new WeakReference(idAllocationManager));
+        return idAllocationManager;
     }
 
     /**
