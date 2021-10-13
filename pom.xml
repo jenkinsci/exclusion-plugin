@@ -21,7 +21,7 @@
 		<java.level>8</java.level>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<gitHubRepo>jenkinsci/exclusion-plugin</gitHubRepo>
-		<spotbugs.failOnError>false</spotbugs.failOnError>
+		<spotbugs.skip>true</spotbugs.skip>
 	</properties>
 
 	<licenses>
