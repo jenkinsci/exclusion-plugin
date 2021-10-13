@@ -4,7 +4,12 @@ import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.*;
+import hudson.model.Computer;
+import hudson.model.Descriptor;
+import hudson.model.Executor;
+import hudson.model.Item;
+import hudson.model.Run;
+import hudson.model.TaskListener;
 import hudson.model.listeners.ItemListener;
 import hudson.tasks.BuildWrapper;
 import jenkins.tasks.SimpleBuildWrapper;
@@ -27,7 +32,7 @@ public class IdAllocator extends SimpleBuildWrapper {
 
 	//Resources currently configured in the job
     private IdType[] ids = null;
-    private static List<ResourcesMonitor> listResources = new ArrayList<ResourcesMonitor>();
+    private static List<ResourcesMonitor> listResources = new ArrayList<>();
     private static String jName = "unknown";
 
     public IdAllocator(IdType[] ids) {
@@ -36,8 +41,8 @@ public class IdAllocator extends SimpleBuildWrapper {
 
     @Override
     public void setUp(Context context, Run<?, ?> run, FilePath filePath, Launcher launcher, TaskListener taskListener, EnvVars envVars) throws IOException, InterruptedException {
-        final List<String> allocated = new ArrayList<String>();
-        final List<Id> alloc = new ArrayList<Id>();
+        final List<String> allocated = new ArrayList<>();
+        final List<Id> alloc = new ArrayList<>();
         final String buildName = run.getParent().getName();
         final Computer cur = Executor.currentExecutor().getOwner();
         final IdAllocationManager pam = IdAllocationManager.getManager(cur);
@@ -224,7 +229,7 @@ public class IdAllocator extends SimpleBuildWrapper {
                     setName(split[i + 1]);
                 }
             }
-            return new IdAllocator(ids.toArray(new IdType[ids.size()]));
+            return new IdAllocator(ids.toArray(new IdType[0]));
         }
 
         // TODO introduced to keep things working in unittest too. jName has to die as soon as we have decent coverage.
