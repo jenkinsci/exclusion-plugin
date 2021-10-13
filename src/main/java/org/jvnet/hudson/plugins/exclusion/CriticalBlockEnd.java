@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 /**
- * Build step -> End of critical zone
+ * Build step -&gt; End of critical zone
  *
  * @author Anthony Roux
  */
