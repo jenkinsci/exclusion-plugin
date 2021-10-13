@@ -1,27 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>org.jenkins-ci.plugins</groupId>
 		<artifactId>plugin</artifactId>
-		<version>1.609.1</version>
+		<version>4.29</version>
+		<relativePath />
 	</parent>
 
 	<artifactId>Exclusion</artifactId>
 	<packaging>hpi</packaging>
-	<version>0.13-SNAPSHOT</version>
+	<version>${revision}${changelist}</version>
 	<name>Jenkins Exclusion Plug-in</name>
-	<url>https://wiki.jenkins-ci.org/display/JENKINS/Exclusion-Plugin</url>
+	<url>https://github.com/jenkinsci/exclusion-plugin</url>
 	<properties>
+		<revision>0.13</revision>
+		<changelist>-SNAPSHOT</changelist>
+		<jenkins.version>2.222.4</jenkins.version>
+		<java.level>8</java.level>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<gitHubRepo>jenkinsci/exclusion-plugin</gitHubRepo>
+		<spotbugs.failOnError>false</spotbugs.failOnError>
 	</properties>
 
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>https://opensource.org/licenses/MIT</url>
+		</license>
+	</licenses>
+
 	<scm>
-		<connection>scm:git:ssh://github.com/jenkinsci/exclusion-plugin.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com/jenkinsci/exclusion-plugin.git</developerConnection>
-		<url>https://github.com/jenkinsci/exclusion-plugin</url>
-	  <tag>HEAD</tag>
-  </scm>
+		<connection>scm:git:https://github.com/${gitHubRepo}</connection>
+		<developerConnection>scm:git:https://github.com/${gitHubRepo}</developerConnection>
+		<url>https://github.com/${gitHubRepo}</url>
+		<tag>${scmTag}</tag>
+	</scm>
 
 	<developers>
 		<developer>
@@ -31,14 +46,30 @@
 		</developer>
 	</developers>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins</groupId>
-      <artifactId>cloudbees-folder</artifactId>
-      <version>4.0</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>io.jenkins.tools.bom</groupId>
+				<artifactId>bom-2.222.x</artifactId>
+				<version>887.vae9c8ac09ff7</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>cloudbees-folder</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>matrix-project</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 	<repositories>
 		<repository>
