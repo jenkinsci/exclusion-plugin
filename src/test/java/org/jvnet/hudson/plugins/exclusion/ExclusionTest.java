@@ -168,7 +168,7 @@ public class ExclusionTest {
     public void matrixProject() throws Exception {
         j.jenkins.setNumExecutors(5); // We have enough executors for all configurations
 
-        MatrixProject p = j.createMatrixProject();
+        MatrixProject p = j.createProject(MatrixProject.class);
         p.setAxes(new AxisList(new TextAxis(
                 "axis", "a", "b", "c", "d", "e"
         )));

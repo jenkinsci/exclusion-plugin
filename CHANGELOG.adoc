@@ -1,0 +1,32 @@
+= Changelog
+
+* All notable changes prior to 0.13 are documented in this changelog.
+* Release notes for versions >= 0.13 can be found on the https://github.com/jenkinsci/exclusion-plugin/releases[GitHub releases page].
+
+== Release History
+
+=== Version 0.12 (Apr 19, 2016)
+
+Fixed Administration panel (contribution of https://github.com/kool79[Oleksandr Kulychok])
+
+=== Version 0.11 (Oct 25, 2015)
+
+Add support for the Workflow plugin (contribution of https://github.com/emanuelez[Emanuel Zattin])
+
+=== Version 0.10 (Jan 25, 2014)
+
+Fixed https://issues.jenkins.io/browse/JENKINS-14953[JENKINS-14953] and https://issues.jenkins.io/browse/JENKINS-15884[JENKINS-15884]
+
+=== Version 0.9 (Nov 18, 2013)
+
+Fixed https://www.jenkins.io/security/advisory/2013-11-20/#security-53-cve-2013-6373[SECURITY-53]: Non-administrator users can release resources that are currently held
+
+=== Version 0.8 (Nov 8, 2012)
+
+https://issues.jenkins.io/browse/JENKINS-14953[JENKINS-14953]: Exclusion plugin sometimes reports a resource as locked when it is not and jobs hang as a result
+
+=== Version 0.7 (July 7, 2012)
+
+https://issues.jenkins.io/browse/JENKINS-12250[JENKINS-12250]: Critical block can not be added into conditional step
+
+=== Version 0.6 (Jun 19, 2011)
