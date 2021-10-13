@@ -48,7 +48,7 @@ public class DefaultIdType extends IdType {
 
     @Override
     public DescriptorImpl getDescriptor() {
-        return (DescriptorImpl) Jenkins.getInstance().getDescriptorOrDie(getClass());
+        return (DescriptorImpl) Jenkins.get().getDescriptorOrDie(getClass());
     }
 
     @Extension

@@ -23,6 +23,12 @@
  */
 package org.jvnet.hudson.plugins.exclusion;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import com.cloudbees.hudson.plugins.folder.Folder;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -30,7 +36,11 @@ import hudson.Launcher;
 import hudson.matrix.AxisList;
 import hudson.matrix.MatrixProject;
 import hudson.matrix.TextAxis;
-import hudson.model.*;
+import hudson.model.AbstractBuild;
+import hudson.model.BuildListener;
+import hudson.model.FreeStyleBuild;
+import hudson.model.FreeStyleProject;
+import hudson.model.Job;
 import hudson.model.queue.QueueTaskFuture;
 import hudson.slaves.DumbSlave;
 import hudson.util.OneShotEvent;
@@ -40,10 +50,7 @@ import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.JenkinsRule.WebClient;
 import org.jvnet.hudson.test.TestBuilder;
 
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-
-import static org.junit.Assert.*;
 
 public class ExclusionTest {
 
@@ -104,7 +111,7 @@ public class ExclusionTest {
 
         WebClient wc = j.createWebClient();
         HtmlPage page = wc.goTo("administrationpanel");
-        assertTrue(page.asText().contains("b\tRESOURCE"));
+        assertTrue(page.asNormalizedText().contains("b\tRESOURCE"));
 
         blocker.event.signal();
 
@@ -176,7 +183,7 @@ public class ExclusionTest {
         p.getBuildersList().add(new CriticalBlockStart());
         p.getBuildersList().add(new TestBuilder() {
             @Override
-            public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+            public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) {
                 assertSame(build, IdAllocationManager.getOwnerBuild("RESOURCE"));
                 return true;
             }
@@ -298,7 +305,7 @@ public class ExclusionTest {
         public final OneShotEvent event = new OneShotEvent();
 
         @Override
-        public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+        public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) {
             try {
                 event.block();
             } catch (InterruptedException ex) {

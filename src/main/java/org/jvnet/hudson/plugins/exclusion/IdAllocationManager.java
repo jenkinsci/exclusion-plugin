@@ -1,6 +1,10 @@
 package org.jvnet.hudson.plugins.exclusion;
 
-import hudson.model.*;
+import hudson.model.AbstractProject;
+import hudson.model.Computer;
+import hudson.model.Job;
+import hudson.model.Run;
+import hudson.model.TaskListener;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -17,8 +21,8 @@ import java.util.WeakHashMap;
 public final class IdAllocationManager {
 
     private final Computer node;
-    private static final Map<String, Run<?, ?>> CURRENT_OWNERS = new HashMap<String, Run<?, ?>>();
-    private static final Map<Computer, WeakReference<IdAllocationManager>> INSTANCES = new WeakHashMap();
+    private static final Map<String, Run<?, ?>> CURRENT_OWNERS = new HashMap<>();
+    private static final Map<Computer, WeakReference<IdAllocationManager>> INSTANCES = new WeakHashMap<>();
 
     private IdAllocationManager(Computer node) {
         this.node = node;
@@ -52,7 +56,7 @@ public final class IdAllocationManager {
             boolean canRelease = true;
             Job<?, ?> parentJob = resourceOwner.getParent();
             if (parentJob instanceof AbstractProject) { // It might not be an AbstractProject (Workflow plugin)
-                List<AbstractProject> downstreamProjects = ((AbstractProject) parentJob).getDownstreamProjects();
+                List<AbstractProject> downstreamProjects = ((AbstractProject<?, ?>) parentJob).getDownstreamProjects();
                 for (AbstractProject<?, ?> abstractProject : downstreamProjects) {
                     if (abstractProject.isBuilding()) {
                         canRelease = false;
@@ -61,7 +65,7 @@ public final class IdAllocationManager {
                 }
             }
             if (canRelease) {
-                logger.println("[Exclusion] -> Release resource from completed build: " + resourceOwner.toString());
+                logger.println("[Exclusion] -> Release resource from completed build: " + resourceOwner);
                 CURRENT_OWNERS.remove(id);
             }
         }
@@ -76,7 +80,7 @@ public final class IdAllocationManager {
             }
         }
         IdAllocationManager idAllocationManager = new IdAllocationManager(node);
-        INSTANCES.put(node, new WeakReference(idAllocationManager));
+        INSTANCES.put(node, new WeakReference<>(idAllocationManager));
         return idAllocationManager;
     }
 
@@ -93,6 +97,6 @@ public final class IdAllocationManager {
     }
 
     /*package*/ static HashMap<String, Run<?, ?>> getAllocations() {
-        return new HashMap<String, Run<?, ?>>(CURRENT_OWNERS);
+        return new HashMap<>(CURRENT_OWNERS);
     }
 }

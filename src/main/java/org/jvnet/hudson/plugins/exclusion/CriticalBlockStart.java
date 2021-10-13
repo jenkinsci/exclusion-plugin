@@ -1,21 +1,25 @@
 package org.jvnet.hudson.plugins.exclusion;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.*;
+import hudson.model.AbstractProject;
+import hudson.model.Executor;
+import hudson.model.Run;
+import hudson.model.TaskListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import jenkins.tasks.SimpleBuildStep;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 
 /**
  * Build step -&gt; Start of critical zone
@@ -37,16 +41,16 @@ public class CriticalBlockStart extends Builder implements SimpleBuildStep {
     public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
 
     @Override
-    public void perform(@Nonnull Run<?, ?> run, @Nonnull FilePath filePath, @Nonnull Launcher launcher, @Nonnull TaskListener taskListener) throws InterruptedException, IOException {
+    public void perform(@NonNull Run<?, ?> run, @NonNull FilePath filePath, @NonNull Launcher launcher, @NonNull TaskListener taskListener) throws InterruptedException, IOException {
         pam = IdAllocationManager.getManager(Executor.currentExecutor().getOwner());
 
         PrintStream logger = taskListener.getLogger();
 
         EnvVars environment = run.getEnvironment(taskListener);
-        final List<String> listId = new ArrayList<String>();
+        final List<String> listId = new ArrayList<>();
         // Add to a list all "variableEnv" (which are added by IdAllocator)
         // Each variableEnv is a resource
-        for (Entry<String, String> e: environment.entrySet()) {
+        for (Map.Entry<String, String> e: environment.entrySet()) {
             String cle = e.getKey();
 
             String name = "variableEnv" + run.getParent().getName();

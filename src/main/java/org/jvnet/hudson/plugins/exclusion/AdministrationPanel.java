@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * Administration page model object.
@@ -39,7 +38,7 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
     }
 
     public Object getTarget() {
-        Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
+        Jenkins.get().checkPermission(Jenkins.ADMINISTER);
         return this;
     }
 
@@ -54,7 +53,7 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
     // TODO why does this update stuff?
     public List<ResourcesMonitor> getList() {
 
-        for (Project<?, ?> p : Jenkins.getInstance().getProjects()) {
+        for (Project<?, ?> p : Jenkins.get().getProjects()) {
             if (p.getBuildWrappersList().get(IdAllocator.class) == null) {
                 IdAllocator.deleteList(p.getName());
             }
@@ -66,11 +65,11 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
         }
 
         // For each resource Job, set build to true if a resource is used
-        for (Entry<String, Run<?, ?>> allocation : IdAllocationManager.getAllocations().entrySet()) {
+        for (Map.Entry<String, Run<?, ?>> allocation : IdAllocationManager.getAllocations().entrySet()) {
             IdAllocator.updateBuild(allocation.getValue().getParent().getName(), allocation.getKey(), true);
         }
 
-        ArrayList<ResourcesMonitor> list = new ArrayList<ResourcesMonitor>(listResources.size());
+        ArrayList<ResourcesMonitor> list = new ArrayList<>(listResources.size());
         for (ResourcesMonitor rm : listResources) {
             list.add(new ResourcesMonitor(rm.getJobName(), rm.getResource(), rm.getBuild()));
         }
@@ -83,7 +82,7 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
     public List<AllocatedResource> getAllocatedResources() {
         Map<String, Run<?, ?>> allocations = IdAllocationManager.getAllocations();
 
-        List<AllocatedResource> result = new ArrayList<AllocatedResource>();
+        List<AllocatedResource> result = new ArrayList<>();
         for (String id : allocations.keySet()) {
             Run<?, ?> run = allocations.get(id);
             AllocatedResource allocatedResource = new AllocatedResource();
