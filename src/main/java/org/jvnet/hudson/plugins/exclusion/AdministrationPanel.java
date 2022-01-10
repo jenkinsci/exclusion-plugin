@@ -133,7 +133,7 @@ public class AdministrationPanel implements RootAction, StaplerProxy {
     }
 
     public String getIconFileName() {
-        return "/plugin/Exclusion/icons/exclusion.png";
+        return "gear.png";
     }
 
     public String getDisplayName() {
